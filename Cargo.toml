@@ -1,9 +1,9 @@
 [package]
 name = "tinkr"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2024"
 authors = ["Rouan van der Ende (rouan@netron.dev)"]
-description = "Core application library with Leptos framework support"
+description = "Tinkr is a web framework for quickly building full-stack web applications with Leptos."
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/netrondev/tinkr"
 homepage = "https://github.com/netrondev/tinkr"
@@ -125,6 +125,43 @@ image = { version = "0.25.6", default-features = false, features = [
 jpeg-encoder = { version = "0.6", optional = true }
 infer = { version = "0.19", optional = true }
 
+# Telemetry dependencies
+opentelemetry = { version = "0.22.0", features = [
+    "trace",
+    "metrics",
+], optional = true }
+opentelemetry_sdk = { version = "0.22.0", default-features = false, features = [
+    "trace",
+    "rt-tokio",
+], optional = true }
+opentelemetry-otlp = { version = "0.15.0", features = [
+    "metrics",
+], optional = true }
+opentelemetry-stdout = { version = "0.3.0", features = [
+    "trace",
+    "metrics",
+], optional = true }
+opentelemetry-semantic-conventions = { version = "0.14.0", optional = true }
+tracing-opentelemetry = { version = "0.23", default-features = true, optional = true }
+tracing-loki = { version = "0.2.5", optional = true }
+axum-prometheus = { version = "0.8", optional = true }
+tower = { version = "0.5.2", default-features = false, optional = true, features = [
+    "util",
+] }
+tower-http = { version = "0.6.6", default-features = false, features = [
+    "fs",
+    "compression-gzip",
+    "compression-br",
+    "compression-deflate",
+    "compression-zstd",
+    "cors",
+    "trace",
+], optional = true }
+
+# Pyroscope profiling
+pyroscope = { version = "^0.5.8", optional = true }
+pyroscope_pprofrs = { version = "^0.2.10", optional = true }
+
 
 [features]
 default = ["ssr"]
@@ -157,4 +194,16 @@ ssr = [
     "image",
     "jpeg-encoder",
     "infer",
+    "opentelemetry",
+    "opentelemetry_sdk",
+    "opentelemetry-otlp",
+    "opentelemetry-stdout",
+    "opentelemetry-semantic-conventions",
+    "tracing-opentelemetry",
+    "tracing-loki",
+    "axum-prometheus",
+    "tower",
+    "tower-http",
+    "pyroscope",
+    "pyroscope_pprofrs",
 ]

@@ -1,6 +1,6 @@
 [package]
 name = "tinkr"
-version = "0.0.2"
+version = "0.0.3"
 edition = "2024"
 authors = ["Rouan van der Ende (rouan@netron.dev)"]
 description = "Tinkr is a web framework for quickly building full-stack web applications with Leptos."

@@ -109,10 +109,16 @@ pub async fn signin(input: SignInForm) -> Result<String, ServerFnError> {
 
     let token = user.new_verification_token().await?;
 
+    if std::env::var("SERVICE_URL_DX").is_err() {
+        tracing::warn!("SERVICE_URL_DX not set, using localhost:3000 as fallback");
+    }
+
+    let url = std::env::var("SERVICE_URL_DX").unwrap_or("http://localhost:3000".to_string());
+
     // generate link
     let link = format!(
         "{}/api/auth/callback/email?token={}&email={}&callbackUrl={}",
-        std::env::var("SERVICE_URL_DX").unwrap(),
+        url,
         token.token,
         urlencoding::encode(user.email.to_string().as_str()),
         urlencoding::encode(input.callback_url.unwrap_or_default().as_str())

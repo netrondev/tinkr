@@ -118,7 +118,8 @@ pub fn Button(
     #[prop(optional, into)] href: Option<String>,
     #[prop(optional)] on_click: Option<Callback<()>>,
     #[prop(optional)] color: Option<BtnColor>,
-    #[prop(optional, into)] disabled: MaybeProp<bool>,
+    // #[prop(optional, into)] disabled: MaybeProp<bool>,
+    #[prop(default = false)] disabled: bool,
     #[prop(optional)] button_type: Option<&'static str>,
 ) -> impl IntoView {
     let classtext = move || {
@@ -130,11 +131,11 @@ pub fn Button(
         .to_class()
     };
 
-    let is_disabled = move || disabled.get().unwrap_or(false);
+    // let is_disabled = move || disabled.get().unwrap_or(false);
 
     let default_class = "flex relative items-center rounded-md justify-left w-min text-left text-sm group cursor-pointer whitespace-nowrap";
     let disabled_class = move || {
-        if is_disabled() {
+        if disabled {
             "opacity-50 cursor-not-allowed pointer-events-none"
         } else {
             ""
@@ -154,7 +155,7 @@ pub fn Button(
     };
 
     let handle_click = move |_| {
-        if !is_disabled() {
+        if !disabled {
             if let Some(callback) = on_click {
                 callback.run(());
             }
@@ -274,7 +275,7 @@ pub fn Button(
                 type=button_type.unwrap_or("button")
                 class=move || final_class()
                 on:click=handle_click
-                disabled=is_disabled()
+                disabled=disabled
             >
                 {button_contents}
             </button>

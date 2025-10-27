@@ -242,15 +242,24 @@ pub fn AccountForm() -> impl IntoView {
                         </FormField>
 
                         <div class="col-span-12 flex justify-end gap-3 pt-10">
-                            <Button
+                            {move || {
+
+                                let is_saving_bool = is_saving.get();
+
+                                view! {
+                                    <Button
                                 variant=BtnVariant::CallToAction
                                 color=BtnColor::Primary
                                 button_type="submit"
-                                disabled=is_saving
+                                disabled=is_saving_bool
                                 icon=ButtonIcon::Icon(phosphor_leptos::FLOPPY_DISK)
                             >
-                                {move || if is_saving.get() { "Saving..." } else { "Save Changes" }}
-                            </Button>
+                                    {move || if is_saving.get() { "Saving..." } else { "Save Changes" }}
+                                </Button>
+                                }
+
+                            }}
+
                         </div>
                     </div>
 

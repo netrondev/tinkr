@@ -361,7 +361,7 @@ impl AdapterUser {
         Ok(is_available)
     }
 
-    pub async fn check_username_availability(&self, username: String) -> Result<bool, AppError> {
+    pub async fn check_username_availability(username: String) -> Result<bool, AppError> {
         let client = db_init().await?;
 
         let mut result = client
@@ -375,7 +375,7 @@ impl AdapterUser {
         }
 
         let count: Option<CountResult> = result.take(0)?;
-        let is_available = count.map_or(true, |c| c.count == 0 || self.name == username);
+        let is_available = count.map_or(true, |c| c.count == 0);
 
         Ok(is_available)
     }
@@ -383,10 +383,7 @@ impl AdapterUser {
 
 #[server]
 pub async fn check_username_availability(username: String) -> Result<bool, ServerFnError> {
-    Ok(get_user()
-        .await?
-        .check_username_availability(username.clone())
-        .await?)
+    Ok(AdapterUser::check_username_availability(username.clone()).await?)
 }
 
 #[server]

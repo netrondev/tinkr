@@ -56,34 +56,35 @@ pub async fn signin(input: SignInForm) -> Result<String, ServerFnError> {
             // Generate a unique username based on the email
             let base_name = input.email.0.split('@').next().unwrap_or("user");
             let mut username = base_name.to_string();
+
             let mut counter = 0;
 
-            // Check if username is available, if not, append a number
             loop {
-                let name_to_check = if counter == 0 {
-                    username.clone()
-                } else {
-                    format!("{}{}", username, counter)
-                };
+                let name_to_check = username.clone();
 
                 // Check if this username is available
                 let is_available = check_username_availability(name_to_check.clone())
                     .await
                     .unwrap_or(false);
 
+                println!("is available {} for {}", is_available, name_to_check);
+
                 if is_available {
                     username = name_to_check;
                     break;
-                }
+                } else {
+                    counter += 1;
 
-                counter += 1;
-                if counter > 1000 {
-                    // Fallback to a UUID-based username if we can't find an available one
-                    username = format!(
-                        "user_{}",
-                        uuid::Uuid::new_v4().to_string().split('-').next().unwrap()
-                    );
-                    break;
+                    username = format!("user_{}", counter);
+
+                    if counter > 10 {
+                        // Fallback to a UUID-based username if we can't find an available one
+                        username = format!(
+                            "user_{}",
+                            uuid::Uuid::new_v4().to_string().split('-').next().unwrap()
+                        );
+                        break;
+                    }
                 }
             }
 

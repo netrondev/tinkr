@@ -1,8 +1,8 @@
+use crate::EmailAddress;
+use crate::auth::oauth::OAuthProvider;
 use leptos::{prelude::*, reactive::spawn_local};
 use leptos_router::hooks::use_query_map;
-use crate::EmailAddress;
 use urlencoding::decode;
-use crate::auth::oauth::OAuthProvider;
 
 #[derive(Clone, Debug)]
 enum AuthStatus {
@@ -382,7 +382,8 @@ pub fn OAuthCallback() -> impl IntoView {
                         window().location().set_href(&callback_url).unwrap();
                     }
                     Err(e) => {
-                        set_auth_status.set(AuthStatus::Error(format!("Authentication failed: {}", e)));
+                        set_auth_status
+                            .set(AuthStatus::Error(format!("Authentication failed: {}", e)));
                     }
                 }
             });
@@ -481,10 +482,7 @@ pub fn OAuthCallback() -> impl IntoView {
 }
 
 #[server]
-pub async fn handle_oauth_callback(
-    code: String,
-    state: String,
-) -> Result<String, ServerFnError> {
+pub async fn handle_oauth_callback(code: String, state: String) -> Result<String, ServerFnError> {
     use crate::auth::oauth::{OAuthConfig, OAuthUserInfo};
     use crate::auth::session::{delete_oauth_state, get_oauth_state};
     use http::header::HeaderValue;
@@ -516,8 +514,7 @@ pub async fn handle_oauth_callback(
         .map_err(|e| ServerFnError::new(format!("Failed to exchange code for token: {}", e)))?;
 
     // Fetch user info from the provider
-    let user_info = fetch_user_info(&config, token_result.access_token().secret())
-        .await?;
+    let user_info = fetch_user_info(&config, token_result.access_token().secret()).await?;
 
     // Create or get user
     let user = get_or_create_user_from_oauth(&user_info, &oauth_state.provider).await?;
@@ -576,9 +573,13 @@ async fn fetch_user_info(
             id: json["id"].as_str().unwrap_or("").to_string(),
             email: json["email"].as_str().map(|s| s.to_string()),
             name: json["username"].as_str().map(|s| s.to_string()),
-            avatar: json["avatar"]
-                .as_str()
-                .map(|avatar| format!("https://cdn.discordapp.com/avatars/{}/{}.png", json["id"].as_str().unwrap_or(""), avatar)),
+            avatar: json["avatar"].as_str().map(|avatar| {
+                format!(
+                    "https://cdn.discordapp.com/avatars/{}/{}.png",
+                    json["id"].as_str().unwrap_or(""),
+                    avatar
+                )
+            }),
         },
     };
 
@@ -590,8 +591,8 @@ async fn get_or_create_user_from_oauth(
     user_info: &crate::auth::oauth::OAuthUserInfo,
     provider: &OAuthProvider,
 ) -> Result<crate::auth::user::AdapterUser, ServerFnError> {
-    use crate::user::{AdapterUser, CreateUserData};
     use crate::theme::Theme;
+    use crate::user::{AdapterUser, CreateUserData};
 
     // Try to find existing user by OAuth provider ID
     let existing_user = AdapterUser::get_user_by_oauth_id(&user_info.id, provider).await;
@@ -611,7 +612,10 @@ async fn get_or_create_user_from_oauth(
     }
 
     // Create new user
-    let username = user_info.name.clone().unwrap_or_else(|| format!("user_{}", &user_info.id[..8]));
+    let username = user_info
+        .name
+        .clone()
+        .unwrap_or_else(|| format!("user_{}", &user_info.id[..8]));
 
     let user = AdapterUser::create_user(CreateUserData {
         email: crate::EmailAddress(user_info.email.clone().unwrap_or_default()),

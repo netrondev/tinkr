@@ -410,13 +410,12 @@ impl AdapterUser {
     ) -> Result<(), AppError> {
         let client = db_init().await?;
 
-        let _: Option<RecordId> = client
-            .query("CREATE oauth_account CONTENT { provider_account_id: $oauth_id, provider: $provider, user: $user_id };")
+        client
+            .query("CREATE oauth_account CONTENT { provider_account_id: $oauth_id, provider: $provider, user: $user_id } RETURN NONE;")
             .bind(("oauth_id", oauth_id.to_string()))
             .bind(("provider", provider.as_str().to_string()))
             .bind(("user_id", user_id.clone()))
-            .await?
-            .take(0)?;
+            .await?;
 
         Ok(())
     }

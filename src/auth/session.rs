@@ -18,6 +18,8 @@ use surrealdb::{Datetime, RecordId};
 #[cfg(not(feature = "ssr"))]
 use crate::{Datetime, RecordId};
 
+use crate::auth::oauth::OAuthProvider;
+
 #[derive(Debug, Clone, Serialize, Deserialize, Partial)]
 #[partial("CreateSessionData", derive(Serialize, Deserialize), omit(id))]
 #[partial("UpdateSessionData", derive(Serialize, Deserialize), omit(id, user_id))]
@@ -214,6 +216,82 @@ pub async fn logout() -> Result<(), ServerFnError> {
     }
 
     // The cookie will be cleared on the client side after redirect
+    Ok(())
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct OAuthState {
+    pub csrf_token: String,
+    pub pkce_verifier: String,
+    pub callback_url: String,
+    pub provider: OAuthProvider,
+}
+
+#[cfg(feature = "ssr")]
+pub async fn store_oauth_state(state: OAuthState) -> Result<(), ServerFnError> {
+    use crate::db_init;
+
+    let client = db_init()
+        .await
+        .map_err(|e| ServerFnError::new(format!("Database error: {}", e)))?;
+
+    // Store with a short TTL (10 minutes)
+    let expires = chrono::Utc::now() + chrono::Duration::minutes(10);
+
+    tracing::info!("Storing OAuth state with expires at {:?}", expires);
+
+    let result = client
+        .query("CREATE oauth_state SET csrf_token = $csrf_token, pkce_verifier = $pkce_verifier, callback_url = $callback_url, provider = $provider, expires = $expires;")
+        .bind(("csrf_token", state.csrf_token))
+        .bind(("pkce_verifier", state.pkce_verifier))
+        .bind(("callback_url", state.callback_url))
+        .bind(("provider", state.provider.as_str().to_string()))
+        .bind(("expires", surrealdb::Datetime::from(expires)))
+        .await
+        .map_err(|e| ServerFnError::new(format!("Failed to store OAuth state: {}", e)))?;
+
+    tracing::info!("OAuth state stored successfully");
+
+    Ok(())
+}
+
+#[cfg(feature = "ssr")]
+pub async fn get_oauth_state(csrf_token: String) -> Result<OAuthState, ServerFnError> {
+    use crate::db_init;
+
+    let client = db_init()
+        .await
+        .map_err(|e| ServerFnError::new(format!("Database error: {}", e)))?;
+
+    let mut result = client
+        .query("SELECT * FROM oauth_state WHERE csrf_token = $csrf_token AND expires > time::now() LIMIT 1;")
+        .bind(("csrf_token", csrf_token))
+        .await
+        .map_err(|e| ServerFnError::new(format!("Failed to query OAuth state: {}", e)))?;
+
+    let state: Option<OAuthState> = result
+        .take(0)
+        .map_err(|e| ServerFnError::new(format!("Failed to parse OAuth state: {}", e)))?;
+
+    state.ok_or_else(|| ServerFnError::new("OAuth state not found or expired"))
+}
+
+#[cfg(feature = "ssr")]
+pub async fn delete_oauth_state(csrf_token: String) -> Result<(), ServerFnError> {
+    use crate::db_init;
+
+    let client = db_init()
+        .await
+        .map_err(|e| ServerFnError::new(format!("Database error: {}", e)))?;
+
+    let _: Vec<surrealdb::RecordId> = client
+        .query("DELETE oauth_state WHERE csrf_token = $csrf_token;")
+        .bind(("csrf_token", csrf_token))
+        .await
+        .map_err(|e| ServerFnError::new(format!("Failed to delete OAuth state: {}", e)))?
+        .take(0)
+        .map_err(|e| ServerFnError::new(format!("Failed to parse result: {}", e)))?;
+
     Ok(())
 }
 

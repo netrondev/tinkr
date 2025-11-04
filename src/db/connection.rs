@@ -94,7 +94,7 @@ pub async fn db_init() -> Result<Arc<Surreal<Any>>, AppError> {
 pub async fn db_seperate_connection() -> Result<Surreal<Any>, AppError> {
     let settings = settings::get_settings();
 
-    println!("Connecting to SurrealDB at {}", &settings.surrealdb_host);
+    tracing::trace!("Connecting to SurrealDB at {}", &settings.surrealdb_host);
 
     let db = surrealdb::engine::any::connect(&settings.surrealdb_host).await?;
 

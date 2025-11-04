@@ -379,6 +379,47 @@ impl AdapterUser {
 
         Ok(is_available)
     }
+
+    pub async fn get_user_by_oauth_id(
+        oauth_id: &str,
+        provider: &crate::auth::oauth::OAuthProvider,
+    ) -> Result<Self, AppError> {
+        let client = db_init().await?;
+
+        let mut result = client
+            .query("SELECT VALUE ->links->user FROM oauth_account WHERE provider_account_id = $oauth_id AND provider = $provider LIMIT 1;")
+            .bind(("oauth_id", oauth_id.to_string()))
+            .bind(("provider", provider.as_str().to_string()))
+            .await?;
+
+        let user_ids: Option<Vec<RecordId>> = result.take(0)?;
+
+        if let Some(ids) = user_ids {
+            if let Some(user_id) = ids.first() {
+                return Self::get_user(user_id.clone()).await;
+            }
+        }
+
+        Err(AppError::AuthError("User not found".into()))
+    }
+
+    pub async fn link_oauth_account(
+        user_id: &RecordId,
+        oauth_id: &str,
+        provider: &crate::auth::oauth::OAuthProvider,
+    ) -> Result<(), AppError> {
+        let client = db_init().await?;
+
+        let _: Option<RecordId> = client
+            .query("CREATE oauth_account CONTENT { provider_account_id: $oauth_id, provider: $provider, user: $user_id };")
+            .bind(("oauth_id", oauth_id.to_string()))
+            .bind(("provider", provider.as_str().to_string()))
+            .bind(("user_id", user_id.clone()))
+            .await?
+            .take(0)?;
+
+        Ok(())
+    }
 }
 
 #[server]

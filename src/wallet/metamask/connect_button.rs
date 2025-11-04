@@ -124,8 +124,6 @@ pub fn WalletConnectButton() -> impl IntoView {
         spawn_local(async move {
             let mut w = wallet.get_value();
 
-            println!("Connecting to wallet...");
-
             // Clear any existing error and set loading state
             w.state.error = None;
             w.state.loading = true;

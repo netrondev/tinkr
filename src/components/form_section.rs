@@ -14,9 +14,7 @@ pub fn FormSection(
 
     view! {
         <div class=final_class>
-            <h3 class="text-lg font-medium text-neutral-900 dark:text-neutral-100 mb-4">
-                {title}
-            </h3>
+            <h3 class="text-lg font-medium text-neutral-900 dark:text-neutral-100 mb-4">{title}</h3>
             {children()}
         </div>
     }
@@ -42,11 +40,7 @@ pub fn FormGrid(
         None => base_class.to_string(),
     };
 
-    view! {
-        <div class=final_class>
-            {children()}
-        </div>
-    }
+    view! { <div class=final_class>{children()}</div> }
 }
 
 #[component]
@@ -60,9 +54,5 @@ pub fn FormActions(
         None => base_class.to_string(),
     };
 
-    view! {
-        <div class=final_class>
-            {children()}
-        </div>
-    }
+    view! { <div class=final_class>{children()}</div> }
 }

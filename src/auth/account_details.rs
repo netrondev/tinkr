@@ -86,184 +86,190 @@ pub fn AccountForm() -> impl IntoView {
             <Transition>
                 {move || match details.get() {
                     None => view! { <p>"Loading..."</p> }.into_any(),
-                    Some(delivery_details) => view! {
-                        <div class="grid grid-cols-12 gap-5">
-                        <FormField
-                            label="First Name".to_string()
-                            class="col-span-6".to_string()
-                        >
-                            <input
-                                value=delivery_details.first_name.clone()
-                                placeholder="First Name".to_string()
-                                class=input_class_default()
-                                on:change=move |ev| {
-                                    let value = event_target_value(&ev);
-                                    details.update(|d| {
-                                        if let Some(delivery) = d {
-                                            delivery.first_name = Some(value);
+                    Some(delivery_details) => {
+                        view! {
+                            <div class="grid grid-cols-12 gap-5">
+                                <FormField
+                                    label="First Name".to_string()
+                                    class="col-span-6".to_string()
+                                >
+                                    <input
+                                        value=delivery_details.first_name.clone()
+                                        placeholder="First Name".to_string()
+                                        class=input_class_default()
+                                        on:change=move |ev| {
+                                            let value = event_target_value(&ev);
+                                            details
+                                                .update(|d| {
+                                                    if let Some(delivery) = d {
+                                                        delivery.first_name = Some(value);
+                                                    }
+                                                });
                                         }
-                                    });
-                                }
-                            />
-                        </FormField>
+                                    />
+                                </FormField>
 
-                          <FormField
-                            label="Last Name".to_string()
-                            class="col-span-6".to_string()
-                        >
-                            <input
-                                value=delivery_details.last_name.clone()
-                                placeholder="Last Name".to_string()
-                                class=input_class_default()
-                                on:change=move |ev| {
-                                    let value = event_target_value(&ev);
-                                    details.update(|d| {
-                                        if let Some(delivery) = d {
-                                            delivery.last_name = Some(value);
+                                <FormField
+                                    label="Last Name".to_string()
+                                    class="col-span-6".to_string()
+                                >
+                                    <input
+                                        value=delivery_details.last_name.clone()
+                                        placeholder="Last Name".to_string()
+                                        class=input_class_default()
+                                        on:change=move |ev| {
+                                            let value = event_target_value(&ev);
+                                            details
+                                                .update(|d| {
+                                                    if let Some(delivery) = d {
+                                                        delivery.last_name = Some(value);
+                                                    }
+                                                });
                                         }
-                                    });
-                                }
-                            />
-                        </FormField>
+                                    />
+                                </FormField>
 
-                        <FormField
-                            label="Email".to_string()
-                            class="col-span-6".to_string()
-                        >
-                            <input
-                                value=delivery_details.email.to_string()
-                                placeholder="Email".to_string()
-                                class=input_class_default()
-                                on:change=move |ev| {
-                                    let value = event_target_value(&ev);
-                                    details.update(|d| {
-                                        if let Some(delivery) = d {
-                                            delivery.email = EmailAddress(value);
+                                <FormField label="Email".to_string() class="col-span-6".to_string()>
+                                    <input
+                                        value=delivery_details.email.to_string()
+                                        placeholder="Email".to_string()
+                                        class=input_class_default()
+                                        on:change=move |ev| {
+                                            let value = event_target_value(&ev);
+                                            details
+                                                .update(|d| {
+                                                    if let Some(delivery) = d {
+                                                        delivery.email = EmailAddress(value);
+                                                    }
+                                                });
                                         }
-                                    });
-                                }
-                            />
-                        </FormField>
+                                    />
+                                </FormField>
 
-                        <FormField
-                            label="Phone Number".to_string()
-                            class="col-span-6".to_string()
-                        >
-                            <input
-                                value=delivery_details.phone.clone()
-                                placeholder="Phone Number".to_string()
-                                class=input_class_default()
-                                on:change=move |ev| {
-                                    let value = event_target_value(&ev);
-                                    details.update(|d| {
-                                        if let Some(delivery) = d {
-                                            delivery.phone = Some(value);
+                                <FormField
+                                    label="Phone Number".to_string()
+                                    class="col-span-6".to_string()
+                                >
+                                    <input
+                                        value=delivery_details.phone.clone()
+                                        placeholder="Phone Number".to_string()
+                                        class=input_class_default()
+                                        on:change=move |ev| {
+                                            let value = event_target_value(&ev);
+                                            details
+                                                .update(|d| {
+                                                    if let Some(delivery) = d {
+                                                        delivery.phone = Some(value);
+                                                    }
+                                                });
                                         }
-                                    });
-                                }
-                            />
-                        </FormField>
+                                    />
+                                </FormField>
 
-                        <FormField
-                            label="Address".to_string()
-                            class="col-span-12".to_string()
-                        >
-                            <input
-                                value=delivery_details.address1.clone()
-                                placeholder="Address".to_string()
-                                class=input_class_default()
-                                on:change=move |ev| {
-                                    let value = event_target_value(&ev);
-                                    details.update(|d| {
-                                        if let Some(delivery) = d {
-                                            delivery.address1 = Some(value);
+                                <FormField
+                                    label="Address".to_string()
+                                    class="col-span-12".to_string()
+                                >
+                                    <input
+                                        value=delivery_details.address1.clone()
+                                        placeholder="Address".to_string()
+                                        class=input_class_default()
+                                        on:change=move |ev| {
+                                            let value = event_target_value(&ev);
+                                            details
+                                                .update(|d| {
+                                                    if let Some(delivery) = d {
+                                                        delivery.address1 = Some(value);
+                                                    }
+                                                });
                                         }
-                                    });
-                                }
-                            />
-                        </FormField>
+                                    />
+                                </FormField>
 
-                        <FormField
-                            label="Town/City".to_string()
-                            class="col-span-4".to_string()
-                        >
-                            <input
-                                value=delivery_details.address2.clone()
-                                placeholder="Town/City".to_string()
-                                class=input_class_default()
-                                on:change=move |ev| {
-                                    let value = event_target_value(&ev);
-                                    details.update(|d| {
-                                        if let Some(delivery) = d {
-                                            delivery.address2 = Some(value);
+                                <FormField
+                                    label="Town/City".to_string()
+                                    class="col-span-4".to_string()
+                                >
+                                    <input
+                                        value=delivery_details.address2.clone()
+                                        placeholder="Town/City".to_string()
+                                        class=input_class_default()
+                                        on:change=move |ev| {
+                                            let value = event_target_value(&ev);
+                                            details
+                                                .update(|d| {
+                                                    if let Some(delivery) = d {
+                                                        delivery.address2 = Some(value);
+                                                    }
+                                                });
                                         }
-                                    });
-                                }
-                            />
-                        </FormField>
+                                    />
+                                </FormField>
 
-                        <FormField
-                            label="Province/State".to_string()
-                            class="col-span-4".to_string()
-                        >
-                            <input
-                                class=input_class_default()
-                                value=delivery_details.address3.clone()
-                                placeholder="Province/State".to_string()
-                                on:change=move |ev| {
-                                    let value = event_target_value(&ev);
-                                    details.update(|d| {
-                                        if let Some(delivery) = d {
-                                            delivery.address3 = Some(value);
+                                <FormField
+                                    label="Province/State".to_string()
+                                    class="col-span-4".to_string()
+                                >
+                                    <input
+                                        class=input_class_default()
+                                        value=delivery_details.address3.clone()
+                                        placeholder="Province/State".to_string()
+                                        on:change=move |ev| {
+                                            let value = event_target_value(&ev);
+                                            details
+                                                .update(|d| {
+                                                    if let Some(delivery) = d {
+                                                        delivery.address3 = Some(value);
+                                                    }
+                                                });
                                         }
-                                    });
-                                }
-                            />
-                        </FormField>
+                                    />
+                                </FormField>
 
-
-                        <FormField
-                            label="Postcode".to_string()
-                            class="col-span-4".to_string()
-                        >
-                            <input
-                                class=input_class_default()
-                                value=delivery_details.postcode.clone()
-                                placeholder="Postcode".to_string()
-                                on:change=move |ev| {
-                                    let value = event_target_value(&ev);
-                                    details.update(|d| {
-                                        if let Some(delivery) = d {
-                                            delivery.postcode = Some(value);
+                                <FormField
+                                    label="Postcode".to_string()
+                                    class="col-span-4".to_string()
+                                >
+                                    <input
+                                        class=input_class_default()
+                                        value=delivery_details.postcode.clone()
+                                        placeholder="Postcode".to_string()
+                                        on:change=move |ev| {
+                                            let value = event_target_value(&ev);
+                                            details
+                                                .update(|d| {
+                                                    if let Some(delivery) = d {
+                                                        delivery.postcode = Some(value);
+                                                    }
+                                                });
                                         }
-                                    });
-                                }
-                            />
-                        </FormField>
+                                    />
+                                </FormField>
 
-                        <div class="col-span-12 flex justify-end gap-3 pt-10">
-                            {move || {
+                                <div class="col-span-12 flex justify-end gap-3 pt-10">
+                                    {move || {
+                                        let is_saving_bool = is_saving.get();
 
-                                let is_saving_bool = is_saving.get();
+                                        view! {
+                                            <Button
+                                                variant=BtnVariant::CallToAction
+                                                color=BtnColor::Primary
+                                                button_type="submit"
+                                                disabled=is_saving_bool
+                                                icon=ButtonIcon::Icon(phosphor_leptos::FLOPPY_DISK)
+                                            >
+                                                {move || {
+                                                    if is_saving.get() { "Saving..." } else { "Save Changes" }
+                                                }}
+                                            </Button>
+                                        }
+                                    }}
 
-                                view! {
-                                    <Button
-                                variant=BtnVariant::CallToAction
-                                color=BtnColor::Primary
-                                button_type="submit"
-                                disabled=is_saving_bool
-                                icon=ButtonIcon::Icon(phosphor_leptos::FLOPPY_DISK)
-                            >
-                                    {move || if is_saving.get() { "Saving..." } else { "Save Changes" }}
-                                </Button>
-                                }
-
-                            }}
-
-                        </div>
-                    </div>
-
-                 }.into_any(),
+                                </div>
+                            </div>
+                        }
+                            .into_any()
+                    }
                 }}
             </Transition>
 
@@ -273,13 +279,15 @@ pub fn AccountForm() -> impl IntoView {
                         <div class="mt-4 p-4 bg-green-100 text-green-800 rounded">
                             "Account details saved successfully!"
                         </div>
-                    }.into_any()
+                    }
+                        .into_any()
                 } else if let Some(Err(e)) = update_action.value().get() {
                     view! {
                         <div class="mt-4 p-4 bg-red-100 text-red-800 rounded">
                             "Error saving: " {e.to_string()}
                         </div>
-                    }.into_any()
+                    }
+                        .into_any()
                 } else {
                     view! { <div></div> }.into_any()
                 }

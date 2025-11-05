@@ -4,7 +4,10 @@ use leptos::prelude::*;
 #[component]
 pub fn Hero(title: &'static str, subtitle: &'static str, children: Children) -> impl IntoView {
     view! {
-        <section class="relative flex-0 flex items-center justify-center overflow-hidden h-full" style="height: 80vh; min-height: 600px;">
+        <section
+            class="relative flex-0 flex items-center justify-center overflow-hidden h-full"
+            style="height: 80vh; min-height: 600px;"
+        >
             // Particle animation background
             <div class="absolute inset-0 overflow-hidden">
                 <ParticleAnimation />
@@ -18,9 +21,7 @@ pub fn Hero(title: &'static str, subtitle: &'static str, children: Children) -> 
                 <p class="text-xl md:text-2xl text-neutral-600 dark:text-neutral-400 mb-12 max-w-3xl mx-auto">
                     {subtitle}
                 </p>
-                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-                    {children()}
-                </div>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center mb-12">{children()}</div>
             </div>
         </section>
     }
@@ -39,7 +40,7 @@ pub fn HeroButton(href: &'static str, variant: &'static str, children: Children)
     };
 
     view! {
-        <a href={href} class={class}>
+        <a href=href class=class>
             {children()}
         </a>
     }

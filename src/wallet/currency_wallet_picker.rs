@@ -69,5 +69,5 @@ mod tests {
 
 #[component]
 pub fn CurrencyWalletPicker() -> impl IntoView {
-    view! {<div>"Currency Wallet Picker"</div>}
+    view! { <div>"Currency Wallet Picker"</div> }
 }

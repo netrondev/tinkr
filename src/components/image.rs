@@ -430,42 +430,30 @@ pub fn Image(
     view! {
         <Transition fallback=move || {
             view! {
-                <div class="bg-neutral-900 animate-pulse" style={format!(
-                    "width: {}px; height: {}px;",
-                    width.unwrap_or(400),
-                    height.unwrap_or(300)
-                )}></div>
+                <div
+                    class="bg-neutral-900 animate-pulse"
+                    style=format!(
+                        "width: {}px; height: {}px;",
+                        width.unwrap_or(400),
+                        height.unwrap_or(300),
+                    )
+                ></div>
             }
         }>
 
-                {move || {
-                    let src = final_src();
-                    let clas = img_class();
-                    view! {
-                        <img
-                            src=src
-                            // alt=alt.clone().unwrap_or_else(|| "Image".to_string())
-                            class=clas
-                            loading="lazy"
-                            fetchpriority="high"
-                            // loading=loading_attr
-                            // width=width.map(|w| w.to_string())
-                            // height=height.map(|h| h.to_string())
-                            // on:load=move |_| {
-                            //     set_is_loading.set(false);
-                            // }
-                            // on:error=move |_| {
-                            //     if !has_error.get() {
-                            //         set_has_error.set(true);
-                            //         if fallback_src_clone2.is_some() {
-                            //             // Trigger re-render with fallback
-                            //             set_current_src.set(fallback_src_clone2.clone().unwrap());
-                            //         }
-                            //     }
-                            // }
-                        />
-                    }
-                }}
+            {move || {
+                let src = final_src();
+                let clas = img_class();
+                view! {
+                    <img
+                        src=src
+                        // alt=alt.clone().unwrap_or_else(|| "Image".to_string())
+                        class=clas
+                        loading="lazy"
+                        fetchpriority="high"
+                    />
+                }
+            }}
 
         </Transition>
     }
@@ -525,7 +513,7 @@ pub fn ImageIPFSold(
 
     view! {
         <img
-            src={move || file_url()}
+            src=move || file_url()
             alt=alt.clone().unwrap_or_else(|| "Image".to_string())
             class=class.clone().unwrap_or_else(|| "w-full h-full object-cover".to_string())
             loading="lazy"

@@ -24,22 +24,14 @@ use crate::{
 
 #[component]
 pub fn SettingsRouter() -> impl IntoView {
-    view! {<div>
+    view! {
+        <div>
 
             <Routes fallback=|| "Page not found.".into_view()>
                 <Route path=path!("/settings") view=SettingsHome />
-                <Route
-                    path=path!("/settings/keys")
-                    view=KeysControl
-                />
-                <Route
-                    path=path!("/settings/organizations")
-                    view=OrganizationList
-                />
-                <Route
-                    path=path!("/users/organizations/new")
-                    view=NewOrganizationForm
-                />
+                <Route path=path!("/settings/keys") view=KeysControl />
+                <Route path=path!("/settings/organizations") view=OrganizationList />
+                <Route path=path!("/users/organizations/new") view=NewOrganizationForm />
             </Routes>
         </div>
     }

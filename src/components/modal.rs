@@ -68,7 +68,12 @@ pub fn Modal(
 
     view! {
         <Show when=move || visible.get() fallback=|| ()>
-            <div class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+            <div
+                class="fixed inset-0 z-50 overflow-y-auto"
+                aria-labelledby="modal-title"
+                role="dialog"
+                aria-modal="true"
+            >
                 <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                     <div
                         class="fixed inset-0 bg-neutral-500/30 backdrop-blur-lg transition-opacity"
@@ -76,16 +81,22 @@ pub fn Modal(
                         on:click=close_modal
                     ></div>
 
-                    <div class=tw_merge!("inline-block align-top bg-white dark:bg-neutral-800 rounded-lg container text-left overflow-hidden shadow-xl transform sm:my-8 sm:align-middle {} w-full shadow-xl", size_class)>
+                    <div class=tw_merge!(
+                        "inline-block align-top bg-white dark:bg-neutral-800 rounded-lg container text-left overflow-hidden shadow-xl transform sm:my-8 sm:align-middle {} w-full shadow-xl", size_class
+                    )>
                         <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative dark:bg-black bg-white rounded-md">
-                            {title.as_ref().map(|t| {
-                                view! {
-                                    <h3 class="text-lg leading-6 font-medium text-neutral-900 dark:text-neutral-100 mb-4" id="modal-title">
-                                        {t.clone()}
-                                    </h3>
-                                }
-                            })}
-                            {children()}
+                            {title
+                                .as_ref()
+                                .map(|t| {
+                                    view! {
+                                        <h3
+                                            class="text-lg leading-6 font-medium text-neutral-900 dark:text-neutral-100 mb-4"
+                                            id="modal-title"
+                                        >
+                                            {t.clone()}
+                                        </h3>
+                                    }
+                                })} {children()}
                         </div>
                     </div>
                 </div>
@@ -99,7 +110,5 @@ pub fn ModalProvider(children: Children) -> impl IntoView {
     let modals = RwSignal::new(vec![] as Vec<(usize, ModalState)>);
     provide_context(modals);
 
-    view! {
-        {children()}
-    }
+    view! { {children()} }
 }

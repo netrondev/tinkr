@@ -29,46 +29,55 @@ pub fn NavItemList(links: Vec<NavItem>) -> impl IntoView {
     let nav_items = StoredValue::new(links);
 
     view! {
-     <For
-         each=move || {
-             let current_path = pathname();
-             nav_items.get_value().into_iter().map(move |item| {
-                 (item, current_path.clone())
-             }).collect::<Vec<_>>()
-         }
-         key=|(item, path)| format!("{:#?}-{}", item, path)
-         children=move |(item, current_path)| {
-             match item {
-                 NavItem::Link(item) => {
-                     let href = item.url.clone();
-                     let href2 = item.url.clone();
-                     let is_active = current_path == href;
+        <For
+            each=move || {
+                let current_path = pathname();
+                nav_items
+                    .get_value()
+                    .into_iter()
+                    .map(move |item| { (item, current_path.clone()) })
+                    .collect::<Vec<_>>()
+            }
+            key=|(item, path)| format!("{:#?}-{}", item, path)
+            children=move |(item, current_path)| {
+                match item {
+                    NavItem::Link(item) => {
+                        {
+                            let href = item.url.clone();
+                            let href2 = item.url.clone();
+                            let is_active = current_path == href;
 
-                     view! {
-                         <Button
-                             variant=BtnVariant::CallToAction
-                             icon=item.icon.clone()
-                             state=if is_active { BtnState::Active } else { BtnState::Default }
-                             color=if is_active { BtnColor::Primary } else { BtnColor::Neutral }
-                             on:click=move |ev: web_sys::MouseEvent| {
-                                 ev.prevent_default();
-                                 window().location().set_href(&item.url).unwrap();
-                             }
-                             href={href2.clone()}
-                         >
-                             {item.name}
-                         </Button>
-                     }
-                 }.into_any(),
-                 NavItem::Divider => view! {
-                     <div />
-                 }.into_any(),
-                 NavItem::Gap => view! {
-                     <div class="h-2 flex-1" />
-                 }.into_any(),
-             }
-         }
-     />
+                            view! {
+                                <Button
+                                    variant=BtnVariant::CallToAction
+                                    icon=item.icon.clone()
+                                    state=if is_active {
+                                        BtnState::Active
+                                    } else {
+                                        BtnState::Default
+                                    }
+                                    color=if is_active {
+                                        BtnColor::Primary
+                                    } else {
+                                        BtnColor::Neutral
+                                    }
+                                    on:click=move |ev: web_sys::MouseEvent| {
+                                        ev.prevent_default();
+                                        window().location().set_href(&item.url).unwrap();
+                                    }
+                                    href=href2.clone()
+                                >
+                                    {item.name}
+                                </Button>
+                            }
+                        }
+                            .into_any()
+                    }
+                    NavItem::Divider => view! { <div /> }.into_any(),
+                    NavItem::Gap => view! { <div class="h-2 flex-1" /> }.into_any(),
+                }
+            }
+        />
     }
 }
 
@@ -126,9 +135,11 @@ pub fn SideBar(links: Vec<NavItem>) -> impl IntoView {
                                 <For
                                     each=move || {
                                         let current_path = pathname();
-                                        nav_items.get_value().into_iter().map(move |item| {
-                                            (item, current_path.clone())
-                                        }).collect::<Vec<_>>()
+                                        nav_items
+                                            .get_value()
+                                            .into_iter()
+                                            .map(move |item| { (item, current_path.clone()) })
+                                            .collect::<Vec<_>>()
                                     }
                                     key=|(item, path)| format!("{:#?}-{}", item, path)
                                     children=move |(item, current_path)| {
@@ -136,29 +147,31 @@ pub fn SideBar(links: Vec<NavItem>) -> impl IntoView {
                                             NavItem::Link(link) => current_path == link.url,
                                             _ => false,
                                         };
-
                                         match item {
-                                            NavItem::Link(link) => view! {
-                                                <Tooltip label=link.name.clone() align=Align::Right>
-                                                    <Button
-                                                        icon=link.icon.clone()
-                                                        state=MaybeProp::from(if is_active { BtnState::Active } else { BtnState::Default })
-                                                        href=link.url.clone()
-                                                        variant=BtnVariant::Square
-                                                        on_click=Callback::new(move |_| set_is_mobile_open.set(false))
-                                                    />
-                                                </Tooltip>
-                                            }.into_any(),
-                                            NavItem::Divider => view! {
-                                                <div />
-                                            }.into_any(),
-                                            NavItem::Gap => view! {
-                                                <div class="flex-1 h-full" />
-                                            }.into_any(),
+                                            NavItem::Link(link) => {
+
+                                                view! {
+                                                    <Tooltip label=link.name.clone() align=Align::Right>
+                                                        <Button
+                                                            icon=link.icon.clone()
+                                                            state=MaybeProp::from(
+                                                                if is_active { BtnState::Active } else { BtnState::Default },
+                                                            )
+                                                            href=link.url.clone()
+                                                            variant=BtnVariant::Square
+                                                            on_click=Callback::new(move |_| {
+                                                                set_is_mobile_open.set(false)
+                                                            })
+                                                        />
+                                                    </Tooltip>
+                                                }
+                                                    .into_any()
+                                            }
+                                            NavItem::Divider => view! { <div /> }.into_any(),
+                                            NavItem::Gap => {
+                                                view! { <div class="flex-1 h-full" /> }.into_any()
+                                            }
                                         }
-
-
-
                                     }
                                 />
                             }
@@ -167,43 +180,48 @@ pub fn SideBar(links: Vec<NavItem>) -> impl IntoView {
                         <For
                             each=move || {
                                 let current_path = pathname();
-                                nav_items.get_value().into_iter().map(move |item| {
-                                    (item, current_path.clone())
-                                }).collect::<Vec<_>>()
+                                nav_items
+                                    .get_value()
+                                    .into_iter()
+                                    .map(move |item| { (item, current_path.clone()) })
+                                    .collect::<Vec<_>>()
                             }
                             key=|(item, path)| format!("{:#?}-{}", item, path)
                             children=move |(item, current_path)| {
-
-                                 let is_active = match item.clone() {
-                                            NavItem::Link(link) => current_path == link.url,
-                                            _ => false,
-                                        };
-
-
+                                let is_active = match item.clone() {
+                                    NavItem::Link(link) => current_path == link.url,
+                                    _ => false,
+                                };
                                 match item {
-                                    NavItem::Link(link) => view! {
+                                    NavItem::Link(link) => {
 
+                                        view! {
                                             <Button
                                                 icon=link.icon.clone()
-                                                state=if is_active { BtnState::Active } else { BtnState::Default }
+                                                state=if is_active {
+                                                    BtnState::Active
+                                                } else {
+                                                    BtnState::Default
+                                                }
                                                 href=link.url.clone()
                                                 variant=BtnVariant::Default
                                                 class="w-full"
-                                                on_click=Callback::new(move |_| set_is_mobile_open.set(false))
+                                                on_click=Callback::new(move |_| {
+                                                    set_is_mobile_open.set(false)
+                                                })
                                             >
                                                 {link.name.clone()}
                                             </Button>
+                                        }
+                                            .into_any()
+                                    }
+                                    NavItem::Divider => {
 
-                                    }.into_any(),
-                                    NavItem::Divider => view! {
-                                        <div />
-                                    }.into_any(),
-                                    NavItem::Gap => view! {
-                                        <div class="h-2 flex-1" />
-                                    }.into_any(),
+                                        view! { <div /> }
+                                            .into_any()
+                                    }
+                                    NavItem::Gap => view! { <div class="h-2 flex-1" /> }.into_any(),
                                 }
-
-
                             }
                         />
                     </Show>
@@ -218,7 +236,9 @@ pub fn SideBar(links: Vec<NavItem>) -> impl IntoView {
                                             icon=ButtonIcon::Icon(SIDEBAR)
                                             icon_hover=ButtonIcon::Icon(ARROW_LINE_LEFT)
                                             variant=BtnVariant::Square
-                                            on_click=Callback::new(move |_| set_is_wide.set(!is_wide.get()))
+                                            on_click=Callback::new(move |_| {
+                                                set_is_wide.set(!is_wide.get())
+                                            })
                                         />
                                     }
                                 }

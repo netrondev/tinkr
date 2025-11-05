@@ -17,20 +17,18 @@ pub fn ProgressBar(progress: RwSignal<i64>) -> impl IntoView {
     view! {
         <div class="space-y-4">
 
-
             <div class="relative h-2 bg-neutral-700 rounded-full overflow-hidden">
                 <div
-                    class=move || format!(
-                        "absolute inset-y-0 left-0 bg-gradient-to-r from-blue-500 to-cyan-500 duration-200",
-
-                    )
+                    class=move || {
+                        format!(
+                            "absolute inset-y-0 left-0 bg-gradient-to-r from-blue-500 to-cyan-500 duration-200",
+                        )
+                    }
                     style:width=move || format!("{}%", progress.get())
                 ></div>
             </div>
 
-            <div class="text-neutral-400 text-sm">
-                Progress: {move || progress.get()}%
-            </div>
+            <div class="text-neutral-400 text-sm">Progress: {move || progress.get()}%</div>
         </div>
     }
 }

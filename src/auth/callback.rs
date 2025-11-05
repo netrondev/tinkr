@@ -121,7 +121,9 @@ pub fn AuthCallback() -> impl IntoView {
                                 <p class="text-lg font-medium text-neutral-900 dark:text-neutral-100">
                                     "Authentication successful!"
                                 </p>
-                                <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">"Redirecting..."</p>
+                                <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+                                    "Redirecting..."
+                                </p>
                             </div>
                         }
                             .into_any()
@@ -150,7 +152,9 @@ pub fn AuthCallback() -> impl IntoView {
                                     <p class="text-lg font-medium text-neutral-900 dark:text-neutral-100">
                                         "Authentication failed"
                                     </p>
-                                    <p class="mt-2 text-sm text-red-600 dark:text-red-400 break-words">{error}</p>
+                                    <p class="mt-2 text-sm text-red-600 dark:text-red-400 break-words">
+                                        {error}
+                                    </p>
                                     <p class="mt-4 text-sm text-neutral-600 dark:text-neutral-400">
                                         "Please try signing in again or contact support if the issue persists."
                                     </p>
@@ -319,7 +323,9 @@ pub fn VerifyEmailCallback() -> impl IntoView {
                                     <p class="text-lg font-medium text-neutral-900 dark:text-neutral-100">
                                         "Email verification failed"
                                     </p>
-                                    <p class="mt-2 text-sm text-red-600 dark:text-red-400 break-words">{error}</p>
+                                    <p class="mt-2 text-sm text-red-600 dark:text-red-400 break-words">
+                                        {error}
+                                    </p>
                                     <p class="mt-4 text-sm text-neutral-600 dark:text-neutral-400">
                                         "The verification link may have expired or is invalid. Please request a new verification email."
                                     </p>
@@ -437,7 +443,9 @@ pub fn OAuthCallback() -> impl IntoView {
                                 <p class="text-lg font-medium text-neutral-900 dark:text-neutral-100">
                                     "Authentication successful!"
                                 </p>
-                                <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">"Redirecting..."</p>
+                                <p class="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+                                    "Redirecting..."
+                                </p>
                             </div>
                         }
                             .into_any()
@@ -466,7 +474,9 @@ pub fn OAuthCallback() -> impl IntoView {
                                     <p class="text-lg font-medium text-neutral-900 dark:text-neutral-100">
                                         "Authentication failed"
                                     </p>
-                                    <p class="mt-2 text-sm text-red-600 dark:text-red-400 break-words">{error}</p>
+                                    <p class="mt-2 text-sm text-red-600 dark:text-red-400 break-words">
+                                        {error}
+                                    </p>
                                     <p class="mt-4 text-sm text-neutral-600 dark:text-neutral-400">
                                         "Please try signing in again or contact support if the issue persists."
                                     </p>

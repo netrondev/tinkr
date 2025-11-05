@@ -330,7 +330,9 @@ pub fn LogoutPage() -> impl IntoView {
         <div class="flex items-center justify-center min-h-screen">
             <div class="text-center">
                 <h2 class="text-xl font-semibold mb-2">"Logging out..."</h2>
-                <p class="text-neutral-600 dark:text-neutral-400">"You will be redirected shortly."</p>
+                <p class="text-neutral-600 dark:text-neutral-400">
+                    "You will be redirected shortly."
+                </p>
             </div>
         </div>
     }

@@ -13,15 +13,13 @@ pub fn AnimatedDemo(title: &'static str, icon: IconData, children: Children) -> 
             // Header
             <div class="relative z-10 flex items-center gap-3 mb-6">
                 <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-neutral-700 to-neutral-800 flex items-center justify-center">
-                    <Icon icon={icon} size="20px" color="white" />
+                    <Icon icon=icon size="20px" color="white" />
                 </div>
                 <h3 class="text-lg font-semibold text-neutral-100">{title}</h3>
             </div>
 
             // Demo content
-            <div class="relative z-10">
-                {children()}
-            </div>
+            <div class="relative z-10">{children()}</div>
         </div>
     }
 }
@@ -33,35 +31,35 @@ pub fn WebGLDemo() -> impl IntoView {
             <style>
                 {r#"
                 @keyframes rotate3d {
-                    0% {
-                        transform: rotateX(0deg) rotateY(0deg);
-                    }
-                    100% {
-                        transform: rotateX(0deg) rotateY(360deg);
-                    }
+                   0% {
+                       transform: rotateX(0deg) rotateY(0deg);
+                   }
+                   100% {
+                       transform: rotateX(0deg) rotateY(360deg);
+                   }
                 }
                 @keyframes glow-pulse {
-                    0%, 100% {
-                        opacity: 0.3;
-                        transform: scale(1);
-                    }
-                    50% {
-                        opacity: 0.8;
-                        transform: scale(1.1);
-                    }
+                   0%, 100% {
+                       opacity: 0.3;
+                       transform: scale(1);
+                   }
+                   50% {
+                       opacity: 0.8;
+                       transform: scale(1.1);
+                   }
                 }
                 .perspective-1000 {
-                    perspective: 1000px;
+                   perspective: 1000px;
                 }
                 .preserve-3d {
-                    transform-style: preserve-3d;
+                   transform-style: preserve-3d;
                 }
                 .face {
-                    position: absolute;
-                    width: 100%;
-                    height: 100%;
-                    backface-visibility: hidden;
-                    border: 1px solid rgba(255, 255, 255, 0.1);
+                   position: absolute;
+                   width: 100%;
+                   height: 100%;
+                   backface-visibility: hidden;
+                   border: 1px solid rgba(255, 255, 255, 0.1);
                 }
                 "#}
             </style>
@@ -71,7 +69,12 @@ pub fn WebGLDemo() -> impl IntoView {
                 <svg class="w-full h-full opacity-10">
                     <defs>
                         <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" stroke-width="1"/>
+                            <path
+                                d="M 40 0 L 0 0 0 40"
+                                fill="none"
+                                stroke="white"
+                                stroke-width="1"
+                            />
                         </pattern>
                     </defs>
                     <rect width="100%" height="100%" fill="url(#grid)" />
@@ -79,49 +82,76 @@ pub fn WebGLDemo() -> impl IntoView {
             </div>
 
             <div class="absolute inset-0 flex items-center justify-center perspective-1000">
-                <div class="relative w-40 h-40 preserve-3d" style="animation: rotate3d 15s infinite linear">
+                <div
+                    class="relative w-40 h-40 preserve-3d"
+                    style="animation: rotate3d 15s infinite linear"
+                >
                     // Main cube with simplified faces
                     <div class="absolute w-full h-full preserve-3d">
                         // Front face
-                        <div class="face bg-gradient-to-br from-blue-500/40 to-purple-500/40 backdrop-blur-sm flex items-center justify-center"
-                             style="transform: translateZ(80px)">
+                        <div
+                            class="face bg-gradient-to-br from-blue-500/40 to-purple-500/40 backdrop-blur-sm flex items-center justify-center"
+                            style="transform: translateZ(80px)"
+                        >
                             <div class="text-white/80 text-4xl font-bold">3D</div>
                         </div>
                         // Back face
-                        <div class="face bg-gradient-to-br from-purple-500/40 to-pink-500/40 backdrop-blur-sm"
-                             style="transform: rotateY(180deg) translateZ(80px)" />
+                        <div
+                            class="face bg-gradient-to-br from-purple-500/40 to-pink-500/40 backdrop-blur-sm"
+                            style="transform: rotateY(180deg) translateZ(80px)"
+                        />
                         // Right face
-                        <div class="face bg-gradient-to-br from-cyan-500/40 to-blue-500/40 backdrop-blur-sm"
-                             style="transform: rotateY(90deg) translateZ(80px)" />
+                        <div
+                            class="face bg-gradient-to-br from-cyan-500/40 to-blue-500/40 backdrop-blur-sm"
+                            style="transform: rotateY(90deg) translateZ(80px)"
+                        />
                         // Left face
-                        <div class="face bg-gradient-to-br from-pink-500/40 to-purple-500/40 backdrop-blur-sm"
-                             style="transform: rotateY(-90deg) translateZ(80px)" />
+                        <div
+                            class="face bg-gradient-to-br from-pink-500/40 to-purple-500/40 backdrop-blur-sm"
+                            style="transform: rotateY(-90deg) translateZ(80px)"
+                        />
                         // Top face
-                        <div class="face bg-gradient-to-br from-purple-500/40 to-blue-500/40 backdrop-blur-sm"
-                             style="transform: rotateX(90deg) translateZ(80px)" />
+                        <div
+                            class="face bg-gradient-to-br from-purple-500/40 to-blue-500/40 backdrop-blur-sm"
+                            style="transform: rotateX(90deg) translateZ(80px)"
+                        />
                         // Bottom face
-                        <div class="face bg-gradient-to-br from-blue-500/40 to-cyan-500/40 backdrop-blur-sm"
-                             style="transform: rotateX(-90deg) translateZ(80px)" />
+                        <div
+                            class="face bg-gradient-to-br from-blue-500/40 to-cyan-500/40 backdrop-blur-sm"
+                            style="transform: rotateX(-90deg) translateZ(80px)"
+                        />
                     </div>
 
                     // Glowing corners
                     {[
-                        (-1, -1, -1), (1, -1, -1), (-1, 1, -1), (1, 1, -1),
-                        (-1, -1, 1), (1, -1, 1), (-1, 1, 1), (1, 1, 1)
-                    ].into_iter().enumerate().map(|(i, (x, y, z))| {
-                        let transform = format!(
-                            "translateX({}px) translateY({}px) translateZ({}px)",
-                            x * 80, y * 80, z * 80
-                        );
-                        let delay = format!("{}s", i as f32 * 0.2);
-                        view! {
-                            <div
-                                class="absolute w-4 h-4 bg-white rounded-full"
-                                style:transform=transform
-                                style:animation=format!("glow-pulse 2s infinite {}", delay)
-                            />
-                        }
-                    }).collect_view()}
+                        (-1, -1, -1),
+                        (1, -1, -1),
+                        (-1, 1, -1),
+                        (1, 1, -1),
+                        (-1, -1, 1),
+                        (1, -1, 1),
+                        (-1, 1, 1),
+                        (1, 1, 1),
+                    ]
+                        .into_iter()
+                        .enumerate()
+                        .map(|(i, (x, y, z))| {
+                            let transform = format!(
+                                "translateX({}px) translateY({}px) translateZ({}px)",
+                                x * 80,
+                                y * 80,
+                                z * 80,
+                            );
+                            let delay = format!("{}s", i as f32 * 0.2);
+                            view! {
+                                <div
+                                    class="absolute w-4 h-4 bg-white rounded-full"
+                                    style:transform=transform
+                                    style:animation=format!("glow-pulse 2s infinite {}", delay)
+                                />
+                            }
+                        })
+                        .collect_view()}
                 </div>
             </div>
 
@@ -149,36 +179,36 @@ pub fn RealtimeDataDemo() -> impl IntoView {
             <style>
                 {r#"
                 @keyframes candle-update {
-                    0% {
-                        opacity: 0.6;
-                    }
-                    100% {
-                        opacity: 1;
-                    }
+                   0% {
+                       opacity: 0.6;
+                   }
+                   100% {
+                       opacity: 1;
+                   }
                 }
                 @keyframes price-pulse {
-                    0%, 100% {
-                        transform: scale(1);
-                    }
-                    50% {
-                        transform: scale(1.02);
-                    }
+                   0%, 100% {
+                       transform: scale(1);
+                   }
+                   50% {
+                       transform: scale(1.02);
+                   }
                 }
                 .grid-line {
-                    stroke: rgba(255, 255, 255, 0.05);
-                    stroke-width: 1;
+                   stroke: rgba(255, 255, 255, 0.05);
+                   stroke-width: 1;
                 }
                 .price-line {
-                    stroke: #10b981;
-                    stroke-width: 2;
-                    fill: none;
-                    filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.5));
+                   stroke: #10b981;
+                   stroke-width: 2;
+                   fill: none;
+                   filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.5));
                 }
                 .candle-green {
-                    fill: #10b981;
+                   fill: #10b981;
                 }
                 .candle-red {
-                    fill: #ef4444;
+                   fill: #ef4444;
                 }
                 "#}
             </style>
@@ -192,8 +222,12 @@ pub fn RealtimeDataDemo() -> impl IntoView {
                             <span>Bitcoin</span>
                         </div>
                         <div class="flex items-baseline gap-3">
-                            <span class="text-2xl font-bold text-white" style="animation: price-pulse 2s infinite">
-                                ${move || {
+                            <span
+                                class="text-2xl font-bold text-white"
+                                style="animation: price-pulse 2s infinite"
+                            >
+                                $
+                                {move || {
                                     let price = current_price.get();
                                     let whole = price as u64;
                                     let decimal = ((price - whole as f64) * 100.0) as u64;
@@ -206,9 +240,7 @@ pub fn RealtimeDataDemo() -> impl IntoView {
                                 } else {
                                     "text-red-400 text-sm font-medium"
                                 }
-                            }>
-                                {move || format!("{:+.2}%", change_percent.get())}
-                            </span>
+                            }>{move || format!("{:+.2}%", change_percent.get())}</span>
                         </div>
                     </div>
                     <div class="text-right">
@@ -229,64 +261,75 @@ pub fn RealtimeDataDemo() -> impl IntoView {
                     </defs>
 
                     // Grid
-                    {(0..5).map(|i| {
-                        let y = i * 35;
-                        view! {
-                            <line x1="0" y1=y x2="400" y2=y class="grid-line" />
-                        }
-                    }).collect_view()}
-                    {(0..9).map(|i| {
-                        let x = i * 50;
-                        view! {
-                            <line x1=x y1="0" x2=x y2="140" class="grid-line" />
-                        }
-                    }).collect_view()}
+                    {(0..5)
+                        .map(|i| {
+                            let y = i * 35;
+                            view! { <line x1="0" y1=y x2="400" y2=y class="grid-line" /> }
+                        })
+                        .collect_view()}
+                    {(0..9)
+                        .map(|i| {
+                            let x = i * 50;
+                            view! { <line x1=x y1="0" x2=x y2="140" class="grid-line" /> }
+                        })
+                        .collect_view()}
 
                     // Candlesticks
-                    {(0..20).map(|i| {
-                        let x = i * 20 + 10;
-                        let height = 20 + (i * 7 % 30);
-                        let y = 70 - height / 2;
-                        let is_green = i % 3 != 0;
-                        let wick_top = y - 10;
-                        let wick_bottom = y + height + 10;
+                    {(0..20)
+                        .map(|i| {
+                            let x = i * 20 + 10;
+                            let height = 20 + (i * 7 % 30);
+                            let y = 70 - height / 2;
+                            let is_green = i % 3 != 0;
+                            let wick_top = y - 10;
+                            let wick_bottom = y + height + 10;
 
-                        view! {
-                            <g style=format!("animation: candle-update 0.5s ease-out {}s", i as f32 * 0.05)>
-                                // Wick
-                                <line
-                                    x1=x
-                                    y1=wick_top
-                                    x2=x
-                                    y2=wick_bottom
-                                    stroke=if is_green { "#10b981" } else { "#ef4444" }
-                                    stroke-width="1"
-                                />
-                                // Candle body
-                                <rect
-                                    x=x - 4
-                                    y=y
-                                    width="8"
-                                    height=height
-                                    class=if is_green { "candle-green" } else { "candle-red" }
-                                    rx="1"
-                                />
-                            </g>
-                        }
-                    }).collect_view()}
+                            view! {
+                                <g style=format!(
+                                    "animation: candle-update 0.5s ease-out {}s",
+                                    i as f32 * 0.05,
+                                )>
+                                    // Wick
+                                    <line
+                                        x1=x
+                                        y1=wick_top
+                                        x2=x
+                                        y2=wick_bottom
+                                        stroke=if is_green { "#10b981" } else { "#ef4444" }
+                                        stroke-width="1"
+                                    />
+                                    // Candle body
+                                    <rect
+                                        x=x - 4
+                                        y=y
+                                        width="8"
+                                        height=height
+                                        class=if is_green { "candle-green" } else { "candle-red" }
+                                        rx="1"
+                                    />
+                                </g>
+                            }
+                        })
+                        .collect_view()}
 
                     // Moving average line
-                    <path
-                        d="M 0,80 Q 50,75 100,70 T 200,65 T 300,60 T 400,55"
-                        class="price-line"
-                    />
+                    <path d="M 0,80 Q 50,75 100,70 T 200,65 T 300,60 T 400,55" class="price-line" />
                     <path
                         d="M 0,80 Q 50,75 100,70 T 200,65 T 300,60 T 400,55 L 400,140 L 0,140 Z"
                         fill="url(#green-gradient)"
                     />
 
                     // Current price line
-                    <line x1="0" y1="55" x2="400" y2="55" stroke="#10b981" stroke-width="1" stroke-dasharray="5,5" opacity="0.5" />
+                    <line
+                        x1="0"
+                        y1="55"
+                        x2="400"
+                        y2="55"
+                        stroke="#10b981"
+                        stroke-width="1"
+                        stroke-dasharray="5,5"
+                        opacity="0.5"
+                    />
                 </svg>
             </div>
 
@@ -332,17 +375,17 @@ pub fn FileUploadDemo() -> impl IntoView {
 
             <div class="relative h-2 bg-neutral-700 rounded-full overflow-hidden">
                 <div
-                    class=move || format!(
-                        "absolute inset-y-0 left-0 bg-gradient-to-r from-blue-500 to-cyan-500 {}",
-                        if is_uploading.get() { "duration-[2000ms]" } else { "duration-200" }
-                    )
+                    class=move || {
+                        format!(
+                            "absolute inset-y-0 left-0 bg-gradient-to-r from-blue-500 to-cyan-500 {}",
+                            if is_uploading.get() { "duration-[2000ms]" } else { "duration-200" },
+                        )
+                    }
                     style:width=move || format!("{}%", progress.get())
                 ></div>
             </div>
 
-            <div class="text-neutral-400 text-sm">
-                Progress: {move || progress.get()}%
-            </div>
+            <div class="text-neutral-400 text-sm">Progress: {move || progress.get()}%</div>
         </div>
     }
 }
@@ -388,15 +431,19 @@ pub fn CompressionDemo() -> impl IntoView {
         <div class="space-y-4">
             <div class="flex items-center justify-between">
                 <div class="text-neutral-300">Original: 2.5 MB</div>
-                <div class="text-neutral-300">Compressed: {move || format!("{:.1} MB", size.get() as f32 * 0.025)}</div>
+                <div class="text-neutral-300">
+                    Compressed: {move || format!("{:.1} MB", size.get() as f32 * 0.025)}
+                </div>
             </div>
 
             <div class="relative h-16 bg-neutral-800 rounded-lg overflow-hidden">
                 <div
-                    class=move || format!(
-                        "absolute inset-y-0 left-0 bg-gradient-to-r from-orange-500 to-red-500 {}",
-                        if is_compressing.get() { "duration-[1500ms]" } else { "duration-300" }
-                    )
+                    class=move || {
+                        format!(
+                            "absolute inset-y-0 left-0 bg-gradient-to-r from-orange-500 to-red-500 {}",
+                            if is_compressing.get() { "duration-[1500ms]" } else { "duration-300" },
+                        )
+                    }
                     style:width=move || format!("{}%", size.get())
                 ></div>
             </div>

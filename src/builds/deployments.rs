@@ -169,7 +169,7 @@ pub fn DeploymentStatusComponent() -> impl IntoView {
                                             .into_iter()
                                             .take(10)
                                             .map(|deployment| {
-                                                view! { <DeploymentCard deployment=deployment/> }
+                                                view! { <DeploymentCard deployment=deployment /> }
                                             })
                                             .collect_view()}
                                     </div>
@@ -209,9 +209,7 @@ fn DeploymentCard(deployment: Deployment) -> impl IntoView {
             </div>
 
             <div class="text-sm text-neutral-400 space-y-1">
-                <div>
-                    "Started: " {deployment.created_at.clone()}
-                </div>
+                <div>"Started: " {deployment.created_at.clone()}</div>
                 {deployment
                     .finished_at
                     .as_ref()

@@ -137,9 +137,7 @@ where
 
                 // Description
                 <FormField>
-                    <Label for_id="description">
-                        "Description"
-                    </Label>
+                    <Label for_id="description">"Description"</Label>
                     <Textarea
                         id="description"
                         value=description.into()
@@ -151,24 +149,14 @@ where
 
                 // Logo
                 <FormField>
-                    <Label for_id="logo">
-                        "Organization Logo"
-                    </Label>
-
-
-
-
+                    <Label for_id="logo">"Organization Logo"</Label>
 
                     <ImageUpload
                         button_text="Upload Logo"
                         upload_endpoint="/api/upload-avatar"
                         current_image_url=Signal::derive(move || {
                             let url = logo_url.get();
-                            if url.trim().is_empty() {
-                                None
-                            } else {
-                                Some(url)
-                            }
+                            if url.trim().is_empty() { None } else { Some(url) }
                         })
                         on_upload=move |url| logo_url.set(url)
                     />
@@ -177,9 +165,7 @@ where
 
                 // Website
                 <FormField>
-                    <Label for_id="website">
-                        "Website"
-                    </Label>
+                    <Label for_id="website">"Website"</Label>
                     <Input
                         id="website"
                         r#type="url"

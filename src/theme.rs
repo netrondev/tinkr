@@ -251,10 +251,7 @@ pub fn ThemeToggle(tooltip_align: Align) -> impl IntoView {
     };
 
     view! {
-        <Tooltip
-            label="Toggle Theme".to_string()
-            align=tooltip_align
-        >
+        <Tooltip label="Toggle Theme".to_string() align=tooltip_align>
             <Button
                 on:click=toggle_theme
                 icon=ButtonIcon::Icon(SUN_HORIZON)

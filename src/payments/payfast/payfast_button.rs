@@ -70,52 +70,22 @@ pub fn PayFastButton(
             <input type="hidden" name="merchant_id" value=options.merchant_id />
             <input type="hidden" name="merchant_key" value=options.merchant_key />
 
-            <input
-                type="hidden"
-                id="paymentFirstName"
-                name="name_first"
-                value=payment_first_name
-            />
-            <input
-                type="hidden"
-                id="paymentLastName"
-                name="name_last"
-                value=payment_last_name
-            />
-            <input
-                type="hidden"
-                id="paymentEmail"
-                name="email_address"
-                value=payment_email
-            />
+            <input type="hidden" id="paymentFirstName" name="name_first" value=payment_first_name />
+            <input type="hidden" id="paymentLastName" name="name_last" value=payment_last_name />
+            <input type="hidden" id="paymentEmail" name="email_address" value=payment_email />
             <input
                 type="hidden"
                 id="paymentTelephone"
                 name="custom_int1"
                 value=payment_telephone.clone()
             />
-            <input
-                type="hidden"
-                id="paymentConfirmAmount"
-                name="amount"
-                value=amount_formatted
-            />
+            <input type="hidden" id="paymentConfirmAmount" name="amount" value=amount_formatted />
 
             <input type="hidden" name="item_name" value="ScratchFixPro" />
             <input type="hidden" name="item_description" value="PaintKit Order" />
 
-            <input
-                type="hidden"
-                id="paymentUuid"
-                name="custom_str1"
-                value=payment_uuid
-            />
-            <input
-                type="hidden"
-                id="address"
-                name="custom_str2"
-                value=full_address
-            />
+            <input type="hidden" id="paymentUuid" name="custom_str1" value=payment_uuid />
+            <input type="hidden" id="address" name="custom_str2" value=full_address />
             <input type="hidden" id="city" name="custom_str3" value=city />
             <input
                 type="hidden"
@@ -123,38 +93,14 @@ pub fn PayFastButton(
                 name="custom_str4"
                 value=payment_telephone
             />
-            <input
-                type="hidden"
-                id="postal_code"
-                name="custom_str5"
-                value=postal_code
-            />
+            <input type="hidden" id="postal_code" name="custom_str5" value=postal_code />
 
-            <input
-                type="hidden"
-                name="return_url"
-                value=return_url
-            />
-            <input
-                type="hidden"
-                name="cancel_url"
-                value=cancel_url
-            />
-            <input
-                type="hidden"
-                name="notify_url"
-                value=notify_url
-            />
+            <input type="hidden" name="return_url" value=return_url />
+            <input type="hidden" name="cancel_url" value=cancel_url />
+            <input type="hidden" name="notify_url" value=notify_url />
 
-            <button
-                id="payment"
-                class="rounded bg-blue-900 p-4 text-white hover:bg-blue-800"
-            >
-                {move || if sandbox {
-                    "PAYMENT sandbox"
-                } else {
-                    "PAYMENT"
-                }}
+            <button id="payment" class="rounded bg-blue-900 p-4 text-white hover:bg-blue-800">
+                {move || if sandbox { "PAYMENT sandbox" } else { "PAYMENT" }}
             </button>
         </form>
     }

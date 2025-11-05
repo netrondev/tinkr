@@ -208,12 +208,7 @@ pub fn ProfileSection(user: AdapterUser) -> impl IntoView {
                 // Name field
                 <FormField label="Name" label_for="name">
                     <div class="relative">
-                        <Input
-                            id="name"
-                            r#type=InputType::Text
-                            value=name
-                            required=true
-                        />
+                        <Input id="name" r#type=InputType::Text value=name required=true />
                         {
                             let original_name_view = original_name.clone();
                             move || {
@@ -222,50 +217,61 @@ pub fn ProfileSection(user: AdapterUser) -> impl IntoView {
                                         <div class="absolute right-2 top-1/2 -translate-y-1/2">
                                             <div class="animate-spin h-4 w-4 border-2 border-neutral-300 border-t-neutral-600 rounded-full"></div>
                                         </div>
-                                    }.into_any()
+                                    }
+                                        .into_any()
                                 } else if let Some(available) = username_available.get() {
                                     if available && name.get() != **original_name_view {
-                                    view! {
-                                        <div class="absolute right-2 top-1/2 -translate-y-1/2">
-                                            <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                    }.into_any()
+                                        view! {
+                                            <div class="absolute right-2 top-1/2 -translate-y-1/2">
+                                                <svg
+                                                    class="h-5 w-5 text-green-500"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 20 20"
+                                                >
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                        clip-rule="evenodd"
+                                                    />
+                                                </svg>
+                                            </div>
+                                        }
+                                            .into_any()
+                                    } else {
+                                        view! { <div></div> }.into_any()
+                                    }
                                 } else {
                                     view! { <div></div> }.into_any()
                                 }
-                            } else {
-                                view! { <div></div> }.into_any()
                             }
-                        }}
+                        }
                     </div>
                     {
                         let original_name_view2 = original_name.clone();
                         move || {
                             if let Some(error) = username_error.get() {
+                                view! { <p class="mt-1 text-sm text-red-600">{error}</p> }
+                                    .into_any()
+                            } else if username_available.get() == Some(true)
+                                && name.get() != **original_name_view2
+                            {
                                 view! {
-                                    <p class="mt-1 text-sm text-red-600">{error}</p>
-                                }.into_any()
-                            } else if username_available.get() == Some(true) && name.get() != **original_name_view2 {
-                            view! {
-                                <p class="mt-1 text-sm text-green-600">"Username is available"</p>
-                            }.into_any()
-                        } else {
-                            view! { <div></div> }.into_any()
+                                    <p class="mt-1 text-sm text-green-600">
+                                        "Username is available"
+                                    </p>
+                                }
+                                    .into_any()
+                            } else {
+                                view! { <div></div> }.into_any()
+                            }
                         }
-                    }}
+                    }
                 </FormField>
 
                 // Email field
                 <FormField label="Email" label_for="email">
                     <div class="relative">
-                        <Input
-                            id="email"
-                            r#type=InputType::Email
-                            value=email
-                            required=true
-                        />
+                        <Input id="email" r#type=InputType::Email value=email required=true />
                         {
                             let original_email_view = original_email.clone();
                             move || {
@@ -274,23 +280,36 @@ pub fn ProfileSection(user: AdapterUser) -> impl IntoView {
                                         <div class="absolute right-2 top-1/2 -translate-y-1/2">
                                             <div class="animate-spin h-4 w-4 border-2 border-neutral-300 border-t-neutral-600 rounded-full"></div>
                                         </div>
-                                    }.into_any()
+                                    }
+                                        .into_any()
                                 } else if let Some(available) = email_available.get() {
-                                    if available && email.get() != **original_email_view && email_format_valid.get() {
-                                    view! {
-                                        <div class="absolute right-2 top-1/2 -translate-y-1/2">
-                                            <svg class="h-5 w-5 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                                            </svg>
-                                        </div>
-                                    }.into_any()
+                                    if available && email.get() != **original_email_view
+                                        && email_format_valid.get()
+                                    {
+                                        view! {
+                                            <div class="absolute right-2 top-1/2 -translate-y-1/2">
+                                                <svg
+                                                    class="h-5 w-5 text-green-500"
+                                                    fill="currentColor"
+                                                    viewBox="0 0 20 20"
+                                                >
+                                                    <path
+                                                        fill-rule="evenodd"
+                                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                        clip-rule="evenodd"
+                                                    />
+                                                </svg>
+                                            </div>
+                                        }
+                                            .into_any()
+                                    } else {
+                                        view! { <div></div> }.into_any()
+                                    }
                                 } else {
                                     view! { <div></div> }.into_any()
                                 }
-                            } else {
-                                view! { <div></div> }.into_any()
                             }
-                        }}
+                        }
                     </div>
                     {
                         let original_email_view2 = original_email.clone();
@@ -298,73 +317,90 @@ pub fn ProfileSection(user: AdapterUser) -> impl IntoView {
                             if let Some(error) = email_error.get() {
                                 if error == "Email is already in use" {
                                     view! {
-                                        <Alert severity=AlertSeverity::Error>
-                                            {error}
-                                        </Alert>
+                                        <Alert severity=AlertSeverity::Error>{error}</Alert>
                                         <Button
                                             variant=BtnVariant::CallToAction
                                             color=BtnColor::Primary
-                                        href="/login">"Login instead"</Button>
-
-                                    }.into_any()
+                                            href="/login"
+                                        >
+                                            "Login instead"
+                                        </Button>
+                                    }
+                                        .into_any()
                                 } else {
-                                    view! {<span class="text-sm text-red-600">{error}</span>}.into_any()
+
+                                    view! { <span class="text-sm text-red-600">{error}</span> }
+                                        .into_any()
                                 }
-                            } else if email_available.get() == Some(true) && email.get() != **original_email_view2 && email_format_valid.get() {
+                            } else if email_available.get() == Some(true)
+                                && email.get() != **original_email_view2 && email_format_valid.get()
+                            {
+                                view! {
+                                    <p class="mt-1 text-sm text-green-600">"Email is available"</p>
+                                }
+                                    .into_any()
+                            } else {
+                                view! { <div></div> }.into_any()
+                            }
+                        }
+                    }
+
+                    {match user.email_verified {
+                        Some(_) => {
                             view! {
-                                <p class="mt-1 text-sm text-green-600">"Email is available"</p>
-                            }.into_any()
-                        } else {
-                            view! { <div></div> }.into_any()
+                                <Alert severity=AlertSeverity::Success>"Email verified"</Alert>
+                            }
+                                .into_any()
+                        }
+                        None => {
+                            view! {
+                                <div class="space-y-2">
+                                    <Alert severity=AlertSeverity::Warning>
+                                        "Email not verified"
+                                    </Alert>
+                                    <div class="flex items-center gap-2">
+                                        <button
+                                            type="button"
+                                            on:click=move |_| {
+                                                send_verification.dispatch(());
+                                            }
+                                            disabled=sending_verification.get()
+                                            class="text-sm px-3 py-1.5 bg-neutral-600 hover:bg-neutral-700 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                        >
+                                            {move || {
+                                                if sending_verification.get() {
+                                                    "Sending..."
+                                                } else {
+                                                    "Send Verification Email"
+                                                }
+                                            }}
+                                        </button>
+                                        {move || {
+                                            if verification_sent.get() {
+                                                view! {
+                                                    <span class="text-sm text-green-600">
+                                                        "Verification email sent!"
+                                                    </span>
+                                                }
+                                                    .into_any()
+                                            } else if let Some(error) = verification_error.get() {
+                                                view! { <span class="text-sm text-red-600">{error}</span> }
+                                                    .into_any()
+                                            } else {
+                                                view! { <div></div> }.into_any()
+                                            }
+                                        }}
+                                    </div>
+                                </div>
+                            }
+                                .into_any()
                         }
                     }}
-
-                     {match user.email_verified {
-                         Some(_) => view! {
-                            <Alert severity=AlertSeverity::Success>
-                                "Email verified"
-                            </Alert>
-                         }.into_any(),
-                         None => view! {
-                            <div class="space-y-2">
-                                <Alert severity=AlertSeverity::Warning>
-                                    "Email not verified"
-                                </Alert>
-                                <div class="flex items-center gap-2">
-                                    <button
-                                        type="button"
-                                        on:click=move |_| { send_verification.dispatch(()); }
-                                        disabled=sending_verification.get()
-                                        class="text-sm px-3 py-1.5 bg-neutral-600 hover:bg-neutral-700 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
-                                    >
-                                        {move || if sending_verification.get() { "Sending..." } else { "Send Verification Email" }}
-                                    </button>
-                                    {move || {
-                                        if verification_sent.get() {
-                                            view! {
-                                                <span class="text-sm text-green-600">"Verification email sent!"</span>
-                                            }.into_any()
-                                        } else if let Some(error) = verification_error.get() {
-                                            view! {
-                                                <span class="text-sm text-red-600">{error}</span>
-                                            }.into_any()
-                                        } else {
-                                            view! { <div></div> }.into_any()
-                                        }
-                                    }}
-                                </div>
-                            </div>
-                         }.into_any()
-                     }}
                 </FormField>
-
-
 
                 // Success message
                 <Show when=move || success.get()>
-                     <Alert severity=AlertSeverity::Success>
-                        "Profile updated successfully"
-                    </Alert>
+                    <Alert severity=AlertSeverity::Success>"Profile updated successfully"</Alert>
                 </Show>
 
                 // Error message
@@ -372,8 +408,16 @@ pub fn ProfileSection(user: AdapterUser) -> impl IntoView {
                     <div class="rounded-md bg-red-50 p-4">
                         <div class="flex">
                             <div class="flex-shrink-0">
-                                <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+                                <svg
+                                    class="h-5 w-5 text-red-400"
+                                    viewBox="0 0 20 20"
+                                    fill="currentColor"
+                                >
+                                    <path
+                                        fill-rule="evenodd"
+                                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                        clip-rule="evenodd"
+                                    />
                                 </svg>
                             </div>
                             <div class="ml-3">

@@ -88,68 +88,80 @@ pub fn OrganizationEdit() -> impl IntoView {
 
     view! {
         <div class="max-w-2xl mx-auto px-4 py-8">
-            <Suspense fallback=move || view! { <p>"Loading organization..."</p> }>
+            <Suspense fallback=move || {
+                view! { <p>"Loading organization..."</p> }
+            }>
                 {move || {
-                    org_resource.get().map(|org_result| {
-                        match org_result {
-                            Ok(org) => {
-                                let org_id = org.id.clone();
+                    org_resource
+                        .get()
+                        .map(|org_result| {
+                            match org_result {
+                                Ok(org) => {
+                                    let org_id = org.id.clone();
+                                    let org_id_for_submit = org_id.clone();
+                                    let org_id_for_cancel = org_id.clone();
 
-                                let org_id_for_submit = org_id.clone();
-                                let org_id_for_cancel = org_id.clone();
+                                    view! {
+                                        <div>
+                                            <div class="mb-8">
+                                                <h1 class="text-2xl font-bold text-neutral-900 dark:text-white mb-2">
+                                                    "Edit Organization"
+                                                </h1>
+                                                <p class="text-neutral-600 dark:text-neutral-400">
+                                                    "Update your organization's information"
+                                                </p>
+                                            </div>
 
-                                view! {
-                                    <div>
-                                        <div class="mb-8">
-                                            <h1 class="text-2xl font-bold text-neutral-900 dark:text-white mb-2">
-                                                "Edit Organization"
-                                            </h1>
-                                            <p class="text-neutral-600 dark:text-neutral-400">
-                                                "Update your organization's information"
-                                            </p>
-                                        </div>
-
-                                        <div class="bg-white dark:bg-neutral-800 rounded-lg shadow dark:shadow-neutral-700 p-6">
-                                            <OrganizationForm
-                                                mode=OrganizationFormMode::Edit(org)
-                                                on_submit=move |form_data| {
-                                                    if let OrganizationFormData::Update(update_data) = form_data {
-                                                        update_action.dispatch((org_id_for_submit.clone(), update_data));
+                                            <div class="bg-white dark:bg-neutral-800 rounded-lg shadow dark:shadow-neutral-700 p-6">
+                                                <OrganizationForm
+                                                    mode=OrganizationFormMode::Edit(org)
+                                                    on_submit=move |form_data| {
+                                                        if let OrganizationFormData::Update(update_data) = form_data {
+                                                            update_action
+                                                                .dispatch((org_id_for_submit.clone(), update_data));
+                                                        }
                                                     }
-                                                }
-                                                on_cancel={
-                                                    let navigate = navigate.clone();
-                                                    move || navigate(&format!("/users/organizations/{}", org_id_for_cancel), Default::default())
-                                                }
-                                                is_submitting=is_submitting
-                                                submit_button_text="Save Changes"
-                                            />
+                                                    on_cancel={
+                                                        let navigate = navigate.clone();
+                                                        move || navigate(
+                                                            &format!("/users/organizations/{}", org_id_for_cancel),
+                                                            Default::default(),
+                                                        )
+                                                    }
+                                                    is_submitting=is_submitting
+                                                    submit_button_text="Save Changes"
+                                                />
 
-                                            // Error display
-                                            {move || {
-                                                if let Some(Err(e)) = update_action.value().get() {
-                                                    view! {
-                                                        <div class="mt-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4">
-                                                            <p class="text-red-800 dark:text-red-400">
-                                                                "Error updating organization: " {format!("{:?}", e)}
-                                                            </p>
-                                                        </div>
-                                                    }.into_any()
-                                                } else {
-                                                    view! {}.into_any()
-                                                }
-                                            }}
+                                                // Error display
+                                                {move || {
+                                                    if let Some(Err(e)) = update_action.value().get() {
+                                                        view! {
+                                                            <div class="mt-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4">
+                                                                <p class="text-red-800 dark:text-red-400">
+                                                                    "Error updating organization: " {format!("{:?}", e)}
+                                                                </p>
+                                                            </div>
+                                                        }
+                                                            .into_any()
+                                                    } else {
+                                                        view! {}.into_any()
+                                                    }
+                                                }}
+                                            </div>
                                         </div>
-                                    </div>
-                                }.into_any()
-                            },
-                            Err(err) => view! {
-                                <div class="bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded">
-                                    <p>"Error loading organization: " {err.to_string()}</p>
-                                </div>
-                            }.into_any()
-                        }
-                    })
+                                    }
+                                        .into_any()
+                                }
+                                Err(err) => {
+                                    view! {
+                                        <div class="bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded">
+                                            <p>"Error loading organization: " {err.to_string()}</p>
+                                        </div>
+                                    }
+                                        .into_any()
+                                }
+                            }
+                        })
                 }}
             </Suspense>
         </div>

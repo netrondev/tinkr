@@ -41,18 +41,10 @@ pub fn Heading(
         .to_class()
     };
 
-    view! {
-        <h1 class=classtext>
-            {children()}
-        </h1>
-    }
+    view! { <h1 class=classtext>{children()}</h1> }
 }
 
 #[component]
 pub fn SubHeading(children: Children) -> impl IntoView {
-    view! {
-        <p class="mt-1 text-md text-neutral-500 dark:text-neutral-400 mb-2">
-            {children()}
-        </p>
-    }
+    view! { <p class="mt-1 text-md text-neutral-500 dark:text-neutral-400 mb-2">{children()}</p> }
 }

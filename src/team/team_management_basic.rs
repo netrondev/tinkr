@@ -54,52 +54,59 @@ pub fn TeamManagement(organization_id: String) -> impl IntoView {
 
     view! {
         <div>
-            <h2 class="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
-                "Teams"
-            </h2>
+            <h2 class="text-lg font-semibold text-neutral-900 dark:text-white mb-4">"Teams"</h2>
 
-            <Suspense fallback=move || view! { <p class="text-neutral-600 dark:text-neutral-400">"Loading teams..."</p> }>
+            <Suspense fallback=move || {
+                view! { <p class="text-neutral-600 dark:text-neutral-400">"Loading teams..."</p> }
+            }>
                 {move || {
-                    teams_resource.get().map(|teams_result| {
-                        match teams_result {
-                            Ok(teams) => {
-                                if teams.is_empty() {
-                                    view! {
-                                        <div>
-                                            <p class="text-neutral-600 dark:text-neutral-400 mb-4">
-                                                "No teams yet."
-                                            </p>
-                                            <CreateTeamSection organization_id=organization_id.clone() />
-                                        </div>
-                                    }.into_any()
-                                } else {
-                                    view! {
-                                        <div>
-                                            <div class="mb-4">
-                                                <CreateTeamSection organization_id=organization_id.clone() />
+                    teams_resource
+                        .get()
+                        .map(|teams_result| {
+                            match teams_result {
+                                Ok(teams) => {
+                                    if teams.is_empty() {
+                                        view! {
+                                            <div>
+                                                <p class="text-neutral-600 dark:text-neutral-400 mb-4">
+                                                    "No teams yet."
+                                                </p>
+                                                <CreateTeamSection organization_id=organization_id
+                                                    .clone() />
                                             </div>
-                                            <div class="space-y-2">
-                                                <For
-                                                    each=move || teams.clone()
-                                                    key=|team| team.id.to_string()
-                                                    children=move |team| {
-                                                        view! {
-                                                            <TeamCard team=team />
+                                        }
+                                            .into_any()
+                                    } else {
+                                        view! {
+                                            <div>
+                                                <div class="mb-4">
+                                                    <CreateTeamSection organization_id=organization_id
+                                                        .clone() />
+                                                </div>
+                                                <div class="space-y-2">
+                                                    <For
+                                                        each=move || teams.clone()
+                                                        key=|team| team.id.to_string()
+                                                        children=move |team| {
+                                                            view! { <TeamCard team=team /> }
                                                         }
-                                                    }
-                                                />
+                                                    />
+                                                </div>
                                             </div>
-                                        </div>
-                                    }.into_any()
+                                        }
+                                            .into_any()
+                                    }
+                                }
+                                Err(err) => {
+                                    view! {
+                                        <p class="text-red-600 dark:text-red-400">
+                                            "Error loading teams: " {err.to_string()}
+                                        </p>
+                                    }
+                                        .into_any()
                                 }
                             }
-                            Err(err) => view! {
-                                <p class="text-red-600 dark:text-red-400">
-                                    "Error loading teams: " {err.to_string()}
-                                </p>
-                            }.into_any()
-                        }
-                    })
+                        })
                 }}
             </Suspense>
         </div>
@@ -122,9 +129,7 @@ fn CreateTeamSection(organization_id: String) -> impl IntoView {
 
     view! {
         <div class="bg-neutral-50 dark:bg-neutral-900 p-4 rounded-lg">
-            <h3 class="font-medium text-neutral-900 dark:text-white mb-3">
-                "Create New Team"
-            </h3>
+            <h3 class="font-medium text-neutral-900 dark:text-white mb-3">"Create New Team"</h3>
             <form on:submit=move |ev: web_sys::SubmitEvent| {
                 ev.prevent_default();
                 let name_value = name.get();
@@ -180,11 +185,16 @@ fn TeamCard(team: Team) -> impl IntoView {
                     <h3 class="font-medium text-neutral-900 dark:text-white">
                         {team.name.clone()}
                     </h3>
-                    {team.description.clone().map(|desc| view! {
-                        <p class="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
-                            {desc}
-                        </p>
-                    })}
+                    {team
+                        .description
+                        .clone()
+                        .map(|desc| {
+                            view! {
+                                <p class="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
+                                    {desc}
+                                </p>
+                            }
+                        })}
                 </div>
                 <button
                     on:click=move |_| show_members.update(|v| *v = !*v)
@@ -211,56 +221,65 @@ fn TeamMembersList(team_id: String) -> impl IntoView {
     );
 
     view! {
-        <Suspense fallback=move || view! { <p class="text-sm text-neutral-500">"Loading members..."</p> }>
+        <Suspense fallback=move || {
+            view! { <p class="text-sm text-neutral-500">"Loading members..."</p> }
+        }>
             {move || {
-                members_resource.get().map(|members_result| {
-                    match members_result {
-                        Ok(members) => {
-                            if members.is_empty() {
-                                view! {
-                                    <p class="text-sm text-neutral-500">
-                                        "No members in this team."
-                                    </p>
-                                }.into_any()
-                            } else {
-                                view! {
-                                    <div class="space-y-2">
-                                        <For
-                                            each=move || members.clone()
-                                            key=|(member, _)| member.id.to_string()
-                                            children=move |(member, user)| {
-                                                view! {
-                                                    <div class="flex items-center justify-between text-sm">
-                                                        <div>
-                                                            <span class="font-medium text-neutral-900 dark:text-white">
-                                                                {user.name.clone()}
-                                                            </span>
-                                                            <span class="text-neutral-600 dark:text-neutral-400 ml-2">
-                                                                {user.email.to_string()}
+                members_resource
+                    .get()
+                    .map(|members_result| {
+                        match members_result {
+                            Ok(members) => {
+                                if members.is_empty() {
+                                    view! {
+                                        <p class="text-sm text-neutral-500">
+                                            "No members in this team."
+                                        </p>
+                                    }
+                                        .into_any()
+                                } else {
+                                    view! {
+                                        <div class="space-y-2">
+                                            <For
+                                                each=move || members.clone()
+                                                key=|(member, _)| member.id.to_string()
+                                                children=move |(member, user)| {
+                                                    view! {
+                                                        <div class="flex items-center justify-between text-sm">
+                                                            <div>
+                                                                <span class="font-medium text-neutral-900 dark:text-white">
+                                                                    {user.name.clone()}
+                                                                </span>
+                                                                <span class="text-neutral-600 dark:text-neutral-400 ml-2">
+                                                                    {user.email.to_string()}
+                                                                </span>
+                                                            </div>
+                                                            <span class="text-xs text-neutral-500 dark:text-neutral-400">
+                                                                {match member.role {
+                                                                    TeamRole::Owner => "Owner",
+                                                                    TeamRole::Admin => "Admin",
+                                                                    TeamRole::Member => "Member",
+                                                                }}
                                                             </span>
                                                         </div>
-                                                        <span class="text-xs text-neutral-500 dark:text-neutral-400">
-                                                            {match member.role {
-                                                                TeamRole::Owner => "Owner",
-                                                                TeamRole::Admin => "Admin",
-                                                                TeamRole::Member => "Member",
-                                                            }}
-                                                        </span>
-                                                    </div>
+                                                    }
                                                 }
-                                            }
-                                        />
-                                    </div>
-                                }.into_any()
+                                            />
+                                        </div>
+                                    }
+                                        .into_any()
+                                }
+                            }
+                            Err(err) => {
+                                view! {
+                                    <p class="text-sm text-red-600 dark:text-red-400">
+                                        "Error loading members: " {err.to_string()}
+                                    </p>
+                                }
+                                    .into_any()
                             }
                         }
-                        Err(err) => view! {
-                            <p class="text-sm text-red-600 dark:text-red-400">
-                                "Error loading members: " {err.to_string()}
-                            </p>
-                        }.into_any()
-                    }
-                })
+                    })
             }}
         </Suspense>
     }

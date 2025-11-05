@@ -71,25 +71,39 @@ where
                                 if let Some(rpc) = selected_rpc.get() {
                                     view! {
                                         <>
-                                            {rpc.icon.clone().map(|icon| {
-                                                view! {
-                                                    <img
-                                                        src={format!("https://icons.llamao.fi/icons/chains/rsz_{}.jpg", icon)}
-                                                        alt={rpc.name.clone()}
-                                                        class="w-6 h-6 rounded-full object-cover"
-                                                        onerror="this.style.display='none'"
-                                                    />
-                                                }.into_any()
-                                            }).unwrap_or_else(|| view! {
-                                                <div class="w-6 h-6 rounded-full bg-neutral-300 dark:bg-neutral-600 flex items-center justify-center">
-                                                    <span class="text-xs font-bold">{rpc.name.chars().next().unwrap_or('?')}</span>
-                                                </div>
-                                            }.into_any())}
+                                            {rpc
+                                                .icon
+                                                .clone()
+                                                .map(|icon| {
+                                                    view! {
+                                                        <img
+                                                            src=format!(
+                                                                "https://icons.llamao.fi/icons/chains/rsz_{}.jpg",
+                                                                icon,
+                                                            )
+                                                            alt=rpc.name.clone()
+                                                            class="w-6 h-6 rounded-full object-cover"
+                                                            onerror="this.style.display='none'"
+                                                        />
+                                                    }
+                                                        .into_any()
+                                                })
+                                                .unwrap_or_else(|| {
+                                                    view! {
+                                                        <div class="w-6 h-6 rounded-full bg-neutral-300 dark:bg-neutral-600 flex items-center justify-center">
+                                                            <span class="text-xs font-bold">
+                                                                {rpc.name.chars().next().unwrap_or('?')}
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                        .into_any()
+                                                })}
                                             <span class="text-sm">
                                                 {format!("{} (Chain ID: {})", rpc.name, rpc.chain_id)}
                                             </span>
                                         </>
-                                    }.into_any()
+                                    }
+                                        .into_any()
                                 } else {
                                     view! { <></> }.into_any()
                                 }
@@ -156,26 +170,39 @@ where
                                                 }
                                             >
                                                 <div class="flex items-center space-x-3">
-                                                    {rpc.icon.clone().map(|icon| {
-                                                        view! {
-                                                            <img
-                                                                src={format!("https://icons.llamao.fi/icons/chains/rsz_{}.jpg", icon)}
-                                                                alt={rpc.name.clone()}
-                                                                class="w-8 h-8 rounded-full object-cover"
-                                                                onerror="this.style.display='none'"
-                                                            />
-                                                        }.into_any()
-                                                    }).unwrap_or_else(|| view! {
-                                                        <div class="w-8 h-8 rounded-full bg-neutral-300 dark:bg-neutral-600 flex items-center justify-center">
-                                                            <span class="text-xs font-bold">{rpc.name.chars().next().unwrap_or('?')}</span>
-                                                        </div>
-                                                    }.into_any())}
-                                                    <div class="flex-1">
+                                                    {rpc
+                                                        .icon
+                                                        .clone()
+                                                        .map(|icon| {
+                                                            view! {
+                                                                <img
+                                                                    src=format!(
+                                                                        "https://icons.llamao.fi/icons/chains/rsz_{}.jpg",
+                                                                        icon,
+                                                                    )
+                                                                    alt=rpc.name.clone()
+                                                                    class="w-8 h-8 rounded-full object-cover"
+                                                                    onerror="this.style.display='none'"
+                                                                />
+                                                            }
+                                                                .into_any()
+                                                        })
+                                                        .unwrap_or_else(|| {
+                                                            view! {
+                                                                <div class="w-8 h-8 rounded-full bg-neutral-300 dark:bg-neutral-600 flex items-center justify-center">
+                                                                    <span class="text-xs font-bold">
+                                                                        {rpc.name.chars().next().unwrap_or('?')}
+                                                                    </span>
+                                                                </div>
+                                                            }
+                                                                .into_any()
+                                                        })} <div class="flex-1">
                                                         <div class="font-medium">
                                                             {rpc.name.clone()} " - " {rpc.network.clone()}
                                                         </div>
                                                         <div class="text-xs text-neutral-500 dark:text-neutral-400">
-                                                            "Chain ID: " {rpc.chain_id} " • " {rpc.native_currency.clone()}
+                                                            "Chain ID: " {rpc.chain_id} " • "
+                                                            {rpc.native_currency.clone()}
                                                         </div>
                                                     </div>
                                                 </div>

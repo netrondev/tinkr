@@ -109,9 +109,7 @@ pub fn TeamManagement(organization_id: String) -> impl IntoView {
     view! {
         <div>
             <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold text-neutral-900 dark:text-white">
-                    "Teams"
-                </h2>
+                <h2 class="text-lg font-semibold text-neutral-900 dark:text-white">"Teams"</h2>
                 <button
                     on:click=move |_| show_create_form.set(true)
                     class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
@@ -120,60 +118,76 @@ pub fn TeamManagement(organization_id: String) -> impl IntoView {
                 </button>
             </div>
 
-            <Suspense fallback=move || view! { <p class="text-neutral-600 dark:text-neutral-400">"Loading teams..."</p> }>
+            <Suspense fallback=move || {
+                view! { <p class="text-neutral-600 dark:text-neutral-400">"Loading teams..."</p> }
+            }>
                 {move || {
-                    teams_resource.get().map(|teams_result| {
-                        match teams_result {
-                            Ok(teams) => {
-                                if teams.is_empty() {
-                                    view! {
-                                        <p class="text-neutral-600 dark:text-neutral-400">
-                                            "No teams yet. Create your first team to get started."
-                                        </p>
-                                    }.into_any()
-                                } else {
-                                    view! {
-                                        <div class="space-y-2">
-                                            <For
-                                                each=move || teams.clone()
-                                                key=|team| team.id.to_string()
-                                                children=move |team| {
-                                                    let team_clone = team.clone();
-                                                    view! {
-                                                        <div
-                                                            class="p-4 bg-neutral-50 dark:bg-neutral-900 rounded-lg cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800"
-                                                            on:click=move |_| selected_team.set(Some(team_clone.clone()))
-                                                        >
-                                                            <div class="flex justify-between items-center">
-                                                                <div>
-                                                                    <h3 class="font-medium text-neutral-900 dark:text-white">
-                                                                        {team.name.clone()}
-                                                                    </h3>
-                                                                    {team.description.clone().map(|desc| view! {
-                                                                        <p class="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
-                                                                            {desc}
-                                                                        </p>
-                                                                    })}
+                    teams_resource
+                        .get()
+                        .map(|teams_result| {
+                            match teams_result {
+                                Ok(teams) => {
+                                    if teams.is_empty() {
+                                        view! {
+                                            <p class="text-neutral-600 dark:text-neutral-400">
+                                                "No teams yet. Create your first team to get started."
+                                            </p>
+                                        }
+                                            .into_any()
+                                    } else {
+                                        view! {
+                                            <div class="space-y-2">
+                                                <For
+                                                    each=move || teams.clone()
+                                                    key=|team| team.id.to_string()
+                                                    children=move |team| {
+                                                        let team_clone = team.clone();
+                                                        view! {
+                                                            <div
+                                                                class="p-4 bg-neutral-50 dark:bg-neutral-900 rounded-lg cursor-pointer hover:bg-neutral-100 dark:hover:bg-neutral-800"
+                                                                on:click=move |_| {
+                                                                    selected_team.set(Some(team_clone.clone()))
+                                                                }
+                                                            >
+                                                                <div class="flex justify-between items-center">
+                                                                    <div>
+                                                                        <h3 class="font-medium text-neutral-900 dark:text-white">
+                                                                            {team.name.clone()}
+                                                                        </h3>
+                                                                        {team
+                                                                            .description
+                                                                            .clone()
+                                                                            .map(|desc| {
+                                                                                view! {
+                                                                                    <p class="text-sm text-neutral-600 dark:text-neutral-400 mt-1">
+                                                                                        {desc}
+                                                                                    </p>
+                                                                                }
+                                                                            })}
+                                                                    </div>
+                                                                    <span class="text-sm text-neutral-500 dark:text-neutral-400">
+                                                                        "Click to manage"
+                                                                    </span>
                                                                 </div>
-                                                                <span class="text-sm text-neutral-500 dark:text-neutral-400">
-                                                                    "Click to manage"
-                                                                </span>
                                                             </div>
-                                                        </div>
+                                                        }
                                                     }
-                                                }
-                                            />
-                                        </div>
-                                    }.into_any()
+                                                />
+                                            </div>
+                                        }
+                                            .into_any()
+                                    }
+                                }
+                                Err(err) => {
+                                    view! {
+                                        <p class="text-red-600 dark:text-red-400">
+                                            "Error loading teams: " {err.to_string()}
+                                        </p>
+                                    }
+                                        .into_any()
                                 }
                             }
-                            Err(err) => view! {
-                                <p class="text-red-600 dark:text-red-400">
-                                    "Error loading teams: " {err.to_string()}
-                                </p>
-                            }.into_any()
-                        }
-                    })
+                        })
                 }}
             </Suspense>
 
@@ -192,17 +206,21 @@ pub fn TeamManagement(organization_id: String) -> impl IntoView {
                 </div>
             </Show>
 
-            <Show when=move || selected_team.get().is_some()>
+            <Show when=move || {
+                selected_team.get().is_some()
+            }>
                 {move || {
-                    selected_team.get().map(|team| {
-                        view! {
-                            <TeamDetailView
-                                team=team
-                                on_close=move || selected_team.set(None)
-                                on_update=move || teams_resource.refetch()
-                            />
-                        }
-                    })
+                    selected_team
+                        .get()
+                        .map(|team| {
+                            view! {
+                                <TeamDetailView
+                                    team=team
+                                    on_close=move || selected_team.set(None)
+                                    on_update=move || teams_resource.refetch()
+                                />
+                            }
+                        })
                 }}
             </Show>
         </div>
@@ -219,20 +237,18 @@ fn CreateTeamForm(
     let description = RwSignal::new(String::new());
 
     view! {
-        <form on:submit=move |ev: SubmitEvent| {
-            ev.prevent_default();
-            let name_value = name.get();
-            let desc_value = description.get();
-
-            if !name_value.is_empty() {
-                let desc = if desc_value.is_empty() {
-                    None
-                } else {
-                    Some(desc_value)
-                };
-                create_team_action.dispatch((organization_id.clone(), name_value, desc));
+        <form
+            on:submit=move |ev: SubmitEvent| {
+                ev.prevent_default();
+                let name_value = name.get();
+                let desc_value = description.get();
+                if !name_value.is_empty() {
+                    let desc = if desc_value.is_empty() { None } else { Some(desc_value) };
+                    create_team_action.dispatch((organization_id.clone(), name_value, desc));
+                }
             }
-        } class="space-y-4">
+            class="space-y-4"
+        >
             <div>
                 <label
                     for="team-name"
@@ -339,10 +355,12 @@ fn TeamDetailView(
                 </div>
 
                 <div class="space-y-6">
-                    {team.description.clone().map(|desc| view! {
-                        <p class="text-neutral-600 dark:text-neutral-400">{desc}</p>
-                    })}
-
+                    {team
+                        .description
+                        .clone()
+                        .map(|desc| {
+                            view! { <p class="text-neutral-600 dark:text-neutral-400">{desc}</p> }
+                        })}
                     <div>
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-lg font-medium text-neutral-900 dark:text-white">
@@ -356,86 +374,104 @@ fn TeamDetailView(
                             </button>
                         </div>
 
-                        <Suspense fallback=move || view! { <p>"Loading members..."</p> }>
+                        <Suspense fallback=move || {
+                            view! { <p>"Loading members..."</p> }
+                        }>
                             {move || {
-                                members_resource.get().map(|members_result| {
-                                    match members_result {
-                                        Ok(members) => {
-                                            view! {
-                                                <div class="space-y-2">
-                                                    <For
-                                                        each=move || members.clone()
-                                                        key=|(member, _)| member.id.to_string()
-                                                        children=move |(member, user)| {
-                                                            let user_id = user.id.to_string();
-                                                            let team_id_for_remove = team_id.clone();
+                                members_resource
+                                    .get()
+                                    .map(|members_result| {
+                                        match members_result {
+                                            Ok(members) => {
+                                                view! {
+                                                    <div class="space-y-2">
+                                                        <For
+                                                            each=move || members.clone()
+                                                            key=|(member, _)| member.id.to_string()
+                                                            children=move |(member, user)| {
+                                                                let user_id = user.id.to_string();
+                                                                let team_id_for_remove = team_id.clone();
 
-                                                            view! {
-                                                                <div class="flex items-center justify-between p-3 bg-neutral-50 dark:bg-neutral-900 rounded-lg">
-                                                                    <div class="flex items-center space-x-3">
-                                                                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                                                                            <span class="text-white font-medium">
-                                                                                {user.name.chars().next().unwrap_or('U').to_uppercase().to_string()}
+                                                                view! {
+                                                                    <div class="flex items-center justify-between p-3 bg-neutral-50 dark:bg-neutral-900 rounded-lg">
+                                                                        <div class="flex items-center space-x-3">
+                                                                            <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                                                                                <span class="text-white font-medium">
+                                                                                    {user
+                                                                                        .name
+                                                                                        .chars()
+                                                                                        .next()
+                                                                                        .unwrap_or('U')
+                                                                                        .to_uppercase()
+                                                                                        .to_string()}
+                                                                                </span>
+                                                                            </div>
+                                                                            <div>
+                                                                                <p class="font-medium text-neutral-900 dark:text-white">
+                                                                                    {user.name.clone()}
+                                                                                </p>
+                                                                                <p class="text-sm text-neutral-600 dark:text-neutral-400">
+                                                                                    {user.email.to_string()}
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="flex items-center space-x-2">
+                                                                            <span class="text-sm text-neutral-600 dark:text-neutral-400">
+                                                                                {match member.role {
+                                                                                    TeamRole::Owner => "Owner",
+                                                                                    TeamRole::Admin => "Admin",
+                                                                                    TeamRole::Member => "Member",
+                                                                                }}
                                                                             </span>
-                                                                        </div>
-                                                                        <div>
-                                                                            <p class="font-medium text-neutral-900 dark:text-white">
-                                                                                {user.name.clone()}
-                                                                            </p>
-                                                                            <p class="text-sm text-neutral-600 dark:text-neutral-400">
-                                                                                {user.email.to_string()}
-                                                                            </p>
+                                                                            <Show when=move || member.role != TeamRole::Owner>
+                                                                                <button
+                                                                                    on:click=move |_| {
+                                                                                        remove_member_action
+                                                                                            .dispatch((team_id_for_remove.clone(), user_id.clone()));
+                                                                                    }
+                                                                                    class="p-1 text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-900/20 rounded"
+                                                                                >
+                                                                                    "✕"
+                                                                                </button>
+                                                                            </Show>
                                                                         </div>
                                                                     </div>
-                                                                    <div class="flex items-center space-x-2">
-                                                                        <span class="text-sm text-neutral-600 dark:text-neutral-400">
-                                                                            {match member.role {
-                                                                                TeamRole::Owner => "Owner",
-                                                                                TeamRole::Admin => "Admin",
-                                                                                TeamRole::Member => "Member",
-                                                                            }}
-                                                                        </span>
-                                                                        <Show when=move || member.role != TeamRole::Owner>
-                                                                            <button
-                                                                                on:click=move |_| {
-                                                                                    remove_member_action.dispatch((team_id_for_remove.clone(), user_id.clone()));
-                                                                                }
-                                                                                class="p-1 text-red-600 hover:bg-red-100 dark:text-red-400 dark:hover:bg-red-900/20 rounded"
-                                                                            >
-                                                                                "✕"
-                                                                            </button>
-                                                                        </Show>
-                                                                    </div>
-                                                                </div>
+                                                                }
                                                             }
-                                                        }
-                                                    />
-                                                </div>
-                                            }.into_any()
+                                                        />
+                                                    </div>
+                                                }
+                                                    .into_any()
+                                            }
+                                            Err(err) => {
+                                                view! {
+                                                    <p class="text-red-600 dark:text-red-400">
+                                                        "Error loading members: " {err.to_string()}
+                                                    </p>
+                                                }
+                                                    .into_any()
+                                            }
                                         }
-                                        Err(err) => view! {
-                                            <p class="text-red-600 dark:text-red-400">
-                                                "Error loading members: " {err.to_string()}
-                                            </p>
-                                        }.into_any()
-                                    }
-                                })
+                                    })
                             }}
                         </Suspense>
                     </div>
-
                     <Show when=move || show_add_member.get()>
                         <div class="border-t border-neutral-200 dark:border-neutral-700 pt-4">
                             <h4 class="text-md font-medium text-neutral-900 dark:text-white mb-4">
                                 "Add Team Member"
                             </h4>
-                            <form on:submit=move |ev: SubmitEvent| {
-                                ev.prevent_default();
-                                let email = new_member_email.get();
-                                if !email.is_empty() {
-                                    add_member_action.dispatch((team_id.clone(), email, new_member_role.get()));
+                            <form
+                                on:submit=move |ev: SubmitEvent| {
+                                    ev.prevent_default();
+                                    let email = new_member_email.get();
+                                    if !email.is_empty() {
+                                        add_member_action
+                                            .dispatch((team_id.clone(), email, new_member_role.get()));
+                                    }
                                 }
-                            } class="space-y-4">
+                                class="space-y-4"
+                            >
                                 <div>
                                     <label
                                         for="member-email"
@@ -448,7 +484,9 @@ fn TeamDetailView(
                                         id="member-email"
                                         class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-neutral-900 dark:text-white"
                                         prop:value=move || new_member_email.get()
-                                        on:input=move |ev| new_member_email.set(event_target_value(&ev))
+                                        on:input=move |ev| {
+                                            new_member_email.set(event_target_value(&ev))
+                                        }
                                         required
                                     />
                                 </div>
@@ -465,10 +503,13 @@ fn TeamDetailView(
                                         class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-neutral-900 dark:text-white"
                                         on:change=move |ev| {
                                             let value = event_target_value(&ev);
-                                            new_member_role.set(match value.as_str() {
-                                                "admin" => TeamRole::Admin,
-                                                _ => TeamRole::Member,
-                                            });
+                                            new_member_role
+                                                .set(
+                                                    match value.as_str() {
+                                                        "admin" => TeamRole::Admin,
+                                                        _ => TeamRole::Member,
+                                                    },
+                                                );
                                         }
                                     >
                                         <option value="member">"Member"</option>

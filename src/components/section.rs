@@ -13,10 +13,8 @@ pub fn Section(
     };
 
     view! {
-        <section id={id} class={combined_class}>
-            <div class="">
-                {children()}
-            </div>
+        <section id=id class=combined_class>
+            <div class="">{children()}</div>
         </section>
     }
 }
@@ -39,15 +37,14 @@ pub fn SectionHeader(
     let alignment_class = if centered { "text-center" } else { "" };
 
     view! {
-        <div class={format!("mb-16 {}", alignment_class)}>
+        <div class=format!("mb-16 {}", alignment_class)>
             <h2 class="text-4xl md:text-5xl font-bold text-neutral-900 dark:text-neutral-100 mb-4">
                 {title}
             </h2>
-            {subtitle.map(|s| view! {
-                <p class="text-xl text-neutral-600 dark:text-neutral-400">
-                    {s}
-                </p>
-            })}
+            {subtitle
+                .map(|s| {
+                    view! { <p class="text-xl text-neutral-600 dark:text-neutral-400">{s}</p> }
+                })}
         </div>
     }
 }

@@ -168,22 +168,21 @@ pub fn Button(
         Some(BtnVariant::Square) => view! {
             <div class="w-full flex items-center justify-center relative">
                 {match (&icon, &icon_hover) {
-                    (Some(normal_icon), Some(hover_icon)) => view! {
-                        <>
-                            <div class="group-hover:hidden">
-                                {normal_icon.display()}
-                            </div>
-                            <div class="hidden group-hover:block">
-                                {hover_icon.display()}
-                            </div>
-                        </>
-                    }.into_any(),
+                    (Some(normal_icon), Some(hover_icon)) => {
+                        view! {
+                            <>
+                                <div class="group-hover:hidden">{normal_icon.display()}</div>
+                                <div class="hidden group-hover:block">{hover_icon.display()}</div>
+                            </>
+                        }
+                            .into_any()
+                    }
                     (Some(normal_icon), None) => normal_icon.display(),
                     (None, _) => view! { <div /> }.into_any(),
                 }}
                 {match children {
                     Some(children) => children(),
-                    None => view! {  }.into_any(),
+                    None => view! {}.into_any(),
                 }}
             </div>
         }
@@ -191,22 +190,21 @@ pub fn Button(
         Some(BtnVariant::Round) => view! {
             <div class="w-full flex items-center justify-center relative">
                 {match (&icon, &icon_hover) {
-                    (Some(normal_icon), Some(hover_icon)) => view! {
-                        <>
-                            <div class="group-hover:hidden">
-                                {normal_icon.display()}
-                            </div>
-                            <div class="hidden group-hover:block">
-                                {hover_icon.display()}
-                            </div>
-                        </>
-                    }.into_any(),
+                    (Some(normal_icon), Some(hover_icon)) => {
+                        view! {
+                            <>
+                                <div class="group-hover:hidden">{normal_icon.display()}</div>
+                                <div class="hidden group-hover:block">{hover_icon.display()}</div>
+                            </>
+                        }
+                            .into_any()
+                    }
                     (Some(normal_icon), None) => normal_icon.display(),
                     (None, _) => view! { <div /> }.into_any(),
                 }}
                 {match children {
                     Some(children) => children(),
-                    None => view! {  }.into_any(),
+                    None => view! {}.into_any(),
                 }}
             </div>
         }
@@ -215,24 +213,31 @@ pub fn Button(
             <div class="w-full flex items-center justify-left gap-2">
 
                 {match (&icon, &icon_hover) {
-                    (Some(normal_icon), Some(hover_icon)) => view! {
-                        <div class="w-10 flex items-center justify-center">
-                            <div class="group-hover:hidden">
+                    (Some(normal_icon), Some(hover_icon)) => {
+                        view! {
+                            <div class="w-10 flex items-center justify-center">
+                                <div class="group-hover:hidden">{normal_icon.display()}</div>
+                                <div class="hidden group-hover:block">{hover_icon.display()}</div>
+                            </div>
+                        }
+                            .into_any()
+                    }
+                    (Some(normal_icon), None) => {
+                        view! {
+                            <div class="w-10 flex items-center justify-center">
                                 {normal_icon.display()}
                             </div>
-                            <div class="hidden group-hover:block">
-                                {hover_icon.display()}
-                            </div>
-                        </div>
-                    }.into_any(),
-                    (Some(normal_icon), None) => view! { <div class="w-10 flex items-center justify-center">{normal_icon.display()}</div> }.into_any(),
-                    (None, _) => view! {  }.into_any(),
+                        }
+                            .into_any()
+                    }
+                    (None, _) => view! {}.into_any(),
                 }}
-
-                <span>{match children {
-                    Some(children) => children(),
-                    None => view! {  }.into_any(),
-                }}</span>
+                <span>
+                    {match children {
+                        Some(children) => children(),
+                        None => view! {}.into_any(),
+                    }}
+                </span>
             </div>
         }
         .into_any(),

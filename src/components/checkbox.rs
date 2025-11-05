@@ -50,8 +50,7 @@ pub fn Checkbox(
             <label class="flex items-center cursor-pointer">
                 {checkbox_view}
                 <span class="ml-2 text-sm text-neutral-700 dark:text-neutral-300">
-                    {label.unwrap_or_default()}
-                    {children.map(|c| c())}
+                    {label.unwrap_or_default()} {children.map(|c| c())}
                 </span>
             </label>
         }

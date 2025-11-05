@@ -25,8 +25,8 @@ pub fn FeatureCard(
             on:mouseleave=move |_| set_is_hovered.set(false)
         >
             <div class=move || {
-                format!("absolute -inset-0.5 rounded-2xl blur opacity-30 group-hover:opacity-60 duration-1000 group-hover:duration-200",
-
+                format!(
+                    "absolute -inset-0.5 rounded-2xl blur opacity-30 group-hover:opacity-60 duration-1000 group-hover:duration-200",
                 )
             }></div>
             <div class="relative bg-white dark:bg-neutral-900 p-8 rounded-2xl ring-1 ring-neutral-900/5 dark:ring-neutral-100/10 duration-300 group-hover:scale-[1.02]">
@@ -34,17 +34,15 @@ pub fn FeatureCard(
                     format!(
                         "w-16 h-16 mb-6 rounded-xl bg-gradient-to-br {} flex items-center justify-center transform duration-300 {}",
                         gradient_class,
-                        if is_hovered.get() { "rotate-12 scale-110" } else { "" }
+                        if is_hovered.get() { "rotate-12 scale-110" } else { "" },
                     )
                 }>
-                    <Icon icon={icon} size="32px" color="white" />
+                    <Icon icon=icon size="32px" color="white" />
                 </div>
                 <h3 class="text-xl font-semibold text-neutral-900 dark:text-neutral-100 mb-3">
                     {title}
                 </h3>
-                <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">
-                    {description}
-                </p>
+                <p class="text-neutral-600 dark:text-neutral-400 leading-relaxed">{description}</p>
             </div>
         </div>
     }
@@ -52,9 +50,5 @@ pub fn FeatureCard(
 
 #[component]
 pub fn FeatureGrid(children: Children) -> impl IntoView {
-    view! {
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {children()}
-        </div>
-    }
+    view! { <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">{children()}</div> }
 }

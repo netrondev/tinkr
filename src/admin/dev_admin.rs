@@ -14,10 +14,8 @@ pub fn DevAdmin() -> impl IntoView {
                     <h2 class="text-lg font-semibold mb-2">"Database Operations"</h2>
 
                     <ActionForm action=delete_tables>
-                        <Button
-                            color=BtnColor::Error
+                        <Button color=BtnColor::Error>
                             // button_type="submit"
-                        >
                             "Delete Token Tables"
                         </Button>
                     </ActionForm>
@@ -25,16 +23,22 @@ pub fn DevAdmin() -> impl IntoView {
                     {move || {
                         if let Some(result) = delete_tables.value().get() {
                             match result {
-                                Ok(msg) => view! {
-                                    <div class="mt-2 text-green-600 dark:text-green-400">
-                                        {msg}
-                                    </div>
-                                }.into_any(),
-                                Err(e) => view! {
-                                    <div class="mt-2 text-red-600 dark:text-red-400">
-                                        {format!("Error: {}", e)}
-                                    </div>
-                                }.into_any(),
+                                Ok(msg) => {
+                                    view! {
+                                        <div class="mt-2 text-green-600 dark:text-green-400">
+                                            {msg}
+                                        </div>
+                                    }
+                                        .into_any()
+                                }
+                                Err(e) => {
+                                    view! {
+                                        <div class="mt-2 text-red-600 dark:text-red-400">
+                                            {format!("Error: {}", e)}
+                                        </div>
+                                    }
+                                        .into_any()
+                                }
                             }
                         } else {
                             view! { <div></div> }.into_any()

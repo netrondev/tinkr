@@ -24,8 +24,8 @@ pub fn SettingsHome() -> impl IntoView {
                     <SubHeading>"Manage your account settings and preferences"</SubHeading>
                 </div>
 
-                <Suspense
-                    fallback=move || view! {
+                <Suspense fallback=move || {
+                    view! {
                         <div class="bg-white shadow rounded-lg p-6">
                             <div class="animate-pulse">
                                 <div class="h-4 bg-neutral-200 rounded w-1/4 mb-4"></div>
@@ -33,36 +33,46 @@ pub fn SettingsHome() -> impl IntoView {
                             </div>
                         </div>
                     }
-                >
+                }>
                     {move || {
-                        user_resource.get().map(|user| match user {
-                            Ok(user) => {
-                                let usera = user.clone();
-                                let userb = user.clone();
-                                view! {
-                                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                                    <SectionStyled>
-                                        <div class="flex flex-col gap-5">
-                                            <Heading>"Account"</Heading>
-                                            <AvatarSection user={userb.clone()} on_update=move || user_resource.refetch() />
-                                            <ProfileSection user={usera.clone()} />
-                                        </div>
-                                    </SectionStyled>
+                        user_resource
+                            .get()
+                            .map(|user| match user {
+                                Ok(user) => {
+                                    let usera = user.clone();
+                                    let userb = user.clone();
+                                    view! {
+                                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                                            <SectionStyled>
+                                                <div class="flex flex-col gap-5">
+                                                    <Heading>"Account"</Heading>
+                                                    <AvatarSection
+                                                        user=userb.clone()
+                                                        on_update=move || user_resource.refetch()
+                                                    />
+                                                    <ProfileSection user=usera.clone() />
+                                                </div>
+                                            </SectionStyled>
 
-                                    <SectionStyled>
-                                        <div class="flex flex-col gap-5">
-                                            <Heading>"Delivery Details"</Heading>
-                                            <crate::auth::account_details::AccountForm />
+                                            <SectionStyled>
+                                                <div class="flex flex-col gap-5">
+                                                    <Heading>"Delivery Details"</Heading>
+                                                    <crate::auth::account_details::AccountForm />
+                                                </div>
+                                            </SectionStyled>
                                         </div>
-                                    </SectionStyled>
-                                </div>
-                            }.into_any()},
-                            Err(e) => view! {
-                                <Alert severity=AlertSeverity::Error>
-                                    "Error loading user data: " {e.to_string()}
-                                </Alert>
-                            }.into_any(),
-                        })
+                                    }
+                                        .into_any()
+                                }
+                                Err(e) => {
+                                    view! {
+                                        <Alert severity=AlertSeverity::Error>
+                                            "Error loading user data: " {e.to_string()}
+                                        </Alert>
+                                    }
+                                        .into_any()
+                                }
+                            })
                     }}
                 </Suspense>
             </div>

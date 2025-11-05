@@ -19,7 +19,9 @@ fn metamask_section() -> impl IntoView {
 
 #[cfg(feature = "ssr")]
 fn metamask_section() -> impl IntoView {
-    view! { <p class="text-sm text-gray-500">"MetaMask connection is only available in the browser"</p> }
+    view! {
+        <p class="text-sm text-gray-500">"MetaMask connection is only available in the browser"</p>
+    }
 }
 
 #[component]
@@ -92,7 +94,9 @@ fn NewWalletFormContent() -> impl IntoView {
             <div class="max-w-2xl mx-auto py-8 px-4">
                 <div class="bg-white dark:bg-neutral-800 rounded-lg shadow p-6">
                     <div class="flex items-center justify-between mb-6">
-                        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">"Add Wallet"</h1>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                            "Add Wallet"
+                        </h1>
                         <button
                             class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
                             on:click=move |_| {
@@ -105,52 +109,66 @@ fn NewWalletFormContent() -> impl IntoView {
 
                     // Wallet mode selector
                     <div class="mb-6">
-                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">"Choose wallet option:"</label>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            "Choose wallet option:"
+                        </label>
                         <div class="grid grid-cols-3 gap-3">
                             <button
                                 type="button"
-                                class=move || format!(
-                                    "p-3 rounded-lg border-2 {}",
-                                    if wallet_mode.get() == "generate" {
-                                        "border-purple-500 bg-purple-50 dark:bg-purple-900/20"
-                                    } else {
-                                        "border-gray-300 dark:border-gray-600 hover:border-purple-300"
-                                    }
-                                )
+                                class=move || {
+                                    format!(
+                                        "p-3 rounded-lg border-2 {}",
+                                        if wallet_mode.get() == "generate" {
+                                            "border-purple-500 bg-purple-50 dark:bg-purple-900/20"
+                                        } else {
+                                            "border-gray-300 dark:border-gray-600 hover:border-purple-300"
+                                        },
+                                    )
+                                }
                                 on:click=move |_| set_wallet_mode.set("generate".to_string())
                             >
                                 <div class="text-sm font-medium">"Generate New"</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">"Create a new EVM wallet"</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                    "Create a new EVM wallet"
+                                </div>
                             </button>
                             <button
                                 type="button"
-                                class=move || format!(
-                                    "p-3 rounded-lg border-2 {}",
-                                    if wallet_mode.get() == "import" {
-                                        "border-purple-500 bg-purple-50 dark:bg-purple-900/20"
-                                    } else {
-                                        "border-gray-300 dark:border-gray-600 hover:border-purple-300"
-                                    }
-                                )
+                                class=move || {
+                                    format!(
+                                        "p-3 rounded-lg border-2 {}",
+                                        if wallet_mode.get() == "import" {
+                                            "border-purple-500 bg-purple-50 dark:bg-purple-900/20"
+                                        } else {
+                                            "border-gray-300 dark:border-gray-600 hover:border-purple-300"
+                                        },
+                                    )
+                                }
                                 on:click=move |_| set_wallet_mode.set("import".to_string())
                             >
                                 <div class="text-sm font-medium">"Import Wallet"</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">"Use private key"</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                    "Use private key"
+                                </div>
                             </button>
                             <button
                                 type="button"
-                                class=move || format!(
-                                    "p-3 rounded-lg border-2 {}",
-                                    if wallet_mode.get() == "connect" {
-                                        "border-purple-500 bg-purple-50 dark:bg-purple-900/20"
-                                    } else {
-                                        "border-gray-300 dark:border-gray-600 hover:border-purple-300"
-                                    }
-                                )
+                                class=move || {
+                                    format!(
+                                        "p-3 rounded-lg border-2 {}",
+                                        if wallet_mode.get() == "connect" {
+                                            "border-purple-500 bg-purple-50 dark:bg-purple-900/20"
+                                        } else {
+                                            "border-gray-300 dark:border-gray-600 hover:border-purple-300"
+                                        },
+                                    )
+                                }
                                 on:click=move |_| set_wallet_mode.set("connect".to_string())
                             >
                                 <div class="text-sm font-medium">"Connect Existing"</div>
-                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">"External wallet"</div>
+                                <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                    "External wallet"
+                                </div>
                             </button>
                         </div>
                     </div>
@@ -162,7 +180,9 @@ fn NewWalletFormContent() -> impl IntoView {
                         <div class="space-y-4">
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">"Label"</label>
+                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    "Label"
+                                </label>
                                 <input
                                     type="text"
                                     required
@@ -175,98 +195,121 @@ fn NewWalletFormContent() -> impl IntoView {
 
                             // Show different fields based on wallet mode
                             {move || match wallet_mode.get().as_str() {
-                                "generate" => view! {
-                                    <>
-                                        <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md p-4">
-                                            <p class="text-sm text-green-700 dark:text-green-300">
-                                                "A new EVM wallet will be generated with a secure private key. The private key will be stored securely in your account."
-                                            </p>
-                                        </div>
+                                "generate" => {
+                                    view! {
+                                        <>
+                                            <div class="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md p-4">
+                                                <p class="text-sm text-green-700 dark:text-green-300">
+                                                    "A new EVM wallet will be generated with a secure private key. The private key will be stored securely in your account."
+                                                </p>
+                                            </div>
 
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">"Chain"</label>
-                                            <select
-                                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
-                                                prop:value=move || chain_id.get()
-                                                on:change=move |e| set_chain_id.set(event_target_value(&e))
-                                            >
-                                                <option value="0x1">"Ethereum Mainnet"</option>
-                                                <option value="0x89">"Polygon"</option>
-                                                <option value="0x38">"BSC"</option>
-                                                <option value="0xa4b1">"Arbitrum"</option>
-                                                <option value="0xa">"Optimism"</option>
-                                                <option value="0x2105">"Base"</option>
-                                            </select>
-                                        </div>
-                                    </>
-                                }.into_any(),
-                                "import" => view! {
-                                    <>
-                                        <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md p-4">
-                                            <p class="text-sm text-yellow-700 dark:text-yellow-300">
-                                                "⚠️ Warning: Only import private keys from wallets you control. Your private key will be encrypted and stored securely."
-                                            </p>
-                                        </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                    "Chain"
+                                                </label>
+                                                <select
+                                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
+                                                    prop:value=move || chain_id.get()
+                                                    on:change=move |e| set_chain_id.set(event_target_value(&e))
+                                                >
+                                                    <option value="0x1">"Ethereum Mainnet"</option>
+                                                    <option value="0x89">"Polygon"</option>
+                                                    <option value="0x38">"BSC"</option>
+                                                    <option value="0xa4b1">"Arbitrum"</option>
+                                                    <option value="0xa">"Optimism"</option>
+                                                    <option value="0x2105">"Base"</option>
+                                                </select>
+                                            </div>
+                                        </>
+                                    }
+                                        .into_any()
+                                }
+                                "import" => {
+                                    view! {
+                                        <>
+                                            <div class="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-md p-4">
+                                                <p class="text-sm text-yellow-700 dark:text-yellow-300">
+                                                    "⚠️ Warning: Only import private keys from wallets you control. Your private key will be encrypted and stored securely."
+                                                </p>
+                                            </div>
 
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">"Private Key"</label>
-                                            <input
-                                                type="password"
-                                                required
-                                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100 font-mono"
-                                                placeholder="Enter your private key (with or without 0x prefix)"
-                                                prop:value=move || private_key.get()
-                                                on:input=move |e| set_private_key.set(event_target_value(&e))
-                                            />
-                                        </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                    "Private Key"
+                                                </label>
+                                                <input
+                                                    type="password"
+                                                    required
+                                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100 font-mono"
+                                                    placeholder="Enter your private key (with or without 0x prefix)"
+                                                    prop:value=move || private_key.get()
+                                                    on:input=move |e| {
+                                                        set_private_key.set(event_target_value(&e))
+                                                    }
+                                                />
+                                            </div>
 
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">"Chain"</label>
-                                            <select
-                                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
-                                                prop:value=move || chain_id.get()
-                                                on:change=move |e| set_chain_id.set(event_target_value(&e))
-                                            >
-                                                <option value="0x1">"Ethereum Mainnet"</option>
-                                                <option value="0x89">"Polygon"</option>
-                                                <option value="0x38">"BSC"</option>
-                                                <option value="0xa4b1">"Arbitrum"</option>
-                                                <option value="0xa">"Optimism"</option>
-                                                <option value="0x2105">"Base"</option>
-                                            </select>
-                                        </div>
-                                    </>
-                                }.into_any(),
-                                _ => view! {
-                                    <>
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">"Wallet Address"</label>
-                                            <input
-                                                type="text"
-                                                required
-                                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
-                                                placeholder="Enter wallet address (Solana or Ethereum)"
-                                                prop:value=move || address.get()
-                                                on:input=move |e| set_address.set(event_target_value(&e))
-                                            />
-                                        </div>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                    "Chain"
+                                                </label>
+                                                <select
+                                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
+                                                    prop:value=move || chain_id.get()
+                                                    on:change=move |e| set_chain_id.set(event_target_value(&e))
+                                                >
+                                                    <option value="0x1">"Ethereum Mainnet"</option>
+                                                    <option value="0x89">"Polygon"</option>
+                                                    <option value="0x38">"BSC"</option>
+                                                    <option value="0xa4b1">"Arbitrum"</option>
+                                                    <option value="0xa">"Optimism"</option>
+                                                    <option value="0x2105">"Base"</option>
+                                                </select>
+                                            </div>
+                                        </>
+                                    }
+                                        .into_any()
+                                }
+                                _ => {
+                                    view! {
+                                        <>
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                    "Wallet Address"
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    required
+                                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
+                                                    placeholder="Enter wallet address (Solana or Ethereum)"
+                                                    prop:value=move || address.get()
+                                                    on:input=move |e| set_address.set(event_target_value(&e))
+                                                />
+                                            </div>
 
-                                        <div>
-                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">"Wallet Type"</label>
-                                            <select
-                                                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
-                                                prop:value=move || wallet_type.get()
-                                                on:change=move |e| set_wallet_type.set(event_target_value(&e))
-                                            >
-                                                <option value="phantom">"Phantom"</option>
-                                                <option value="solflare">"Solflare"</option>
-                                                <option value="backpack">"Backpack"</option>
-                                                <option value="metamask">"MetaMask"</option>
-                                                <option value="other">"Other"</option>
-                                            </select>
-                                        </div>
-                                    </>
-                                }.into_any()
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                    "Wallet Type"
+                                                </label>
+                                                <select
+                                                    class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-neutral-700 text-gray-900 dark:text-gray-100"
+                                                    prop:value=move || wallet_type.get()
+                                                    on:change=move |e| {
+                                                        set_wallet_type.set(event_target_value(&e))
+                                                    }
+                                                >
+                                                    <option value="phantom">"Phantom"</option>
+                                                    <option value="solflare">"Solflare"</option>
+                                                    <option value="backpack">"Backpack"</option>
+                                                    <option value="metamask">"MetaMask"</option>
+                                                    <option value="other">"Other"</option>
+                                                </select>
+                                            </div>
+                                        </>
+                                    }
+                                        .into_any()
+                                }
                             }}
 
                             <div class="flex items-center">
@@ -277,27 +320,35 @@ fn NewWalletFormContent() -> impl IntoView {
                                     prop:checked=move || is_primary.get()
                                     on:change=move |e| set_is_primary.set(event_target_checked(&e))
                                 />
-                                <label for="is_primary" class="ml-2 block text-sm text-gray-700 dark:text-gray-300">
+                                <label
+                                    for="is_primary"
+                                    class="ml-2 block text-sm text-gray-700 dark:text-gray-300"
+                                >
                                     "Set as primary wallet"
                                 </label>
                             </div>
 
                             // Show MetaMask connection only for connect mode
-                            {move || if wallet_mode.get() == "connect" {
-                                view! {
-                                    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-4">
-                                        <p class="text-sm text-blue-700 dark:text-blue-300 mb-4">
-                                            "Connect your wallet directly using the button below, or manually enter a wallet address."
-                                        </p>
+                            {move || {
+                                if wallet_mode.get() == "connect" {
+                                    view! {
+                                        <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-md p-4">
+                                            <p class="text-sm text-blue-700 dark:text-blue-300 mb-4">
+                                                "Connect your wallet directly using the button below, or manually enter a wallet address."
+                                            </p>
 
-                                        <div class="mt-4">
-                                            <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">"MetaMask Wallet:"</p>
-                                            {metamask_section()}
+                                            <div class="mt-4">
+                                                <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                                    "MetaMask Wallet:"
+                                                </p>
+                                                {metamask_section()}
+                                            </div>
                                         </div>
-                                    </div>
-                                }.into_any()
-                            } else {
-                                view! { <></> }.into_any()
+                                    }
+                                        .into_any()
+                                } else {
+                                    view! { <></> }.into_any()
+                                }
                             }}
                         </div>
 
@@ -326,7 +377,7 @@ fn NewWalletFormContent() -> impl IntoView {
                                         match wallet_mode.get().as_str() {
                                             "generate" => "Generate Wallet",
                                             "import" => "Import Wallet",
-                                            _ => "Add Wallet"
+                                            _ => "Add Wallet",
                                         }
                                     }
                                 }}

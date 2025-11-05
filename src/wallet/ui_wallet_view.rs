@@ -44,39 +44,53 @@ pub fn WalletView() -> impl IntoView {
 
     view! {
         <div class="p-6">
-            <Suspense fallback=move || view! {
-                <div class="bg-white dark:bg-neutral-800 rounded-lg shadow">
-                    <div class="p-6">
-                        <div class="animate-pulse space-y-4">
-                            <div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
-                            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-                            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+            <Suspense fallback=move || {
+                view! {
+                    <div class="bg-white dark:bg-neutral-800 rounded-lg shadow">
+                        <div class="p-6">
+                            <div class="animate-pulse space-y-4">
+                                <div class="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+                                <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                                <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-2/3"></div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                }
             }>
                 {move || {
                     match wallet_resource.get() {
                         Some(Ok(wallet)) => {
-                            // let wallet_address = wallet.address.clone();
                             let wallet_address_clone = wallet.address.clone();
                             let wallet_address_clone_b = wallet.address.clone();
+                            // let wallet_address = wallet.address.clone();
                             view! {
                                 <div class="bg-white dark:bg-neutral-800 rounded-lg shadow">
                                     <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
                                         <div class="flex items-center justify-between">
                                             <div class="flex items-center gap-3">
-                                                <Icon icon=WALLET color="purple" weight=IconWeight::Duotone size="2rem" />
+                                                <Icon
+                                                    icon=WALLET
+                                                    color="purple"
+                                                    weight=IconWeight::Duotone
+                                                    size="2rem"
+                                                />
                                                 <div>
                                                     <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
                                                         {wallet.label.clone()}
                                                         {if wallet.is_primary {
-                                                            view! { <span class="ml-2 text-sm bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-0.5 rounded-full">"Primary"</span> }.into_any()
+                                                            view! {
+                                                                <span class="ml-2 text-sm bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-0.5 rounded-full">
+                                                                    "Primary"
+                                                                </span>
+                                                            }
+                                                                .into_any()
                                                         } else {
                                                             view! { <span></span> }.into_any()
                                                         }}
                                                     </h1>
-                                                    <p class="text-sm text-gray-500 dark:text-gray-400">{wallet.wallet_type.clone()} " Wallet"</p>
+                                                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                                                        {wallet.wallet_type.clone()} " Wallet"
+                                                    </p>
                                                 </div>
                                             </div>
                                             <a
@@ -92,18 +106,30 @@ pub fn WalletView() -> impl IntoView {
                                     <div class="p-6 space-y-6">
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
-                                                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">"Wallet Details"</h3>
+                                                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+                                                    "Wallet Details"
+                                                </h3>
                                                 <dl class="space-y-3">
                                                     <div>
-                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">"Label"</dt>
-                                                        <dd class="text-sm text-gray-900 dark:text-gray-100">{wallet.label.clone()}</dd>
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                            "Label"
+                                                        </dt>
+                                                        <dd class="text-sm text-gray-900 dark:text-gray-100">
+                                                            {wallet.label.clone()}
+                                                        </dd>
                                                     </div>
                                                     <div>
-                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">"Wallet Type"</dt>
-                                                        <dd class="text-sm text-gray-900 dark:text-gray-100">{wallet.wallet_type.clone()}</dd>
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                            "Wallet Type"
+                                                        </dt>
+                                                        <dd class="text-sm text-gray-900 dark:text-gray-100">
+                                                            {wallet.wallet_type.clone()}
+                                                        </dd>
                                                     </div>
                                                     <div>
-                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">"Address"</dt>
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                            "Address"
+                                                        </dt>
                                                         <dd class="flex items-center gap-2">
                                                             <span class="text-sm text-gray-900 dark:text-gray-100 font-mono">
                                                                 <Button
@@ -119,7 +145,8 @@ pub fn WalletView() -> impl IntoView {
                                                                 title="Copy address"
                                                                 on:click=move |_| copy_address(wallet_address_clone.clone())
                                                             >
-                                                                <Icon icon=COPY /> Copy
+                                                                <Icon icon=COPY />
+                                                                Copy
                                                             </button>
                                                         </dd>
                                                     </div>
@@ -127,10 +154,14 @@ pub fn WalletView() -> impl IntoView {
                                             </div>
 
                                             <div>
-                                                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">"Wallet Status"</h3>
+                                                <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">
+                                                    "Wallet Status"
+                                                </h3>
                                                 <div class="space-y-3">
                                                     <div>
-                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">"Connection Status"</dt>
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                            "Connection Status"
+                                                        </dt>
                                                         <dd class="text-sm mt-1">
                                                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">
                                                                 "Connected"
@@ -138,7 +169,9 @@ pub fn WalletView() -> impl IntoView {
                                                         </dd>
                                                     </div>
                                                     <div>
-                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">"Primary Wallet"</dt>
+                                                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                                                            "Primary Wallet"
+                                                        </dt>
                                                         <dd class="text-sm text-gray-900 dark:text-gray-100 mt-1">
                                                             {if wallet.clone().is_primary { "Yes" } else { "No" }}
                                                         </dd>
@@ -148,7 +181,8 @@ pub fn WalletView() -> impl IntoView {
                                         </div>
                                     </div>
                                 </div>
-                            }.into_any()
+                            }
+                                .into_any()
                         }
                         Some(Err(e)) => {
                             view! {
@@ -165,13 +199,10 @@ pub fn WalletView() -> impl IntoView {
                                         </div>
                                     </div>
                                 </div>
-                            }.into_any()
+                            }
+                                .into_any()
                         }
-                        None => {
-                            view! {
-                                <div></div>
-                            }.into_any()
-                        }
+                        None => view! { <div></div> }.into_any(),
                     }
                 }}
             </Suspense>

@@ -35,8 +35,12 @@ pub fn NewOrganizationForm() -> impl IntoView {
     view! {
         <div class="max-w-2xl mx-auto px-4 py-8">
             <div class="mb-8">
-                <h1 class="text-2xl font-bold text-neutral-900 dark:text-white mb-2">"Create New Organization"</h1>
-                <p class="text-neutral-600 dark:text-neutral-400">"Set up a new organization to collaborate with your team"</p>
+                <h1 class="text-2xl font-bold text-neutral-900 dark:text-white mb-2">
+                    "Create New Organization"
+                </h1>
+                <p class="text-neutral-600 dark:text-neutral-400">
+                    "Set up a new organization to collaborate with your team"
+                </p>
             </div>
 
             <div class="bg-white dark:bg-neutral-800 rounded-lg shadow dark:shadow-neutral-700 p-6">
@@ -60,9 +64,12 @@ pub fn NewOrganizationForm() -> impl IntoView {
                     if let Some(Err(e)) = create_org_action.value().get() {
                         view! {
                             <div class="mt-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md p-4">
-                                <p class="text-red-800 dark:text-red-400">"Error creating organization: " {format!("{:?}", e)}</p>
+                                <p class="text-red-800 dark:text-red-400">
+                                    "Error creating organization: " {format!("{:?}", e)}
+                                </p>
                             </div>
-                        }.into_any()
+                        }
+                            .into_any()
                     } else {
                         view! {}.into_any()
                     }

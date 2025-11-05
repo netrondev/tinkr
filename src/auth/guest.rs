@@ -51,10 +51,11 @@ pub fn ForceUserAccount() -> impl IntoView {
     view! {
         <div class="p-4 bg-yellow-100 text-yellow-800 rounded-md border border-yellow-300">
             "You are currently browsing as a guest. Please "
-            <a href="/login" class="text-blue-600 underline">"log in"</a>
-            " or "
-            <a href="/signup" class="text-blue-600 underline">"create an account"</a>
-            " to access all features."
+            <a href="/login" class="text-blue-600 underline">
+                "log in"
+            </a> " or " <a href="/signup" class="text-blue-600 underline">
+                "create an account"
+            </a> " to access all features."
         </div>
     }
 }
@@ -93,9 +94,7 @@ pub fn ForcedGuest(children: ChildrenFn) -> impl IntoView {
         }
     });
 
-    view! {
-        {children()}
-    }
+    view! { {children()} }
 
     // view! {
     //     <Suspense fallback=|| {

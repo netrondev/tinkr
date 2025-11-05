@@ -316,7 +316,7 @@ pub fn LogoutPage() -> impl IntoView {
             {
                 use web_sys::window;
                 if let Some(window) = window() {
-                    let _ = window.location().set_href("/");
+                    let _ = window.location().set_href("/login");
                 }
             }
             #[cfg(feature = "ssr")]

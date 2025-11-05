@@ -84,7 +84,7 @@ pub fn Modal(
                     <div class=tw_merge!(
                         "inline-block align-top bg-white dark:bg-neutral-800 rounded-lg container text-left overflow-hidden shadow-xl transform sm:my-8 sm:align-middle {} w-full shadow-xl", size_class
                     )>
-                        <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative dark:bg-black bg-white rounded-md">
+                        <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative dark:bg-neutral-900 bg-white rounded-md">
                             {title
                                 .as_ref()
                                 .map(|t| {

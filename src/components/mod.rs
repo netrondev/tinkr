@@ -24,6 +24,7 @@ pub mod page_error_404;
 pub mod particle_animation;
 pub mod progress_bar;
 pub mod section;
+pub mod select;
 pub mod seperator;
 pub mod sidebar;
 pub mod submit_button;
@@ -32,6 +33,7 @@ pub mod tooltip;
 pub mod user_avatar;
 pub mod user_navbutton;
 pub mod version;
+
 //////////////////////////////
 
 pub use alert::{Alert, AlertSeverity};
@@ -58,6 +60,7 @@ pub use modal::{Modal, ModalSize};
 pub use navigation_back_button::NavigationBackButton;
 pub use particle_animation::ParticleAnimation;
 pub use section::{Section, SectionHeader, SectionStyled};
+pub use select::Select;
 pub use seperator::Seperator;
 pub use sidebar::NavItem;
 pub use sidebar::SideBar;

@@ -154,3 +154,23 @@ pub fn FormField(
         </div>
     }
 }
+
+#[component]
+pub fn InputSimple() -> impl IntoView {
+    view! {
+        <input
+            class="rounded-lg border-2 border-neutral-200 bg-white px-3 py-2 text-sm font-medium text-neutral-700 hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800 w-full"
+        />
+    }
+}
+
+#[component]
+pub fn InputDivStyled(children: Children) -> impl IntoView {
+    view! {
+        <div
+            class="max-h-64 overflow-y-auto rounded-lg border-2 border-neutral-200 bg-white p-2 text-sm font-medium text-neutral-700 hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800 mr-2 flex flex-col"
+        >
+            {children()}
+        </div>
+    }.into_any()
+}

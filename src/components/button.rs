@@ -43,6 +43,8 @@ struct ButtonsProps {
 pub enum BtnVariant {
     #[tw(default, class = "h-10 rounded-md p-4")]
     Default,
+    #[tw(class = "h-10 w-full rounded-md p-4")]
+    Wide,
     #[tw(class = "w-10 h-10 rounded-md")]
     Square,
     #[tw(class = "w-10 h-10 rounded-full")]
@@ -60,7 +62,7 @@ pub enum BtnVariant {
 pub enum BtnColor {
     #[tw(
         default,
-        class = "text-neutral-700 bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+        class = "text-neutral-700 bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:bg-blue-500 dark:active:bg-blue-600"
     )]
     Default,
     #[tw(
@@ -80,7 +82,7 @@ pub enum BtnColor {
     )]
     Neutral,
     #[tw(
-        class = "rounded-lg border-2 border-neutral-200 bg-white px-3 py-2 text-sm font-medium text-neutral-700 hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-750"
+        class = "rounded-lg border-2 border-neutral-200 bg-white px-3 py-2 text-sm font-medium text-neutral-700 hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800"
     )]
     Outlined,
     #[tw(

@@ -39,7 +39,7 @@ use crate::theme::Theme;
 )]
 #[partial(
     "DeliveryDetails",
-    derive(Debug, Serialize, Deserialize, Clone),
+    derive(Debug, Serialize, Deserialize, Clone, PartialEq),
     omit(id, name, email_verified, is_admin, superadmin, theme, image)
 )]
 pub struct AdapterUser {

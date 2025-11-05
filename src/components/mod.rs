@@ -15,6 +15,7 @@ pub mod hero;
 pub mod image;
 pub mod image_upload;
 pub mod input;
+pub mod label;
 pub mod loading;
 pub mod logo;
 pub mod modal;
@@ -33,7 +34,6 @@ pub mod tooltip;
 pub mod user_avatar;
 pub mod user_navbutton;
 pub mod version;
-
 //////////////////////////////
 
 pub use alert::{Alert, AlertSeverity};

@@ -73,13 +73,12 @@ impl OAuthConfig {
     }
 
     pub fn get_redirect_url() -> String {
-        std::env::var("SERVICE_URL_DX")
-            .unwrap_or_else(|_| "http://localhost:3000".to_string())
+        std::env::var("SERVICE_URL_DX").unwrap_or_else(|_| "http://localhost:3000".to_string())
     }
 
     pub fn build_client(&self) -> Result<BasicClient, String> {
-        let auth_url = AuthUrl::new(self.auth_url.clone())
-            .map_err(|e| format!("Invalid auth URL: {}", e))?;
+        let auth_url =
+            AuthUrl::new(self.auth_url.clone()).map_err(|e| format!("Invalid auth URL: {}", e))?;
         let token_url = TokenUrl::new(self.token_url.clone())
             .map_err(|e| format!("Invalid token URL: {}", e))?;
 
@@ -89,8 +88,8 @@ impl OAuthConfig {
             self.provider.as_str()
         );
 
-        let redirect = RedirectUrl::new(redirect_url)
-            .map_err(|e| format!("Invalid redirect URL: {}", e))?;
+        let redirect =
+            RedirectUrl::new(redirect_url).map_err(|e| format!("Invalid redirect URL: {}", e))?;
 
         Ok(BasicClient::new(
             ClientId::new(self.client_id.clone()),

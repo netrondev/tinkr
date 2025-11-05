@@ -57,6 +57,168 @@ async fn update_account_details(details: DeliveryDetails) -> Result<(), ServerFn
 }
 
 #[component]
+pub fn DeliveryDetailsForm(
+    /// The delivery details to display/edit
+    details: Signal<DeliveryDetails>,
+    /// Whether the form fields should be editable
+    editable: Signal<bool>,
+    /// Optional callback when details change (only used when editable=true)
+    #[prop(optional)]
+    on_change: Option<Callback<DeliveryDetails>>,
+) -> impl IntoView {
+    let input_class = move || {
+        if editable.get() {
+            input_class_default()
+        } else {
+            format!("{} bg-gray-100 cursor-default", input_class_default())
+        }
+    };
+
+    let handle_change = move |field: &str, value: String| {
+        if !editable.get() {
+            return;
+        }
+
+        if let Some(callback) = on_change {
+            let mut updated_details = details.get();
+            match field {
+                "first_name" => updated_details.first_name = Some(value),
+                "last_name" => updated_details.last_name = Some(value),
+                "email" => updated_details.email = EmailAddress(value),
+                "phone" => updated_details.phone = Some(value),
+                "address1" => updated_details.address1 = Some(value),
+                "address2" => updated_details.address2 = Some(value),
+                "address3" => updated_details.address3 = Some(value),
+                "postcode" => updated_details.postcode = Some(value),
+                _ => {}
+            }
+            callback.run(updated_details);
+        }
+    };
+
+    view! {
+        <div class="grid grid-cols-12 gap-5">
+            <FormField
+                label="First Name".to_string()
+                class="col-span-6".to_string()
+            >
+                <input
+                    value=move || details.get().first_name.clone()
+                    placeholder="First Name".to_string()
+                    class=input_class
+                    disabled=move || !editable.get()
+                    on:change=move |ev| {
+                        handle_change("first_name", event_target_value(&ev));
+                    }
+                />
+            </FormField>
+
+            <FormField
+                label="Last Name".to_string()
+                class="col-span-6".to_string()
+            >
+                <input
+                    value=move || details.get().last_name.clone()
+                    placeholder="Last Name".to_string()
+                    class=input_class
+                    disabled=move || !editable.get()
+                    on:change=move |ev| {
+                        handle_change("last_name", event_target_value(&ev));
+                    }
+                />
+            </FormField>
+
+            <FormField label="Email".to_string() class="col-span-6".to_string()>
+                <input
+                    value=move || details.get().email.to_string()
+                    placeholder="Email".to_string()
+                    class=input_class
+                    disabled=move || !editable.get()
+                    on:change=move |ev| {
+                        handle_change("email", event_target_value(&ev));
+                    }
+                />
+            </FormField>
+
+            <FormField
+                label="Phone Number".to_string()
+                class="col-span-6".to_string()
+            >
+                <input
+                    value=move || details.get().phone.clone()
+                    placeholder="Phone Number".to_string()
+                    class=input_class
+                    disabled=move || !editable.get()
+                    on:change=move |ev| {
+                        handle_change("phone", event_target_value(&ev));
+                    }
+                />
+            </FormField>
+
+            <FormField
+                label="Address".to_string()
+                class="col-span-12".to_string()
+            >
+                <input
+                    value=move || details.get().address1.clone()
+                    placeholder="Address".to_string()
+                    class=input_class
+                    disabled=move || !editable.get()
+                    on:change=move |ev| {
+                        handle_change("address1", event_target_value(&ev));
+                    }
+                />
+            </FormField>
+
+            <FormField
+                label="Town/City".to_string()
+                class="col-span-4".to_string()
+            >
+                <input
+                    value=move || details.get().address2.clone()
+                    placeholder="Town/City".to_string()
+                    class=input_class
+                    disabled=move || !editable.get()
+                    on:change=move |ev| {
+                        handle_change("address2", event_target_value(&ev));
+                    }
+                />
+            </FormField>
+
+            <FormField
+                label="Province/State".to_string()
+                class="col-span-4".to_string()
+            >
+                <input
+                    class=input_class
+                    value=move || details.get().address3.clone()
+                    placeholder="Province/State".to_string()
+                    disabled=move || !editable.get()
+                    on:change=move |ev| {
+                        handle_change("address3", event_target_value(&ev));
+                    }
+                />
+            </FormField>
+
+            <FormField
+                label="Postcode".to_string()
+                class="col-span-4".to_string()
+            >
+                <input
+                    class=input_class
+                    value=move || details.get().postcode.clone()
+                    placeholder="Postcode".to_string()
+                    disabled=move || !editable.get()
+                    on:change=move |ev| {
+                        handle_change("postcode", event_target_value(&ev));
+                    }
+                />
+            </FormField>
+        </div>
+    }
+}
+
+#[component]
 pub fn AccountForm() -> impl IntoView {
     let user_delivery_details = LocalResource::new(get_account_details);
 
@@ -81,191 +243,47 @@ pub fn AccountForm() -> impl IntoView {
         }
     };
 
+    let on_details_change = Callback::new(move |updated: DeliveryDetails| {
+        details.set(Some(updated));
+    });
+
     view! {
         <form on:submit=on_submit>
             <Transition>
                 {move || match details.get() {
                     None => view! { <p>"Loading..."</p> }.into_any(),
                     Some(delivery_details) => {
+                        let details_signal = Signal::derive(move || {
+                            details.get().unwrap_or(delivery_details.clone())
+                        });
+                        let editable = Signal::derive(|| true);
+
                         view! {
-                            <div class="grid grid-cols-12 gap-5">
-                                <FormField
-                                    label="First Name".to_string()
-                                    class="col-span-6".to_string()
-                                >
-                                    <input
-                                        value=delivery_details.first_name.clone()
-                                        placeholder="First Name".to_string()
-                                        class=input_class_default()
-                                        on:change=move |ev| {
-                                            let value = event_target_value(&ev);
-                                            details
-                                                .update(|d| {
-                                                    if let Some(delivery) = d {
-                                                        delivery.first_name = Some(value);
-                                                    }
-                                                });
-                                        }
-                                    />
-                                </FormField>
+                            <DeliveryDetailsForm
+                                details=details_signal
+                                editable=editable
+                                on_change=on_details_change
+                            />
 
-                                <FormField
-                                    label="Last Name".to_string()
-                                    class="col-span-6".to_string()
-                                >
-                                    <input
-                                        value=delivery_details.last_name.clone()
-                                        placeholder="Last Name".to_string()
-                                        class=input_class_default()
-                                        on:change=move |ev| {
-                                            let value = event_target_value(&ev);
-                                            details
-                                                .update(|d| {
-                                                    if let Some(delivery) = d {
-                                                        delivery.last_name = Some(value);
-                                                    }
-                                                });
-                                        }
-                                    />
-                                </FormField>
+                            <div class="col-span-12 flex justify-end gap-3 pt-10">
+                                {move || {
+                                    let is_saving_bool = is_saving.get();
 
-                                <FormField label="Email".to_string() class="col-span-6".to_string()>
-                                    <input
-                                        value=delivery_details.email.to_string()
-                                        placeholder="Email".to_string()
-                                        class=input_class_default()
-                                        on:change=move |ev| {
-                                            let value = event_target_value(&ev);
-                                            details
-                                                .update(|d| {
-                                                    if let Some(delivery) = d {
-                                                        delivery.email = EmailAddress(value);
-                                                    }
-                                                });
-                                        }
-                                    />
-                                </FormField>
+                                    view! {
+                                        <Button
+                                            variant=BtnVariant::CallToAction
+                                            color=BtnColor::Primary
+                                            button_type="submit"
+                                            disabled=is_saving_bool
+                                            icon=ButtonIcon::Icon(phosphor_leptos::FLOPPY_DISK)
+                                        >
+                                            {move || {
+                                                if is_saving.get() { "Saving..." } else { "Save Changes" }
+                                            }}
+                                        </Button>
+                                    }
+                                }}
 
-                                <FormField
-                                    label="Phone Number".to_string()
-                                    class="col-span-6".to_string()
-                                >
-                                    <input
-                                        value=delivery_details.phone.clone()
-                                        placeholder="Phone Number".to_string()
-                                        class=input_class_default()
-                                        on:change=move |ev| {
-                                            let value = event_target_value(&ev);
-                                            details
-                                                .update(|d| {
-                                                    if let Some(delivery) = d {
-                                                        delivery.phone = Some(value);
-                                                    }
-                                                });
-                                        }
-                                    />
-                                </FormField>
-
-                                <FormField
-                                    label="Address".to_string()
-                                    class="col-span-12".to_string()
-                                >
-                                    <input
-                                        value=delivery_details.address1.clone()
-                                        placeholder="Address".to_string()
-                                        class=input_class_default()
-                                        on:change=move |ev| {
-                                            let value = event_target_value(&ev);
-                                            details
-                                                .update(|d| {
-                                                    if let Some(delivery) = d {
-                                                        delivery.address1 = Some(value);
-                                                    }
-                                                });
-                                        }
-                                    />
-                                </FormField>
-
-                                <FormField
-                                    label="Town/City".to_string()
-                                    class="col-span-4".to_string()
-                                >
-                                    <input
-                                        value=delivery_details.address2.clone()
-                                        placeholder="Town/City".to_string()
-                                        class=input_class_default()
-                                        on:change=move |ev| {
-                                            let value = event_target_value(&ev);
-                                            details
-                                                .update(|d| {
-                                                    if let Some(delivery) = d {
-                                                        delivery.address2 = Some(value);
-                                                    }
-                                                });
-                                        }
-                                    />
-                                </FormField>
-
-                                <FormField
-                                    label="Province/State".to_string()
-                                    class="col-span-4".to_string()
-                                >
-                                    <input
-                                        class=input_class_default()
-                                        value=delivery_details.address3.clone()
-                                        placeholder="Province/State".to_string()
-                                        on:change=move |ev| {
-                                            let value = event_target_value(&ev);
-                                            details
-                                                .update(|d| {
-                                                    if let Some(delivery) = d {
-                                                        delivery.address3 = Some(value);
-                                                    }
-                                                });
-                                        }
-                                    />
-                                </FormField>
-
-                                <FormField
-                                    label="Postcode".to_string()
-                                    class="col-span-4".to_string()
-                                >
-                                    <input
-                                        class=input_class_default()
-                                        value=delivery_details.postcode.clone()
-                                        placeholder="Postcode".to_string()
-                                        on:change=move |ev| {
-                                            let value = event_target_value(&ev);
-                                            details
-                                                .update(|d| {
-                                                    if let Some(delivery) = d {
-                                                        delivery.postcode = Some(value);
-                                                    }
-                                                });
-                                        }
-                                    />
-                                </FormField>
-
-                                <div class="col-span-12 flex justify-end gap-3 pt-10">
-                                    {move || {
-                                        let is_saving_bool = is_saving.get();
-
-                                        view! {
-                                            <Button
-                                                variant=BtnVariant::CallToAction
-                                                color=BtnColor::Primary
-                                                button_type="submit"
-                                                disabled=is_saving_bool
-                                                icon=ButtonIcon::Icon(phosphor_leptos::FLOPPY_DISK)
-                                            >
-                                                {move || {
-                                                    if is_saving.get() { "Saving..." } else { "Save Changes" }
-                                                }}
-                                            </Button>
-                                        }
-                                    }}
-
-                                </div>
                             </div>
                         }
                             .into_any()

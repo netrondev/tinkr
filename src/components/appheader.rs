@@ -150,7 +150,7 @@ where
                                 }
                             />
 
-                            <ThemeToggle tooltip_align=Align::Right />
+                            // <ThemeToggle tooltip_align=Align::Right />
 
                         </div>
                     </nav>

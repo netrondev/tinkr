@@ -98,9 +98,9 @@ where
 
                     <div class="flex-1" />
 
-                    <div class="hidden md:block">
-                        <ThemeToggle tooltip_align=Align::Bottom />
-                    </div>
+                    // <div class="hidden md:block">
+                    //     <ThemeToggle tooltip_align=Align::Bottom />
+                    // </div>
 
                     {cart()}
 

@@ -22,6 +22,15 @@ pub enum NavItem {
     Gap,
 }
 
+impl NavItem {
+    pub fn view_list(links: Vec<NavItem>) -> impl IntoView {
+        view! {
+            <NavItemList links=links />
+        }
+        .into_any()
+    }
+}
+
 #[component]
 pub fn NavItemList(links: Vec<NavItem>) -> impl IntoView {
     let location = leptos_router::hooks::use_location();
@@ -51,11 +60,11 @@ pub fn NavItemList(links: Vec<NavItem>) -> impl IntoView {
                                 <Button
                                     variant=BtnVariant::CallToAction
                                     icon=item.icon.clone()
-                                    state=if is_active {
-                                        BtnState::Active
-                                    } else {
-                                        BtnState::Default
-                                    }
+                                    // state=if is_active {
+                                    //     BtnState::Active
+                                    // } else {
+                                    //     BtnState::Default
+                                    // }
                                     color=if is_active {
                                         BtnColor::Primary
                                     } else {

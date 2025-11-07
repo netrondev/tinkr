@@ -1,6 +1,6 @@
 use crate::{
+    components::{heading::Heading, label::Label},
     RecordId,
-    components::{Label, heading::Heading},
 };
 use leptos::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -119,6 +119,11 @@ pub fn PaymentView(payment: Payment) -> impl IntoView {
             <section class="grid grid-cols-2">
 
                 <div class="flex flex-col gap-3 py-10">
+
+                    <div>
+                        <Label>"Payment Status"</Label>
+                        <span>{payment.payment_status}</span>
+                    </div>
 
                     <div>
                         <Label>"Address"</Label>

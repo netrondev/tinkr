@@ -98,10 +98,7 @@ pub fn DeliveryDetailsForm(
 
     view! {
         <div class="grid grid-cols-12 gap-5">
-            <FormField
-                label="First Name".to_string()
-                class="col-span-6".to_string()
-            >
+            <FormField label="First Name".to_string() class="col-span-6".to_string()>
                 <input
                     value=move || details.get().first_name.clone()
                     placeholder="First Name".to_string()
@@ -113,10 +110,7 @@ pub fn DeliveryDetailsForm(
                 />
             </FormField>
 
-            <FormField
-                label="Last Name".to_string()
-                class="col-span-6".to_string()
-            >
+            <FormField label="Last Name".to_string() class="col-span-6".to_string()>
                 <input
                     value=move || details.get().last_name.clone()
                     placeholder="Last Name".to_string()
@@ -140,10 +134,7 @@ pub fn DeliveryDetailsForm(
                 />
             </FormField>
 
-            <FormField
-                label="Phone Number".to_string()
-                class="col-span-6".to_string()
-            >
+            <FormField label="Phone Number".to_string() class="col-span-6".to_string()>
                 <input
                     value=move || details.get().phone.clone()
                     placeholder="Phone Number".to_string()
@@ -155,10 +146,7 @@ pub fn DeliveryDetailsForm(
                 />
             </FormField>
 
-            <FormField
-                label="Address".to_string()
-                class="col-span-12".to_string()
-            >
+            <FormField label="Address".to_string() class="col-span-12".to_string()>
                 <input
                     value=move || details.get().address1.clone()
                     placeholder="Address".to_string()
@@ -170,10 +158,7 @@ pub fn DeliveryDetailsForm(
                 />
             </FormField>
 
-            <FormField
-                label="Town/City".to_string()
-                class="col-span-4".to_string()
-            >
+            <FormField label="Town/City".to_string() class="col-span-4".to_string()>
                 <input
                     value=move || details.get().address2.clone()
                     placeholder="Town/City".to_string()
@@ -185,10 +170,7 @@ pub fn DeliveryDetailsForm(
                 />
             </FormField>
 
-            <FormField
-                label="Province/State".to_string()
-                class="col-span-4".to_string()
-            >
+            <FormField label="Province/State".to_string() class="col-span-4".to_string()>
                 <input
                     class=input_class
                     value=move || details.get().address3.clone()
@@ -200,10 +182,7 @@ pub fn DeliveryDetailsForm(
                 />
             </FormField>
 
-            <FormField
-                label="Postcode".to_string()
-                class="col-span-4".to_string()
-            >
+            <FormField label="Postcode".to_string() class="col-span-4".to_string()>
                 <input
                     class=input_class
                     value=move || details.get().postcode.clone()
@@ -271,8 +250,8 @@ pub fn AccountForm() -> impl IntoView {
 
                                     view! {
                                         <Button
-                                            variant=BtnVariant::CallToAction
-                                            color=BtnColor::Primary
+                                            variant=BtnVariant::Default
+                                            color=BtnColor::Neutral
                                             button_type="submit"
                                             disabled=is_saving_bool
                                             icon=ButtonIcon::Icon(phosphor_leptos::FLOPPY_DISK)

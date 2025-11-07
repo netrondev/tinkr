@@ -99,7 +99,7 @@ where
                     <div class="flex-1" />
 
                     // <div class="hidden md:block">
-                    //     <ThemeToggle tooltip_align=Align::Bottom />
+                    // <ThemeToggle tooltip_align=Align::Bottom />
                     // </div>
 
                     {cart()}
@@ -150,8 +150,7 @@ where
                                 }
                             />
 
-                            // <ThemeToggle tooltip_align=Align::Right />
-
+                        // <ThemeToggle tooltip_align=Align::Right />
                         </div>
                     </nav>
                 </Show>

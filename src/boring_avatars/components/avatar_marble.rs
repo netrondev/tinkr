@@ -131,9 +131,7 @@ pub fn BoringAvatarMarble(
     let elements = generate_marble_data(&name, &colors);
     let svg_string = generate_marble_svg(&elements, size, square, &name, title);
 
-    view! {
-        <div inner_html=svg_string />
-    }
+    view! { <div inner_html=svg_string /> }
 }
 
 #[cfg(test)]

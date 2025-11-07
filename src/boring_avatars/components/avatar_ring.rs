@@ -106,9 +106,7 @@ pub fn BoringAvatarRing(
     let ring_colors = generate_ring_colors(&name, &colors);
     let svg_string = generate_ring_svg(&ring_colors, size, square, &name, title);
 
-    view! {
-        <div inner_html=svg_string />
-    }
+    view! { <div inner_html=svg_string /> }
 }
 
 #[cfg(test)]

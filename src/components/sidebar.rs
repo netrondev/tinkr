@@ -24,9 +24,7 @@ pub enum NavItem {
 
 impl NavItem {
     pub fn view_list(links: Vec<NavItem>) -> impl IntoView {
-        view! {
-            <NavItemList links=links />
-        }
+        view! { <NavItemList links=links /> }
         .into_any()
     }
 }
@@ -61,9 +59,9 @@ pub fn NavItemList(links: Vec<NavItem>) -> impl IntoView {
                                     variant=BtnVariant::CallToAction
                                     icon=item.icon.clone()
                                     // state=if is_active {
-                                    //     BtnState::Active
+                                    // BtnState::Active
                                     // } else {
-                                    //     BtnState::Default
+                                    // BtnState::Default
                                     // }
                                     color=if is_active {
                                         BtnColor::Primary

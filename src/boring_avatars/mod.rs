@@ -42,33 +42,19 @@ pub fn Avatar(
     title: bool,
 ) -> AnyView {
     match variant {
-        AvatarVariants::Pixel => view! {
-            <BoringAvatarPixel name=name colors=colors size=size square=square title=title />
-        }
+        AvatarVariants::Pixel => view! { <BoringAvatarPixel name=name colors=colors size=size square=square title=title /> }
         .into_any(),
-        AvatarVariants::Bauhaus => view! {
-            <BoringAvatarBauhaus name=name colors=colors size=size square=square title=title />
-        }
+        AvatarVariants::Bauhaus => view! { <BoringAvatarBauhaus name=name colors=colors size=size square=square title=title /> }
         .into_any(),
-        AvatarVariants::Ring => view! {
-            <BoringAvatarRing name=name colors=colors size=size square=square title=title />
-        }
+        AvatarVariants::Ring => view! { <BoringAvatarRing name=name colors=colors size=size square=square title=title /> }
         .into_any(),
-        AvatarVariants::Beam | AvatarVariants::Geometric => view! {
-            <BoringAvatarBeam name=name colors=colors size=size square=square title=title />
-        }
+        AvatarVariants::Beam | AvatarVariants::Geometric => view! { <BoringAvatarBeam name=name colors=colors size=size square=square title=title /> }
         .into_any(),
-        AvatarVariants::Sunset => view! {
-            <BoringAvatarSunset name=name colors=colors size=size square=square title=title />
-        }
+        AvatarVariants::Sunset => view! { <BoringAvatarSunset name=name colors=colors size=size square=square title=title /> }
         .into_any(),
-        AvatarVariants::Marble => view! {
-            <BoringAvatarMarble name=name colors=colors size=size square=square title=title />
-        }
+        AvatarVariants::Marble => view! { <BoringAvatarMarble name=name colors=colors size=size square=square title=title /> }
         .into_any(),
-        AvatarVariants::Abstract => view! {
-            <BoringAvatarBauhaus name=name colors=colors size=size square=square title=title />
-        }
+        AvatarVariants::Abstract => view! { <BoringAvatarBauhaus name=name colors=colors size=size square=square title=title /> }
         .into_any(),
     }
 }

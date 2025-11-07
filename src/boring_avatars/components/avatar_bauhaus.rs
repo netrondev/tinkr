@@ -148,9 +148,7 @@ pub fn BoringAvatarBauhaus(
     let elements = generate_bauhaus_data(&name, &colors);
     let svg_string = generate_bauhaus_svg(&elements, size, square, &name, title);
 
-    view! {
-        <div inner_html=svg_string />
-    }
+    view! { <div inner_html=svg_string /> }
 }
 
 #[cfg(test)]

@@ -99,9 +99,7 @@ pub fn BoringAvatarSunset(
     let sunset_colors = generate_sunset_colors(&name, &colors);
     let svg_string = generate_sunset_svg(&sunset_colors, size, square, &name, title);
 
-    view! {
-        <div inner_html=svg_string />
-    }
+    view! { <div inner_html=svg_string /> }
 }
 
 #[cfg(test)]

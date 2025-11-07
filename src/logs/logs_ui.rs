@@ -269,8 +269,7 @@ pub fn LogsAdmin() -> impl IntoView {
                                 .into_any()
                         }
                     }
-                }}
-                <LogsFilter filter=filter set_filter=update_filter on_refresh=refresh_logs />
+                }} <LogsFilter filter=filter set_filter=update_filter on_refresh=refresh_logs />
                 {move || {
                     match logs_resource.get() {
                         Some(Ok(logs_response)) => {

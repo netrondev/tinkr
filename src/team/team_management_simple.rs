@@ -360,8 +360,7 @@ fn TeamDetailView(
                         .clone()
                         .map(|desc| {
                             view! { <p class="text-neutral-600 dark:text-neutral-400">{desc}</p> }
-                        })}
-                    <div>
+                        })} <div>
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="text-lg font-medium text-neutral-900 dark:text-white">
                                 "Team Members"
@@ -455,8 +454,7 @@ fn TeamDetailView(
                                     })
                             }}
                         </Suspense>
-                    </div>
-                    <Show when=move || show_add_member.get()>
+                    </div> <Show when=move || show_add_member.get()>
                         <div class="border-t border-neutral-200 dark:border-neutral-700 pt-4">
                             <h4 class="text-md font-medium text-neutral-900 dark:text-white mb-4">
                                 "Add Team Member"

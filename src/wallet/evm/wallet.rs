@@ -263,8 +263,7 @@ pub fn WalletExplorer() -> impl IntoView {
                                                             </div>
                                                         }
                                                             .into_any()
-                                                    })}
-                                                <div>
+                                                    })} <div>
                                                     <h3 class="font-semibold">
                                                         {balance.chain_info.name.clone()}
                                                     </h3>

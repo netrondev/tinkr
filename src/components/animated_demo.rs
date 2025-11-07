@@ -31,35 +31,35 @@ pub fn WebGLDemo() -> impl IntoView {
             <style>
                 {r#"
                 @keyframes rotate3d {
-                   0% {
-                       transform: rotateX(0deg) rotateY(0deg);
-                   }
-                   100% {
-                       transform: rotateX(0deg) rotateY(360deg);
-                   }
+                  0% {
+                      transform: rotateX(0deg) rotateY(0deg);
+                  }
+                  100% {
+                      transform: rotateX(0deg) rotateY(360deg);
+                  }
                 }
                 @keyframes glow-pulse {
-                   0%, 100% {
-                       opacity: 0.3;
-                       transform: scale(1);
-                   }
-                   50% {
-                       opacity: 0.8;
-                       transform: scale(1.1);
-                   }
+                  0%, 100% {
+                      opacity: 0.3;
+                      transform: scale(1);
+                  }
+                  50% {
+                      opacity: 0.8;
+                      transform: scale(1.1);
+                  }
                 }
                 .perspective-1000 {
-                   perspective: 1000px;
+                  perspective: 1000px;
                 }
                 .preserve-3d {
-                   transform-style: preserve-3d;
+                  transform-style: preserve-3d;
                 }
                 .face {
-                   position: absolute;
-                   width: 100%;
-                   height: 100%;
-                   backface-visibility: hidden;
-                   border: 1px solid rgba(255, 255, 255, 0.1);
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  backface-visibility: hidden;
+                  border: 1px solid rgba(255, 255, 255, 0.1);
                 }
                 "#}
             </style>
@@ -179,36 +179,36 @@ pub fn RealtimeDataDemo() -> impl IntoView {
             <style>
                 {r#"
                 @keyframes candle-update {
-                   0% {
-                       opacity: 0.6;
-                   }
-                   100% {
-                       opacity: 1;
-                   }
+                  0% {
+                      opacity: 0.6;
+                  }
+                  100% {
+                      opacity: 1;
+                  }
                 }
                 @keyframes price-pulse {
-                   0%, 100% {
-                       transform: scale(1);
-                   }
-                   50% {
-                       transform: scale(1.02);
-                   }
+                  0%, 100% {
+                      transform: scale(1);
+                  }
+                  50% {
+                      transform: scale(1.02);
+                  }
                 }
                 .grid-line {
-                   stroke: rgba(255, 255, 255, 0.05);
-                   stroke-width: 1;
+                  stroke: rgba(255, 255, 255, 0.05);
+                  stroke-width: 1;
                 }
                 .price-line {
-                   stroke: #10b981;
-                   stroke-width: 2;
-                   fill: none;
-                   filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.5));
+                  stroke: #10b981;
+                  stroke-width: 2;
+                  fill: none;
+                  filter: drop-shadow(0 0 4px rgba(16, 185, 129, 0.5));
                 }
                 .candle-green {
-                   fill: #10b981;
+                  fill: #10b981;
                 }
                 .candle-red {
-                   fill: #ef4444;
+                  fill: #ef4444;
                 }
                 "#}
             </style>

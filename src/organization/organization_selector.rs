@@ -156,8 +156,8 @@ pub fn OrganizationSelector() -> impl IntoView {
                                                         .unwrap_or(false)
                                                 };
                                                 view! {
-                                                    <DropdownItem // class="flex items-center bg-red-500 justify-between px-4 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 cursor-pointer"
-                                                    on_click={
+                                                    // class="flex items-center bg-red-500 justify-between px-4 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 cursor-pointer"
+                                                    <DropdownItem on_click={
                                                         let org_clone = org_clone.clone();
                                                         Callback::from(move || {
                                                             selected_org.set(Some(org_clone.clone()));
@@ -188,8 +188,7 @@ pub fn OrganizationSelector() -> impl IntoView {
                                                                     </div>
                                                                 }
                                                                     .into_any()
-                                                            }} <span>{org.name.clone()}</span>
-                                                            <Show when=is_selected>
+                                                            }} <span>{org.name.clone()}</span> <Show when=is_selected>
                                                                 <Icon
                                                                     weight=IconWeight::Bold
                                                                     icon=CHECK

@@ -93,9 +93,7 @@ pub fn BoringAvatarPixel(
     let pixel_colors = generate_pixel_colors(&name, &colors);
     let svg_string = generate_pixel_svg(&pixel_colors, size, square, &name, title);
 
-    view! {
-        <div inner_html=svg_string />
-    }
+    view! { <div inner_html=svg_string /> }
 }
 
 #[cfg(test)]

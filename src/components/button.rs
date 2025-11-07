@@ -22,12 +22,14 @@ impl ButtonIcon {
                 view! { <img src=url alt="" class="size-8 rounded-full object-cover" /> }.into_any()
             }
             ButtonIcon::Icon(icon) => view! { <Icon icon=icon size="20px" /> }.into_any(),
-            ButtonIcon::Avatar(name) => view! { <Avatar
-                name=name.clone()
-                variant=AvatarVariants::Beam
-                colors=vec!["#d40a2cff".into(), "#0d3dc0ff".into(),  "#cccccc".into()]
-                size=32
-            />}
+            ButtonIcon::Avatar(name) => view! {
+                <Avatar
+                    name=name.clone()
+                    variant=AvatarVariants::Beam
+                    colors=vec!["#d40a2cff".into(), "#0d3dc0ff".into(), "#cccccc".into()]
+                    size=32
+                />
+            }
             .into_any(),
             ButtonIcon::View(view_fn) => {
                 view! { <div class="size-8 flex">{view_fn()}</div> }.into_any()

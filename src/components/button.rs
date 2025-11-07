@@ -1,7 +1,7 @@
+use crate::boring_avatars::{Avatar, AvatarVariants};
 use leptos::prelude::*;
-use tw_merge::*;
-
 use phosphor_leptos::{Icon, IconWeightData};
+use tw_merge::*;
 
 #[derive(Debug, Clone)]
 pub enum ButtonIcon {
@@ -9,6 +9,7 @@ pub enum ButtonIcon {
     ImageCover(String),
     Icon(&'static IconWeightData),
     View(fn() -> AnyView),
+    Avatar(String),
 }
 
 impl ButtonIcon {
@@ -21,8 +22,15 @@ impl ButtonIcon {
                 view! { <img src=url alt="" class="size-8 rounded-full object-cover" /> }.into_any()
             }
             ButtonIcon::Icon(icon) => view! { <Icon icon=icon size="20px" /> }.into_any(),
+            ButtonIcon::Avatar(name) => view! { <Avatar
+                name=name.clone()
+                variant=AvatarVariants::Beam
+                colors=vec!["#d40a2cff".into(), "#0d3dc0ff".into(),  "#cccccc".into()]
+                size=32
+            />}
+            .into_any(),
             ButtonIcon::View(view_fn) => {
-                view! { <div class="size-[20px] flex">{view_fn()}</div> }.into_any()
+                view! { <div class="size-8 flex">{view_fn()}</div> }.into_any()
             }
         }
     }
@@ -242,28 +250,6 @@ pub fn Button(
         }
         .into_any(),
     };
-
-    // let button_contents = view! {
-    //     <div class="w-full flex flex-row items-center gap-2">
-    //         <div class="size-[20px]">
-    //             <div class="w-full h-full flex items-center justify-center text-white text-2xl font-bold">
-    //                 {match icon {
-    //                     Some(ButtonIcon::Image(url)) => view! { <img src=url alt="" class="size-[20px]" /> }.into_any(),
-    //                     Some(ButtonIcon::Icon(icon)) => view! { <Icon icon=icon size="20px" /> }.into_any(),
-    //                     None => view! { <div /> }.into_any(),
-    //                 }}
-    //             </div>
-    //         </div>
-    //         <div class="text-md text-center font-normal max-w-16 leading-tight text-shadow ">
-    //             {
-    //                 match children {
-    //                     Some(children) => children(),
-    //                     None => view! {  }.into_any(),
-    //                 }
-    //             }
-    //         </div>
-    //     </div>
-    // };
 
     if let Some(href_val) = href {
         view! {

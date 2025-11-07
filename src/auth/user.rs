@@ -66,6 +66,29 @@ pub struct AdapterUser {
     pub last_name: Option<String>,
 }
 
+impl Default for AdapterUser {
+    fn default() -> Self {
+        Self {
+            id: RecordId::from_table_key("user", "default"),
+            name: "Guest".to_string(),
+            email_verified: None,
+            image: None,
+            email: EmailAddress::create_blank(),
+            is_admin: Some(false),
+            superadmin: Some(false),
+            theme: Theme::System,
+            address1: None,
+            address2: None,
+            address3: None,
+            postcode: None,
+            phone: None,
+            telephone: None,
+            first_name: None,
+            last_name: None,
+        }
+    }
+}
+
 impl Default for DeliveryDetails {
     fn default() -> Self {
         Self {

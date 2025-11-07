@@ -2,6 +2,7 @@ use leptos::context::Provider;
 use leptos::prelude::*;
 use tw_merge::tw_merge;
 
+use crate::boring_avatars::{Avatar, AvatarVariants};
 use crate::components::Button;
 use crate::components::button::{BtnVariant, ButtonIcon};
 use crate::user::AdapterUser;
@@ -146,25 +147,17 @@ pub fn DropdownHeader(
 
 #[component]
 pub fn AvatarButton(user: AdapterUser) -> impl IntoView {
-    let src = if let Some(image) = user.image.clone() {
-        image
-    } else {
-        format!(
-            "https://ui-avatars.com/api/?name={}&background=3B82F6&color=fff&size=32",
-            user.name.clone(),
-        )
+    if let Some(image) = user.image.clone() {
+        return view! { <DropdownTrigger icon=ButtonIcon::ImageCover(image) variant=BtnVariant::Round /> }
+        .into_any();
     };
 
-    if user.name.starts_with("guest") {
-        return view! {
-            <DropdownTrigger
-                icon=ButtonIcon::Icon(phosphor_leptos::USER_CIRCLE_DASHED)
-                variant=BtnVariant::Round
-            />
-        }
-        .into_any();
+    return view! {
+        <DropdownTrigger
+            // icon=ButtonIcon::Icon(phosphor_leptos::USER_CIRCLE_DASHED)
+            icon=ButtonIcon::Avatar(user.name)
+            variant=BtnVariant::Round
+        />
     }
-
-    view! { <DropdownTrigger icon=ButtonIcon::ImageCover(src) variant=BtnVariant::Round /> }
-    .into_any()
+    .into_any();
 }

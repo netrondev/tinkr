@@ -19,29 +19,42 @@ pub fn WalletItem(wallet: Wallet) -> impl IntoView {
                 <div class="text-sm font-medium text-left text-gray-900 dark:text-gray-100 flex-1">
                     {wallet.label.clone()}
                     {if wallet.is_primary {
-                        view! { <span class="ml-2 text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-0.5 rounded-full">"Primary"</span> }.into_any()
+                        view! {
+                            <span class="ml-2 text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-0.5 rounded-full">
+                                "Primary"
+                            </span>
+                        }
+                            .into_any()
                     } else {
                         view! { <span></span> }.into_any()
                     }}
                 </div>
                 <div class="text-xs text-gray-500 dark:text-gray-400">
                     {wallet.wallet_type.clone()}
-                    {wallet.chain_type.as_ref().map(|chain| {
-                        view! {
-                            <span class="ml-1">
-                                "("{chain.clone()}")"
-                            </span>
-                        }
-                    })}
+                    {wallet
+                        .chain_type
+                        .as_ref()
+                        .map(|chain| {
+                            view! { <span class="ml-1">"("{chain.clone()}")"</span> }
+                        })}
                 </div>
                 <div class="text-xs text-gray-400 dark:text-gray-500 font-mono">
-                    {wallet.address.chars().take(6).collect::<String>() + "..." + &wallet.address.chars().rev().take(4).collect::<String>().chars().rev().collect::<String>()}
+                    {wallet.address.chars().take(6).collect::<String>() + "..."
+                        + &wallet
+                            .address
+                            .chars()
+                            .rev()
+                            .take(4)
+                            .collect::<String>()
+                            .chars()
+                            .rev()
+                            .collect::<String>()}
                 </div>
 
                 <div class="flex items-center space-x-2">
                     <Button
                         color=BtnColor::Neutral
-                        href={format!("/wallets/a/{}", wallet.address.clone())}
+                        href=format!("/wallets/a/{}", wallet.address.clone())
                         icon=ButtonIcon::Icon(phosphor_leptos::WALLET)
                     >
                         "View"
@@ -50,7 +63,7 @@ pub fn WalletItem(wallet: Wallet) -> impl IntoView {
                     <Button
                         icon=ButtonIcon::Icon(phosphor_leptos::GEAR)
                         color=BtnColor::Neutral
-                        href={format!("/wallets/w/{}", wallet.id)}
+                        href=format!("/wallets/w/{}", wallet.id)
                     >
                         "Manage"
                     </Button>
@@ -65,16 +78,18 @@ pub fn WalletList() -> impl IntoView {
     let wallets_resource = Resource::new(|| (), |_| get_user_wallets());
 
     view! {
-        <Suspense fallback=move || view! {
-            <div class="bg-white dark:bg-neutral-800 rounded-lg shadow">
-                <div class="p-6">
-                    <div class="animate-pulse space-y-4">
-                        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
-                        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
-                        <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+        <Suspense fallback=move || {
+            view! {
+                <div class="bg-white dark:bg-neutral-800 rounded-lg shadow">
+                    <div class="p-6">
+                        <div class="animate-pulse space-y-4">
+                            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-3/4"></div>
+                            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2"></div>
+                            <div class="h-4 bg-gray-200 dark:bg-gray-700 rounded w-5/6"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         }>
             {move || {
                 match wallets_resource.get() {
@@ -83,10 +98,13 @@ pub fn WalletList() -> impl IntoView {
                             view! {
                                 <div class="bg-white dark:bg-neutral-800 rounded-lg shadow">
                                     <div class="p-6">
-                                        <p class="text-gray-500 dark:text-gray-400">"No wallets connected. Connect your first wallet to get started."</p>
+                                        <p class="text-gray-500 dark:text-gray-400">
+                                            "No wallets connected. Connect your first wallet to get started."
+                                        </p>
                                     </div>
                                 </div>
-                            }.into_any()
+                            }
+                                .into_any()
                         } else {
                             view! {
                                 <div class="">
@@ -94,14 +112,13 @@ pub fn WalletList() -> impl IntoView {
                                         {wallets
                                             .into_iter()
                                             .map(|wallet| {
-                                                view! {
-                                                    <WalletItem wallet=wallet />
-                                                }
+                                                view! { <WalletItem wallet=wallet /> }
                                             })
                                             .collect_view()}
                                     </div>
                                 </div>
-                            }.into_any()
+                            }
+                                .into_any()
                         }
                     }
                     Some(Err(e)) => {
@@ -119,13 +136,10 @@ pub fn WalletList() -> impl IntoView {
                                     </div>
                                 </div>
                             </div>
-                        }.into_any()
+                        }
+                            .into_any()
                     }
-                    None => {
-                        view! {
-                            <div></div>
-                        }.into_any()
-                    }
+                    None => view! { <div></div> }.into_any(),
                 }
             }}
         </Suspense>

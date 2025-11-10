@@ -78,18 +78,18 @@ pub fn AvatarUpload(on_upload: impl Fn(String) + Clone + 'static) -> impl IntoVi
                 variant=BtnVariant::CallToAction
                 disabled=uploading.get()
             >
-                {move || if uploading.get() {
-                    format!("Uploading... {}%", (progress.get() * 100.0) as i32)
-                } else {
-                    "Change Avatar".to_string()
+                {move || {
+                    if uploading.get() {
+                        format!("Uploading... {}%", (progress.get() * 100.0) as i32)
+                    } else {
+                        "Change Avatar".to_string()
+                    }
                 }}
             </Button>
 
             // Error display
             <Show when=move || error.get().is_some()>
-                <p class="mt-2 text-sm text-red-600">
-                    {move || error.get().unwrap_or_default()}
-                </p>
+                <p class="mt-2 text-sm text-red-600">{move || error.get().unwrap_or_default()}</p>
             </Show>
         </div>
     }

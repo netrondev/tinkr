@@ -2,6 +2,7 @@ use leptos::context::Provider;
 use leptos::prelude::*;
 use tw_merge::tw_merge;
 
+use crate::boring_avatars::{Avatar, AvatarVariants};
 use crate::components::Button;
 use crate::components::button::{BtnVariant, ButtonIcon};
 use crate::user::AdapterUser;
@@ -15,14 +16,9 @@ pub fn Dropdown(
     let final_class = tw_merge!(default_class, class);
 
     view! {
-        <div
-            class=final_class
-            on:click=move |_| dropdown_visible.set(false)
-        >
+        <div class=final_class on:click=move |_| dropdown_visible.set(false)>
             <Provider value=dropdown_visible>
-                <div on:click=move |e| e.stop_propagation()>
-                    {children()}
-                </div>
+                <div on:click=move |e| e.stop_propagation()>{children()}</div>
             </Provider>
         </div>
     }
@@ -92,13 +88,8 @@ pub fn DropdownMenu(
 
     view! {
         <Show when=move || dropdown_visible.get()>
-            <div
-                class=final_class.clone()
-                on:click=move |e| e.stop_propagation()
-            >
-                <div class="py-1 w-full flex flex-col">
-                    {children()}
-                </div>
+            <div class=final_class.clone() on:click=move |e| e.stop_propagation()>
+                <div class="py-1 w-full flex flex-col">{children()}</div>
             </div>
         </Show>
     }
@@ -135,11 +126,7 @@ pub fn DropdownItem(
         .into_any()
     } else {
         view! {
-            <button
-                type="button"
-                class=final_class
-                on:click=handle_click
-            >
+            <button type="button" class=final_class on:click=handle_click>
                 {children()}
             </button>
         }
@@ -155,40 +142,22 @@ pub fn DropdownHeader(
     let default_class = "px-4 py-2 text-sm text-neutral-700 dark:text-neutral-300 border-b dark:border-neutral-700 whitespace-nowrap";
     let final_class = class.unwrap_or(default_class);
 
-    view! {
-        <div class=final_class>
-            {children()}
-        </div>
-    }
+    view! { <div class=final_class>{children()}</div> }
 }
 
 #[component]
 pub fn AvatarButton(user: AdapterUser) -> impl IntoView {
-    let src = if let Some(image) = user.image.clone() {
-        image
-    } else {
-        format!(
-            "https://ui-avatars.com/api/?name={}&background=3B82F6&color=fff&size=32",
-            user.name.clone(),
-        )
+    if let Some(image) = user.image.clone() {
+        return view! { <DropdownTrigger icon=ButtonIcon::ImageCover(image) variant=BtnVariant::Round /> }
+        .into_any();
     };
 
-    if user.name.starts_with("guest") {
-        return view! {
-            <DropdownTrigger
-                icon=ButtonIcon::Icon(phosphor_leptos::USER_CIRCLE_DASHED)
-                variant=BtnVariant::Round
-            />
-
-        }
-        .into_any();
-    }
-
-    view! {
+    return view! {
         <DropdownTrigger
-            icon=ButtonIcon::ImageCover(src)
+            // icon=ButtonIcon::Icon(phosphor_leptos::USER_CIRCLE_DASHED)
+            icon=ButtonIcon::Avatar(user.name)
             variant=BtnVariant::Round
         />
     }
-    .into_any()
+    .into_any();
 }

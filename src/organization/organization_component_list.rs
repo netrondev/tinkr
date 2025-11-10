@@ -61,100 +61,126 @@ pub fn OrganizationDetail() -> impl IntoView {
         <div>
             <UsersHeader />
             <div class="container mx-auto p-6">
-                <Suspense fallback=move || view! { <p>"Loading organization..."</p> }>
+                <Suspense fallback=move || {
+                    view! { <p>"Loading organization..."</p> }
+                }>
                     {move || {
-                        org_resource.get().map(|org_result| {
-                            match org_result {
-                                Ok(org) => {
-                                    let org_clone = org.clone();
-                                    let org_clone_for_closure = org_clone.clone();
-                                    view! {
-                                        <div class="max-w-4xl mx-auto">
-                                            <div class="bg-white dark:bg-neutral-800 shadow rounded-lg p-6">
-                                                <div class="flex justify-between items-start mb-6">
-                                                    <div class="flex items-start space-x-4">
-                                                        {move || {
-                                                            if let Some(logo_url) = &org_clone_for_closure.logo_url {
-                                                                view! {
-                                                                    <img
-                                                                        src=logo_url.clone()
-                                                                        alt="Organization logo"
-                                                                        class="w-16 h-16 rounded-lg object-cover"
-                                                                    />
-                                                                }.into_any()
-                                                            } else {
-                                                                view! {
-                                                                    <div class="w-16 h-16 bg-blue-500 rounded-lg flex items-center justify-center">
-                                                                        <span class="text-white text-2xl font-bold">
-                                                                            {org_clone_for_closure.name.chars().next().unwrap_or('O').to_uppercase().to_string()}
-                                                                        </span>
-                                                                    </div>
-                                                                }.into_any()
-                                                            }
-                                                        }}
+                        org_resource
+                            .get()
+                            .map(|org_result| {
+                                match org_result {
+                                    Ok(org) => {
+                                        let org_clone = org.clone();
+                                        let org_clone_for_closure = org_clone.clone();
+                                        view! {
+                                            <div class="max-w-4xl mx-auto">
+                                                <div class="bg-white dark:bg-neutral-800 shadow rounded-lg p-6">
+                                                    <div class="flex justify-between items-start mb-6">
+                                                        <div class="flex items-start space-x-4">
+                                                            {move || {
+                                                                if let Some(logo_url) = &org_clone_for_closure.logo_url {
+                                                                    view! {
+                                                                        <img
+                                                                            src=logo_url.clone()
+                                                                            alt="Organization logo"
+                                                                            class="w-16 h-16 rounded-lg object-cover"
+                                                                        />
+                                                                    }
+                                                                        .into_any()
+                                                                } else {
+                                                                    view! {
+                                                                        <div class="w-16 h-16 bg-blue-500 rounded-lg flex items-center justify-center">
+                                                                            <span class="text-white text-2xl font-bold">
+                                                                                {org_clone_for_closure
+                                                                                    .name
+                                                                                    .chars()
+                                                                                    .next()
+                                                                                    .unwrap_or('O')
+                                                                                    .to_uppercase()
+                                                                                    .to_string()}
+                                                                            </span>
+                                                                        </div>
+                                                                    }
+                                                                        .into_any()
+                                                                }
+                                                            }} <div>
+                                                                <h1 class="text-2xl font-bold text-neutral-900 dark:text-white">
+                                                                    {org_clone.name.clone()}
+                                                                </h1>
+                                                                {org_clone
+                                                                    .website
+                                                                    .clone()
+                                                                    .map(|website| {
+                                                                        view! {
+                                                                            <a
+                                                                                href=website.clone()
+                                                                                target="_blank"
+                                                                                rel="noopener noreferrer"
+                                                                                class="text-blue-600 dark:text-blue-400 hover:underline"
+                                                                            >
+                                                                                {website.clone()}
+                                                                            </a>
+                                                                        }
+                                                                    })}
+                                                            </div>
+                                                        </div>
                                                         <div>
-                                                            <h1 class="text-2xl font-bold text-neutral-900 dark:text-white">
-                                                                {org_clone.name.clone()}
-                                                            </h1>
-                                                            {org_clone.website.clone().map(|website| view! {
-                                                                <a
-                                                                    href=website.clone()
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                    class="text-blue-600 dark:text-blue-400 hover:underline"
-                                                                >
-                                                                    {website.clone()}
-                                                                </a>
-                                                            })}
+                                                            <Button
+                                                                on:click={
+                                                                    let navigate = navigate.clone();
+                                                                    let org_id = org.id.to_string();
+                                                                    move |_| {
+                                                                        navigate(
+                                                                            &format!("/users/organizations/{}/edit", org_id),
+                                                                            Default::default(),
+                                                                        );
+                                                                    }
+                                                                }
+                                                                href=format!(
+                                                                    "/users/organizations/{}/edit",
+                                                                    org.id.to_string(),
+                                                                )
+                                                                color=BtnColor::Default
+                                                                variant=BtnVariant::CallToAction
+                                                                icon=ButtonIcon::Icon(USERS)
+                                                                class="w-min whitespace-nowrap"
+                                                            >
+                                                                "Edit Organization"
+                                                            </Button>
                                                         </div>
                                                     </div>
-                                                    <div>
-                                                        <Button
-                                                            on:click={
-                                                                let navigate = navigate.clone();
-                                                                let org_id = org.id.to_string();
-                                                                move |_| {
-                                                                    navigate(&format!("/users/organizations/{}/edit", org_id), Default::default());
-                                                                }
+
+                                                    {org_clone
+                                                        .description
+                                                        .map(|desc| {
+                                                            view! {
+                                                                <div class="mb-6">
+                                                                    <h2 class="text-lg font-semibold text-neutral-900 dark:text-white mb-2">
+                                                                        "Description"
+                                                                    </h2>
+                                                                    <p class="text-neutral-600 dark:text-neutral-400">{desc}</p>
+                                                                </div>
                                                             }
-                                                            href={format!("/users/organizations/{}/edit", org.id.to_string())}
-                                                            color=BtnColor::Default
-                                                            variant=BtnVariant::CallToAction
-                                                            icon=ButtonIcon::Icon(USERS)
-                                                            class="w-min whitespace-nowrap"
-                                                        >
-                                                            "Edit Organization"
-                                                        </Button>
-                                                    </div>
-                                                </div>
+                                                        })}
 
-                                                {org_clone.description.map(|desc| view! {
-                                                    <div class="mb-6">
-                                                        <h2 class="text-lg font-semibold text-neutral-900 dark:text-white mb-2">
-                                                            "Description"
-                                                        </h2>
-                                                        <p class="text-neutral-600 dark:text-neutral-400">
-                                                            {desc}
-                                                        </p>
+                                                    <div class="border-t border-neutral-200 dark:border-neutral-700 pt-6">
+                                                        <TeamManagement organization_id=org.id.to_string() />
                                                     </div>
-                                                })}
-
-                                                <div class="border-t border-neutral-200 dark:border-neutral-700 pt-6">
-                                                    <TeamManagement
-                                                        organization_id=org.id.to_string()
-                                                    />
                                                 </div>
                                             </div>
-                                        </div>
-                                    }.into_any()
-                                },
-                                Err(err) => view! {
-                                    <div class="bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded">
-                                        <p>"Error loading organization: " {err.to_string()}</p>
-                                    </div>
-                                }.into_any()
-                            }
-                        })
+                                        }
+                                            .into_any()
+                                    }
+                                    Err(err) => {
+                                        view! {
+                                            <div class="bg-red-100 dark:bg-red-900/20 border border-red-400 dark:border-red-800 text-red-700 dark:text-red-400 px-4 py-3 rounded">
+                                                <p>"Error loading organization: " {err.to_string()}</p>
+                                            </div>
+                                        }
+                                            .into_any()
+                                    }
+                                }
+                            })
                     }}
                 </Suspense>
             </div>
@@ -181,52 +207,64 @@ fn OrganizationCard(organization: Organization) -> impl IntoView {
     view! {
         <div class="bg-white dark:bg-neutral-800 shadow rounded-lg p-6">
             <div class="flex items-start space-x-4">
-                 <a on:click=move |ev:MouseEvent| {
-                    ev.prevent_default();
-                    ev.stop_propagation();
-                    navigate(&format!("/users/organizations/{}",  org_id), Default::default());
-                }
-                     href=move || format!("/users/organizations/{}", org_idc)
-                 >
-     {move || {
-                    if let Some(logo_url) = &org_clone_for_closure.logo_url {
-                        view! {
-                            <img
-                                src=logo_url.clone()
-                                alt="Organization logo"
-                                class="w-16 h-16 rounded-lg object-cover"
-                            />
-                        }.into_any()
-                    } else {
-                        view! {
-                            <div class="w-16 h-16 bg-blue-500 rounded-lg flex items-center justify-center">
-                                <span class="text-white text-2xl font-bold">
-                                    {org_clone_for_closure.name.chars().next().unwrap_or('O').to_uppercase().to_string()}
-                                </span>
-                            </div>
-                        }.into_any()
+                <a
+                    on:click=move |ev: MouseEvent| {
+                        ev.prevent_default();
+                        ev.stop_propagation();
+                        navigate(&format!("/users/organizations/{}", org_id), Default::default());
                     }
-                }}
-            </a>
-
+                    href=move || format!("/users/organizations/{}", org_idc)
+                >
+                    {move || {
+                        if let Some(logo_url) = &org_clone_for_closure.logo_url {
+                            view! {
+                                <img
+                                    src=logo_url.clone()
+                                    alt="Organization logo"
+                                    class="w-16 h-16 rounded-lg object-cover"
+                                />
+                            }
+                                .into_any()
+                        } else {
+                            view! {
+                                <div class="w-16 h-16 bg-blue-500 rounded-lg flex items-center justify-center">
+                                    <span class="text-white text-2xl font-bold">
+                                        {org_clone_for_closure
+                                            .name
+                                            .chars()
+                                            .next()
+                                            .unwrap_or('O')
+                                            .to_uppercase()
+                                            .to_string()}
+                                    </span>
+                                </div>
+                            }
+                                .into_any()
+                        }
+                    }}
+                </a>
 
                 <div>
                     <h1 class="text-2xl font-bold text-neutral-900 dark:text-white">
                         {org_clone.name.clone()}
                     </h1>
-                    {org_clone.website.clone().map(|website| view! {
-                        <a
-                            href=website.clone()
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            class="text-blue-600 dark:text-blue-400 hover:underline"
-                        >
-                            {website.clone()}
-                        </a>
-                    })}
+                    {org_clone
+                        .website
+                        .clone()
+                        .map(|website| {
+                            view! {
+                                <a
+                                    href=website.clone()
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    class="text-blue-600 dark:text-blue-400 hover:underline"
+                                >
+                                    {website.clone()}
+                                </a>
+                            }
+                        })}
                 </div>
             </div>
-
 
         </div>
     }
@@ -243,7 +281,9 @@ pub fn OrganizationList() -> impl IntoView {
             <UsersHeader />
             <div class="container mx-auto p-6">
                 <div class="mb-6 flex justify-between items-center w-full">
-                    <h2 class="text-2xl font-bold text-neutral-800 dark:text-white">"My Organizations"</h2>
+                    <h2 class="text-2xl font-bold text-neutral-800 dark:text-white">
+                        "My Organizations"
+                    </h2>
                     <div>
                         <Button
                             on:click=move |_| {
@@ -258,24 +298,35 @@ pub fn OrganizationList() -> impl IntoView {
                     </div>
                 </div>
 
-                <Suspense fallback=move || view! { <p>"Loading organizations..."</p> }>
+                <Suspense fallback=move || {
+                    view! { <p>"Loading organizations..."</p> }
+                }>
                     {move || {
-                        orgs_resource.get().map(|orgs_result| {
-                            match orgs_result {
-                                Ok(orgs) => view! {
-                                    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                                        {orgs.into_iter().map(|org| view! {
-                                            <OrganizationCard organization=org />
-                                        }).collect::<Vec<_>>()}
-                                    </div>
-                                }.into_any(),
-                                Err(err) => view! {
-                                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-                                        <p>"Error loading organizations: " {err.to_string()}</p>
-                                    </div>
-                                }.into_any()
-                            }
-                        })
+                        orgs_resource
+                            .get()
+                            .map(|orgs_result| {
+                                match orgs_result {
+                                    Ok(orgs) => {
+                                        view! {
+                                            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+                                                {orgs
+                                                    .into_iter()
+                                                    .map(|org| view! { <OrganizationCard organization=org /> })
+                                                    .collect::<Vec<_>>()}
+                                            </div>
+                                        }
+                                            .into_any()
+                                    }
+                                    Err(err) => {
+                                        view! {
+                                            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                                                <p>"Error loading organizations: " {err.to_string()}</p>
+                                            </div>
+                                        }
+                                            .into_any()
+                                    }
+                                }
+                            })
                     }}
                 </Suspense>
             </div>

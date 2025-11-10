@@ -216,46 +216,60 @@ pub fn LogsAdmin() -> impl IntoView {
                         Some(Ok(stats_data)) => {
                             view! {
                                 <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
-                                    {stats_data.iter().map(|stat| {
-                                        let level = stat.level.as_str();
-                                        let count = stat.count;
+                                    {stats_data
+                                        .iter()
+                                        .map(|stat| {
+                                            let level = stat.level.as_str();
+                                            let count = stat.count;
+                                            let color_class = match level {
+                                                "ERROR" => "text-red-500 bg-red-100 dark:bg-red-900/20",
+                                                "WARN" => {
+                                                    "text-yellow-500 bg-yellow-100 dark:bg-yellow-900/20"
+                                                }
+                                                "INFO" => "text-blue-500 bg-blue-100 dark:bg-blue-900/20",
+                                                "DEBUG" => {
+                                                    "text-neutral-500 bg-neutral-100 dark:bg-neutral-800/20"
+                                                }
+                                                "TRACE" => {
+                                                    "text-purple-500 bg-purple-100 dark:bg-purple-900/20"
+                                                }
+                                                _ => {
+                                                    "text-neutral-400 bg-neutral-100 dark:bg-neutral-800/20"
+                                                }
+                                            };
 
-                                        let color_class = match level {
-                                            "ERROR" => "text-red-500 bg-red-100 dark:bg-red-900/20",
-                                            "WARN" => "text-yellow-500 bg-yellow-100 dark:bg-yellow-900/20",
-                                            "INFO" => "text-blue-500 bg-blue-100 dark:bg-blue-900/20",
-                                            "DEBUG" => "text-neutral-500 bg-neutral-100 dark:bg-neutral-800/20",
-                                            "TRACE" => "text-purple-500 bg-purple-100 dark:bg-purple-900/20",
-                                            _ => "text-neutral-400 bg-neutral-100 dark:bg-neutral-800/20",
-                                        };
-
-                                        view! {
-                                            <div class={format!("rounded-lg p-4 {}", color_class)}>
-                                                <div class="text-2xl font-bold">{count}</div>
-                                                <div class="text-sm">{level}</div>
-                                            </div>
-                                        }
-                                    }).collect_view()}
+                                            view! {
+                                                <div class=format!("rounded-lg p-4 {}", color_class)>
+                                                    <div class="text-2xl font-bold">{count}</div>
+                                                    <div class="text-sm">{level}</div>
+                                                </div>
+                                            }
+                                        })
+                                        .collect_view()}
                                 </div>
-                            }.into_any()
-                        },
-                        Some(Err(e)) => view! {
-                            <div class="text-red-500 p-4 rounded-lg bg-red-100 dark:bg-red-900/20">
-                                "Error loading stats: " {e.to_string()}
-                            </div>
-                        }.into_any(),
-                        None => view! {
-                            <div class="text-center py-4">
-                                <div class="text-neutral-500 dark:text-neutral-400">
-                                    "Loading stats..."
+                            }
+                                .into_any()
+                        }
+                        Some(Err(e)) => {
+                            view! {
+                                <div class="text-red-500 p-4 rounded-lg bg-red-100 dark:bg-red-900/20">
+                                    "Error loading stats: " {e.to_string()}
                                 </div>
-                            </div>
-                        }.into_any()
+                            }
+                                .into_any()
+                        }
+                        None => {
+                            view! {
+                                <div class="text-center py-4">
+                                    <div class="text-neutral-500 dark:text-neutral-400">
+                                        "Loading stats..."
+                                    </div>
+                                </div>
+                            }
+                                .into_any()
+                        }
                     }
-                }}
-
-                <LogsFilter filter=filter set_filter=update_filter on_refresh=refresh_logs />
-
+                }} <LogsFilter filter=filter set_filter=update_filter on_refresh=refresh_logs />
                 {move || {
                     match logs_resource.get() {
                         Some(Ok(logs_response)) => {
@@ -266,7 +280,8 @@ pub fn LogsAdmin() -> impl IntoView {
                                             "No logs found matching your criteria"
                                         </div>
                                     </div>
-                                }.into_any()
+                                }
+                                    .into_any()
                             } else {
                                 view! {
                                     <div>
@@ -286,16 +301,19 @@ pub fn LogsAdmin() -> impl IntoView {
                                                         "Load More"
                                                     </Button>
                                                 </div>
-                                            }.into_any()
+                                            }
+                                                .into_any()
                                         } else {
                                             view! { <div></div> }.into_any()
                                         }}
 
                                         <div class="mt-4 text-sm text-neutral-500 dark:text-neutral-400">
-                                            "Showing " {logs_response.logs.len()} " of " {logs_response.total_count} " total logs"
+                                            "Showing " {logs_response.logs.len()} " of "
+                                            {logs_response.total_count} " total logs"
                                         </div>
                                     </div>
-                                }.into_any()
+                                }
+                                    .into_any()
                             }
                         }
                         Some(Err(e)) => {
@@ -303,7 +321,8 @@ pub fn LogsAdmin() -> impl IntoView {
                                 <div class="text-red-500 p-4 rounded-lg bg-red-100 dark:bg-red-900/20">
                                     "Error loading logs: " {e.to_string()}
                                 </div>
-                            }.into_any()
+                            }
+                                .into_any()
                         }
                         None => {
                             view! {
@@ -312,7 +331,8 @@ pub fn LogsAdmin() -> impl IntoView {
                                         "Loading logs..."
                                     </div>
                                 </div>
-                            }.into_any()
+                            }
+                                .into_any()
                         }
                     }
                 }}
@@ -449,14 +469,17 @@ fn LogsFilter(
 fn LogsList(logs: Vec<LogEvent>, on_select_log: WriteSignal<Option<LogEvent>>) -> impl IntoView {
     view! {
         <div class="space-y-2">
-            {logs.into_iter().map(|log| {
-                view! {
-                    <LogEntryCard
-                        log=log.clone()
-                        on_select=move |log_entry: LogEvent| on_select_log.set(Some(log_entry))
-                    />
-                }
-            }).collect_view()}
+            {logs
+                .into_iter()
+                .map(|log| {
+                    view! {
+                        <LogEntryCard
+                            log=log.clone()
+                            on_select=move |log_entry: LogEvent| on_select_log.set(Some(log_entry))
+                        />
+                    }
+                })
+                .collect_view()}
         </div>
     }
 }
@@ -474,7 +497,10 @@ fn LogEntryCard(log: LogEvent, on_select: impl Fn(LogEvent) + 'static) -> impl I
 
     view! {
         <div
-            class={format!("p-4 rounded-lg cursor-pointer hover:bg-neutral-200 hover:dark:bg-neutral-900 {}", log.level_bg_color())}
+            class=format!(
+                "p-4 rounded-lg cursor-pointer hover:bg-neutral-200 hover:dark:bg-neutral-900 {}",
+                log.level_bg_color(),
+            )
             on:click={
                 let log_clone = log.clone();
                 move |_| on_select(log_clone.clone())
@@ -483,9 +509,10 @@ fn LogEntryCard(log: LogEvent, on_select: impl Fn(LogEvent) + 'static) -> impl I
             <div class="flex items-start justify-between">
                 <div class="flex-1 min-w-0">
                     <div class="flex items-center gap-2 mb-1">
-                        <span class={format!("text-xs px-2 py-1 rounded font-medium {}", log.level_color())}>
-                            {log.level.clone()}
-                        </span>
+                        <span class=format!(
+                            "text-xs px-2 py-1 rounded font-medium {}",
+                            log.level_color(),
+                        )>{log.level.clone()}</span>
                         <span class="text-xs text-neutral-500 dark:text-neutral-400">
                             {timestamp_str}
                         </span>
@@ -522,102 +549,119 @@ fn LogDetailModal(
 ) -> impl IntoView {
     view! {
         {move || {
-            log.get().map(|log_entry| {
-                let close = move || set_log.set(None);
-                let timestamp_str = log_entry.timestamp.ago();
+            log.get()
+                .map(|log_entry| {
+                    let close = move || set_log.set(None);
+                    let timestamp_str = log_entry.timestamp.ago();
 
-                view! {
-                    <div class="fixed inset-0 z-50 flex items-center justify-center">
-                        <div class="fixed inset-0 bg-black bg-opacity-50" on:click=move |_| close()></div>
+                    view! {
+                        <div class="fixed inset-0 z-50 flex items-center justify-center">
+                            <div
+                                class="fixed inset-0 bg-black bg-opacity-50"
+                                on:click=move |_| close()
+                            ></div>
 
-                        <div class="relative bg-white dark:bg-neutral-800 rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
-                            <div class="flex items-center justify-between p-4 border-b border-neutral-200 dark:border-neutral-700">
-                                <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
-                                    "Log Details"
-                                </h3>
-                                <Button
-                                    variant=BtnVariant::Default
-                                    color=BtnColor::Neutral
-                                    icon=ButtonIcon::Icon(phosphor_leptos::X)
-                                    on:click=move |_| close()
-                                >
-                                    ""
-                                </Button>
-                            </div>
-
-                            <div class="p-4 overflow-y-auto max-h-[calc(90vh-120px)]">
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                                    <div>
-                                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                                            "Timestamp"
-                                        </label>
-                                        <div class="mt-1 text-sm text-neutral-900 dark:text-neutral-100">
-                                            {timestamp_str}
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                                            "Level"
-                                        </label>
-                                        <div class={format!("mt-1 text-sm font-medium {}", log_entry.level_color())}>
-                                            {log_entry.level.clone()}
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                                            "Target"
-                                        </label>
-                                        <div class="mt-1 text-sm text-neutral-900 dark:text-neutral-100">
-                                            {log_entry.target.clone()}
-                                        </div>
-                                    </div>
-
-                                    <div>
-                                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
-                                            "Location"
-                                        </label>
-                                        <div class="mt-1 text-sm text-neutral-900 dark:text-neutral-100">
-                                            {if let (Some(file), Some(line)) = (&log_entry.file, log_entry.line) {
-                                                format!("{}:{}", file, line)
-                                            } else if let Some(module) = &log_entry.module_path {
-                                                module.clone()
-                                            } else {
-                                                "unknown".to_string()
-                                            }}
-                                        </div>
-                                    </div>
+                            <div class="relative bg-white dark:bg-neutral-800 rounded-lg shadow-xl max-w-4xl w-full mx-4 max-h-[90vh] overflow-hidden">
+                                <div class="flex items-center justify-between p-4 border-b border-neutral-200 dark:border-neutral-700">
+                                    <h3 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+                                        "Log Details"
+                                    </h3>
+                                    <Button
+                                        variant=BtnVariant::Default
+                                        color=BtnColor::Neutral
+                                        icon=ButtonIcon::Icon(phosphor_leptos::X)
+                                        on:click=move |_| close()
+                                    >
+                                        ""
+                                    </Button>
                                 </div>
 
-                                <div class="mb-4">
-                                    <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                                        "Message"
-                                    </label>
-                                    <div class="bg-neutral-50 dark:bg-neutral-900 rounded-md p-4 text-sm text-neutral-900 dark:text-neutral-100 font-mono whitespace-pre-wrap">
-                                        {log_entry.message.clone()}
-                                    </div>
-                                </div>
-
-                                {if !log_entry.fields.is_null() && log_entry.fields.as_object().map_or(false, |obj| !obj.is_empty()) {
-                                    view! {
+                                <div class="p-4 overflow-y-auto max-h-[calc(90vh-120px)]">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                                         <div>
-                                            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
-                                                "Additional Fields"
+                                            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                                                "Timestamp"
                                             </label>
-                                            <div class="bg-neutral-50 dark:bg-neutral-900 rounded-md p-4 text-sm text-neutral-900 dark:text-neutral-100 font-mono">
-                                                <pre>{serde_json::to_string_pretty(&log_entry.fields).unwrap_or_default()}</pre>
+                                            <div class="mt-1 text-sm text-neutral-900 dark:text-neutral-100">
+                                                {timestamp_str}
                                             </div>
                                         </div>
-                                    }.into_any()
-                                } else {
-                                    view! { <div></div> }.into_any()
-                                }}
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                                                "Level"
+                                            </label>
+                                            <div class=format!(
+                                                "mt-1 text-sm font-medium {}",
+                                                log_entry.level_color(),
+                                            )>{log_entry.level.clone()}</div>
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                                                "Target"
+                                            </label>
+                                            <div class="mt-1 text-sm text-neutral-900 dark:text-neutral-100">
+                                                {log_entry.target.clone()}
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300">
+                                                "Location"
+                                            </label>
+                                            <div class="mt-1 text-sm text-neutral-900 dark:text-neutral-100">
+                                                {if let (Some(file), Some(line)) = (
+                                                    &log_entry.file,
+                                                    log_entry.line,
+                                                ) {
+                                                    format!("{}:{}", file, line)
+                                                } else if let Some(module) = &log_entry.module_path {
+                                                    module.clone()
+                                                } else {
+                                                    "unknown".to_string()
+                                                }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                            "Message"
+                                        </label>
+                                        <div class="bg-neutral-50 dark:bg-neutral-900 rounded-md p-4 text-sm text-neutral-900 dark:text-neutral-100 font-mono whitespace-pre-wrap">
+                                            {log_entry.message.clone()}
+                                        </div>
+                                    </div>
+
+                                    {if !log_entry.fields.is_null()
+                                        && log_entry
+                                            .fields
+                                            .as_object()
+                                            .map_or(false, |obj| !obj.is_empty())
+                                    {
+                                        view! {
+                                            <div>
+                                                <label class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                                                    "Additional Fields"
+                                                </label>
+                                                <div class="bg-neutral-50 dark:bg-neutral-900 rounded-md p-4 text-sm text-neutral-900 dark:text-neutral-100 font-mono">
+                                                    <pre>
+                                                        {serde_json::to_string_pretty(&log_entry.fields)
+                                                            .unwrap_or_default()}
+                                                    </pre>
+                                                </div>
+                                            </div>
+                                        }
+                                            .into_any()
+                                    } else {
+                                        view! { <div></div> }.into_any()
+                                    }}
+                                </div>
                             </div>
                         </div>
-                    </div>
-                }
-            })
+                    }
+                })
         }}
     }
 }

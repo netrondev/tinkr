@@ -186,7 +186,9 @@ pub fn WalletExplorer() -> impl IntoView {
                             on:change=move |_| set_include_testnets.update(|v| *v = !*v)
                             class="rounded"
                         />
-                        <label for="include-testnets" class="text-sm">"Include Testnets"</label>
+                        <label for="include-testnets" class="text-sm">
+                            "Include Testnets"
+                        </label>
                     </div>
 
                     <button
@@ -199,11 +201,7 @@ pub fn WalletExplorer() -> impl IntoView {
                         }
                         disabled=move || address_input.get().is_empty() || is_loading.get()
                     >
-                        {move || if is_loading.get() {
-                            "Loading..."
-                        } else {
-                            "Check Balances"
-                        }}
+                        {move || if is_loading.get() { "Loading..." } else { "Check Balances" }}
                     </button>
                 </div>
 
@@ -230,33 +228,48 @@ pub fn WalletExplorer() -> impl IntoView {
                                 let explorer_url_href = explorer_url.clone();
 
                                 view! {
-                                    <div class={if has_balance {
+                                    <div class=if has_balance {
                                         "border-2 border-green-500 dark:border-green-400"
                                     } else {
                                         "border border-neutral-200 dark:border-neutral-700"
-                                    } .to_string() + " rounded-lg p-4 hover:shadow-lg"}>
+                                    }
+                                        .to_string() + " rounded-lg p-4 hover:shadow-lg">
                                         <div class="flex items-start justify-between">
                                             <div class="flex items-center space-x-3">
-                                                {balance.chain_info.icon.clone().map(|icon| {
-                                                    view! {
-                                                        <img
-                                                            src={format!("https://icons.llamao.fi/icons/chains/rsz_{}.jpg", icon)}
-                                                            alt={balance.chain_info.name.clone()}
-                                                            class="w-10 h-10 rounded-full object-cover"
-                                                            onerror="this.style.display='none'"
-                                                        />
-                                                    }.into_any()
-                                                }).unwrap_or_else(|| view! {
-                                                    <div class="w-10 h-10 rounded-full bg-neutral-300 dark:bg-neutral-600 flex items-center justify-center">
-                                                        <span class="text-sm font-bold">{balance.chain_info.name.chars().next().unwrap_or('?')}</span>
-                                                    </div>
-                                                }.into_any())}
-
-                                                <div>
-                                                    <h3 class="font-semibold">{balance.chain_info.name.clone()}</h3>
+                                                {balance
+                                                    .chain_info
+                                                    .icon
+                                                    .clone()
+                                                    .map(|icon| {
+                                                        view! {
+                                                            <img
+                                                                src=format!(
+                                                                    "https://icons.llamao.fi/icons/chains/rsz_{}.jpg",
+                                                                    icon,
+                                                                )
+                                                                alt=balance.chain_info.name.clone()
+                                                                class="w-10 h-10 rounded-full object-cover"
+                                                                onerror="this.style.display='none'"
+                                                            />
+                                                        }
+                                                            .into_any()
+                                                    })
+                                                    .unwrap_or_else(|| {
+                                                        view! {
+                                                            <div class="w-10 h-10 rounded-full bg-neutral-300 dark:bg-neutral-600 flex items-center justify-center">
+                                                                <span class="text-sm font-bold">
+                                                                    {balance.chain_info.name.chars().next().unwrap_or('?')}
+                                                                </span>
+                                                            </div>
+                                                        }
+                                                            .into_any()
+                                                    })} <div>
+                                                    <h3 class="font-semibold">
+                                                        {balance.chain_info.name.clone()}
+                                                    </h3>
                                                     <p class="text-sm text-neutral-600 dark:text-neutral-400">
-                                                        "Chain ID: " {balance.chain_info.chain_id}
-                                                        " • " {balance.chain_info.network.clone()}
+                                                        "Chain ID: " {balance.chain_info.chain_id} " • "
+                                                        {balance.chain_info.network.clone()}
                                                     </p>
                                                 </div>
                                             </div>
@@ -264,16 +277,17 @@ pub fn WalletExplorer() -> impl IntoView {
                                             <div class="text-right">
                                                 <Show
                                                     when=move || balance.error.is_none()
-                                                    fallback=move || view! {
-                                                        <p class="text-sm text-red-500">"Error"</p>
+                                                    fallback=move || {
+                                                        view! { <p class="text-sm text-red-500">"Error"</p> }
                                                     }
                                                 >
-                                                    <p class={if has_balance {
+                                                    <p class=if has_balance {
                                                         "text-lg font-bold text-green-600 dark:text-green-400"
                                                     } else {
                                                         "text-lg"
-                                                    }}>
-                                                        {balance_formatted.clone()} " " {balance.chain_info.native_currency.clone()}
+                                                    }>
+                                                        {balance_formatted.clone()} " "
+                                                        {balance.chain_info.native_currency.clone()}
                                                     </p>
                                                     <p class="text-sm text-neutral-600 dark:text-neutral-400">
                                                         "Nonce: " {balance.nonce}
@@ -285,7 +299,11 @@ pub fn WalletExplorer() -> impl IntoView {
                                         <Show when=move || explorer_url_show.is_some()>
                                             <div class="mt-2">
                                                 <a
-                                                    href={format!("{}/address/{}", explorer_url_href.clone().unwrap_or_default(), address_input.get())}
+                                                    href=format!(
+                                                        "{}/address/{}",
+                                                        explorer_url_href.clone().unwrap_or_default(),
+                                                        address_input.get(),
+                                                    )
                                                     target="_blank"
                                                     class="text-sm text-blue-500 hover:underline"
                                                 >
@@ -304,7 +322,14 @@ pub fn WalletExplorer() -> impl IntoView {
                             "Total chains checked: " {balances.get().len()}
                         </p>
                         <p class="text-sm text-neutral-600 dark:text-neutral-400">
-                            "Chains with balance: " {move || balances.get().iter().filter(|b| b.balance != "0" && b.error.is_none()).count()}
+                            "Chains with balance: "
+                            {move || {
+                                balances
+                                    .get()
+                                    .iter()
+                                    .filter(|b| b.balance != "0" && b.error.is_none())
+                                    .count()
+                            }}
                         </p>
                     </div>
                 </div>

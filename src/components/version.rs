@@ -6,7 +6,7 @@ pub fn Version() -> impl IntoView {
 
     view! {
         <div class="w-full justify-center mt-5 text-xs flex">
-            <span class="text-xs">{version} beta</span>
+            <span class="text-xs">{version}beta</span>
         </div>
     }
 }

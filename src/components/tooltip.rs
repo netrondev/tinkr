@@ -117,7 +117,6 @@ pub fn LabelProvider(children: Children) -> impl IntoView {
                     Align::Left => "-translate-x-full -translate-y-1/2",
                     Align::Right => "-translate-y-1/2",
                 };
-
                 let arrow_position = match tooltip.align {
                     Align::Top => {
                         "bottom-[-5px] left-1/2 transform -translate-x-1/2 border-l-[5px] border-l-transparent border-r-[5px] border-r-transparent border-t-[5px] border-t-neutral-900 dark:border-t-neutral-700"

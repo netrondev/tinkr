@@ -6,22 +6,27 @@ pub fn ParticleAnimation() -> impl IntoView {
         <div class="absolute inset-0 overflow-hidden">
             <div class="particle-container">
                 // Create multiple particle elements
-                {(0..50).map(|i| {
-                    let delay = format!("{}s", i as f32 * 0.1);
-                    let duration = format!("{}s", 20.0 + (i as f32 * 0.5));
-                    let start_x = format!("{}%", (i * 17) % 100);
-                    let start_y = format!("{}%", (i * 23) % 100);
+                {(0..50)
+                    .map(|i| {
+                        let delay = format!("{}s", i as f32 * 0.1);
+                        let duration = format!("{}s", 20.0 + (i as f32 * 0.5));
+                        let start_x = format!("{}%", (i * 17) % 100);
+                        let start_y = format!("{}%", (i * 23) % 100);
 
-                    view! {
-                        <div
-                            class="particle"
-                            style={format!(
-                                "left: {}; top: {}; animation-delay: {}; animation-duration: {};",
-                                start_x, start_y, delay, duration
-                            )}
-                        />
-                    }
-                }).collect::<Vec<_>>()}
+                        view! {
+                            <div
+                                class="particle"
+                                style=format!(
+                                    "left: {}; top: {}; animation-delay: {}; animation-duration: {};",
+                                    start_x,
+                                    start_y,
+                                    delay,
+                                    duration,
+                                )
+                            />
+                        }
+                    })
+                    .collect::<Vec<_>>()}
             </div>
 
             // Add connecting lines as pseudo-elements via CSS

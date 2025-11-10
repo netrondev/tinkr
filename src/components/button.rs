@@ -1,7 +1,7 @@
+use crate::boring_avatars::{Avatar, AvatarVariants};
 use leptos::prelude::*;
-use tw_merge::*;
-
 use phosphor_leptos::{Icon, IconWeightData};
+use tw_merge::*;
 
 #[derive(Debug, Clone)]
 pub enum ButtonIcon {
@@ -9,6 +9,7 @@ pub enum ButtonIcon {
     ImageCover(String),
     Icon(&'static IconWeightData),
     View(fn() -> AnyView),
+    Avatar(String),
 }
 
 impl ButtonIcon {
@@ -21,8 +22,17 @@ impl ButtonIcon {
                 view! { <img src=url alt="" class="size-8 rounded-full object-cover" /> }.into_any()
             }
             ButtonIcon::Icon(icon) => view! { <Icon icon=icon size="20px" /> }.into_any(),
+            ButtonIcon::Avatar(name) => view! {
+                <Avatar
+                    name=name.clone()
+                    variant=AvatarVariants::Beam
+                    colors=vec!["#d40a2cff".into(), "#0d3dc0ff".into(), "#cccccc".into()]
+                    size=32
+                />
+            }
+            .into_any(),
             ButtonIcon::View(view_fn) => {
-                view! { <div class="size-[20px] flex">{view_fn()}</div> }.into_any()
+                view! { <div class="size-8 flex">{view_fn()}</div> }.into_any()
             }
         }
     }
@@ -43,6 +53,8 @@ struct ButtonsProps {
 pub enum BtnVariant {
     #[tw(default, class = "h-10 rounded-md p-4")]
     Default,
+    #[tw(class = "h-10 w-full rounded-md p-4")]
+    Wide,
     #[tw(class = "w-10 h-10 rounded-md")]
     Square,
     #[tw(class = "w-10 h-10 rounded-full")]
@@ -60,7 +72,7 @@ pub enum BtnVariant {
 pub enum BtnColor {
     #[tw(
         default,
-        class = "text-neutral-700 bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+        class = "text-neutral-700 bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 active:bg-blue-500 dark:active:bg-blue-600"
     )]
     Default,
     #[tw(
@@ -80,7 +92,7 @@ pub enum BtnColor {
     )]
     Neutral,
     #[tw(
-        class = "rounded-lg border-2 border-neutral-200 bg-white px-3 py-2 text-sm font-medium text-neutral-700 hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-750"
+        class = "rounded-lg border-2 border-neutral-200 bg-white px-3 py-2 text-sm font-medium text-neutral-700 hover:border-neutral-300 hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:border-neutral-600 dark:hover:bg-neutral-800"
     )]
     Outlined,
     #[tw(
@@ -166,22 +178,21 @@ pub fn Button(
         Some(BtnVariant::Square) => view! {
             <div class="w-full flex items-center justify-center relative">
                 {match (&icon, &icon_hover) {
-                    (Some(normal_icon), Some(hover_icon)) => view! {
-                        <>
-                            <div class="group-hover:hidden">
-                                {normal_icon.display()}
-                            </div>
-                            <div class="hidden group-hover:block">
-                                {hover_icon.display()}
-                            </div>
-                        </>
-                    }.into_any(),
+                    (Some(normal_icon), Some(hover_icon)) => {
+                        view! {
+                            <>
+                                <div class="group-hover:hidden">{normal_icon.display()}</div>
+                                <div class="hidden group-hover:block">{hover_icon.display()}</div>
+                            </>
+                        }
+                            .into_any()
+                    }
                     (Some(normal_icon), None) => normal_icon.display(),
                     (None, _) => view! { <div /> }.into_any(),
                 }}
                 {match children {
                     Some(children) => children(),
-                    None => view! {  }.into_any(),
+                    None => view! {}.into_any(),
                 }}
             </div>
         }
@@ -189,22 +200,21 @@ pub fn Button(
         Some(BtnVariant::Round) => view! {
             <div class="w-full flex items-center justify-center relative">
                 {match (&icon, &icon_hover) {
-                    (Some(normal_icon), Some(hover_icon)) => view! {
-                        <>
-                            <div class="group-hover:hidden">
-                                {normal_icon.display()}
-                            </div>
-                            <div class="hidden group-hover:block">
-                                {hover_icon.display()}
-                            </div>
-                        </>
-                    }.into_any(),
+                    (Some(normal_icon), Some(hover_icon)) => {
+                        view! {
+                            <>
+                                <div class="group-hover:hidden">{normal_icon.display()}</div>
+                                <div class="hidden group-hover:block">{hover_icon.display()}</div>
+                            </>
+                        }
+                            .into_any()
+                    }
                     (Some(normal_icon), None) => normal_icon.display(),
                     (None, _) => view! { <div /> }.into_any(),
                 }}
                 {match children {
                     Some(children) => children(),
-                    None => view! {  }.into_any(),
+                    None => view! {}.into_any(),
                 }}
             </div>
         }
@@ -213,50 +223,35 @@ pub fn Button(
             <div class="w-full flex items-center justify-left gap-2">
 
                 {match (&icon, &icon_hover) {
-                    (Some(normal_icon), Some(hover_icon)) => view! {
-                        <div class="w-10 flex items-center justify-center">
-                            <div class="group-hover:hidden">
+                    (Some(normal_icon), Some(hover_icon)) => {
+                        view! {
+                            <div class="w-10 flex items-center justify-center">
+                                <div class="group-hover:hidden">{normal_icon.display()}</div>
+                                <div class="hidden group-hover:block">{hover_icon.display()}</div>
+                            </div>
+                        }
+                            .into_any()
+                    }
+                    (Some(normal_icon), None) => {
+                        view! {
+                            <div class="w-10 flex items-center justify-center">
                                 {normal_icon.display()}
                             </div>
-                            <div class="hidden group-hover:block">
-                                {hover_icon.display()}
-                            </div>
-                        </div>
-                    }.into_any(),
-                    (Some(normal_icon), None) => view! { <div class="w-10 flex items-center justify-center">{normal_icon.display()}</div> }.into_any(),
-                    (None, _) => view! {  }.into_any(),
+                        }
+                            .into_any()
+                    }
+                    (None, _) => view! {}.into_any(),
                 }}
-
-                <span>{match children {
-                    Some(children) => children(),
-                    None => view! {  }.into_any(),
-                }}</span>
+                <span>
+                    {match children {
+                        Some(children) => children(),
+                        None => view! {}.into_any(),
+                    }}
+                </span>
             </div>
         }
         .into_any(),
     };
-
-    // let button_contents = view! {
-    //     <div class="w-full flex flex-row items-center gap-2">
-    //         <div class="size-[20px]">
-    //             <div class="w-full h-full flex items-center justify-center text-white text-2xl font-bold">
-    //                 {match icon {
-    //                     Some(ButtonIcon::Image(url)) => view! { <img src=url alt="" class="size-[20px]" /> }.into_any(),
-    //                     Some(ButtonIcon::Icon(icon)) => view! { <Icon icon=icon size="20px" /> }.into_any(),
-    //                     None => view! { <div /> }.into_any(),
-    //                 }}
-    //             </div>
-    //         </div>
-    //         <div class="text-md text-center font-normal max-w-16 leading-tight text-shadow ">
-    //             {
-    //                 match children {
-    //                     Some(children) => children(),
-    //                     None => view! {  }.into_any(),
-    //                 }
-    //             }
-    //         </div>
-    //     </div>
-    // };
 
     if let Some(href_val) = href {
         view! {

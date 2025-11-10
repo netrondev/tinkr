@@ -54,10 +54,12 @@ pub fn AuthCheckAdmin(children: ChildrenFn) -> impl IntoView {
         }>
             {move || {
                 match user_resource.get() {
-                    Some(Ok(user)) => match user.is_admin {
-                        Some(true) => children().into_any(),
-                        _ => UnauthedMessage().into_any(),
-                    },
+                    Some(Ok(user)) => {
+                        match user.is_admin {
+                            Some(true) => children().into_any(),
+                            _ => UnauthedMessage().into_any(),
+                        }
+                    }
                     Some(Err(_)) => UnauthedMessage().into_any(),
                     None => view! { <LoadingIndicator /> }.into_any(),
                 }
@@ -80,10 +82,12 @@ where
         }>
             {move || {
                 match user_resource.get() {
-                    Some(Ok(user)) => match user.is_admin {
-                        Some(true) => children().into_any(),
-                        _ => unauthed().into_any(),
-                    },
+                    Some(Ok(user)) => {
+                        match user.is_admin {
+                            Some(true) => children().into_any(),
+                            _ => unauthed().into_any(),
+                        }
+                    }
                     Some(Err(_)) => unauthed().into_any(),
                     None => view! { <LoadingIndicator /> }.into_any(),
                 }

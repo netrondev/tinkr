@@ -74,7 +74,8 @@ pub fn ImageUpload(
                                     class="h-32 w-32 object-cover rounded-lg"
                                 />
                             </div>
-                        }.into_any()
+                        }
+                            .into_any()
                     } else {
                         view! {}.into_any()
                     }
@@ -93,10 +94,12 @@ pub fn ImageUpload(
                 disabled=move || uploading.get()
                 class=final_class
             >
-                {move || if uploading.get() {
-                    format!("Uploading... {}%", (progress.get() * 100.0) as i32)
-                } else {
-                    button_text.to_string()
+                {move || {
+                    if uploading.get() {
+                        format!("Uploading... {}%", (progress.get() * 100.0) as i32)
+                    } else {
+                        button_text.to_string()
+                    }
                 }}
             </button>
 

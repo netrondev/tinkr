@@ -168,39 +168,50 @@ pub fn ChainIdToInfo(chain_id: u64) -> impl IntoView {
     );
 
     view! {
-        <Suspense fallback=move || view! { <div class="animate-pulse">"Loading chain info..."</div> }>
+        <Suspense fallback=move || {
+            view! { <div class="animate-pulse">"Loading chain info..."</div> }
+        }>
             {move || {
-                chain_info.get().map(|result| {
-                    match result {
-                        Ok(chain) => {
-                            view! {
-                                <div class="flex items-center gap-2">
-                                    {chain.icon.as_ref().map(|icon_name| {
-                                        view! {
-                                            <img
-                                                src=format!("https://icons.llamao.fi/icons/chains/rsz_{}.jpg", icon_name)
-                                                alt=chain.name.clone()
-                                                class="w-6 h-6 rounded-full"
-                                                onerror="this.style.display='none'"
-                                            />
-                                        }
-                                    })}
-                                    <span class="font-medium">{chain.name}</span>
-                                    <span class="text-sm text-neutral-500 dark:text-neutral-400">
-                                        "(Chain ID: " {chain.chain_id} ")"
-                                    </span>
-                                </div>
-                            }.into_any()
+                chain_info
+                    .get()
+                    .map(|result| {
+                        match result {
+                            Ok(chain) => {
+                                view! {
+                                    <div class="flex items-center gap-2">
+                                        {chain
+                                            .icon
+                                            .as_ref()
+                                            .map(|icon_name| {
+                                                view! {
+                                                    <img
+                                                        src=format!(
+                                                            "https://icons.llamao.fi/icons/chains/rsz_{}.jpg",
+                                                            icon_name,
+                                                        )
+                                                        alt=chain.name.clone()
+                                                        class="w-6 h-6 rounded-full"
+                                                        onerror="this.style.display='none'"
+                                                    />
+                                                }
+                                            })} <span class="font-medium">{chain.name}</span>
+                                        <span class="text-sm text-neutral-500 dark:text-neutral-400">
+                                            "(Chain ID: " {chain.chain_id} ")"
+                                        </span>
+                                    </div>
+                                }
+                                    .into_any()
+                            }
+                            Err(_) => {
+                                view! {
+                                    <div class="text-sm text-neutral-500 dark:text-neutral-400">
+                                        "Chain " {chain_id} " not found"
+                                    </div>
+                                }
+                                    .into_any()
+                            }
                         }
-                        Err(_) => {
-                            view! {
-                                <div class="text-sm text-neutral-500 dark:text-neutral-400">
-                                    "Chain " {chain_id} " not found"
-                                </div>
-                            }.into_any()
-                        }
-                    }
-                })
+                    })
             }}
         </Suspense>
     }

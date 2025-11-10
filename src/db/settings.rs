@@ -25,7 +25,7 @@ pub fn get_settings() -> Settings {
     dotenv().ok();
 
     Settings {
-        surrealdb_host: get_env("SURREALDB_HOST").unwrap_or("ws://localhost:8000".to_string()),
+        surrealdb_host: get_env("SURREALDB_HOST_NEW").unwrap_or("ws://localhost:8000".to_string()),
         surrealdb_db: get_env("SURREALDB_DB").unwrap_or("default".to_string()),
         surrealdb_ns: get_env("SURREALDB_NS").unwrap_or("default".to_string()),
         surrealdb_user: get_env("SURREALDB_USER").unwrap_or("root".to_string()),

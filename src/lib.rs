@@ -6,6 +6,8 @@ pub mod status;
 pub mod surrealtypes;
 pub mod utils;
 
+pub mod boring_avatars;
+
 pub mod payments;
 
 pub use status::Status;

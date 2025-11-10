@@ -131,11 +131,7 @@ pub fn FormGroup(
     let default_class = "space-y-4";
     let final_class = class.unwrap_or(default_class);
 
-    view! {
-        <div class=final_class>
-            {children()}
-        </div>
-    }
+    view! { <div class=final_class>{children()}</div> }
 }
 
 #[component]
@@ -146,11 +142,7 @@ pub fn FormField(
     let default_class = "";
     let final_class = class.unwrap_or(default_class);
 
-    view! {
-        <div class=final_class>
-            {children()}
-        </div>
-    }
+    view! { <div class=final_class>{children()}</div> }
 }
 
 #[component]
@@ -161,9 +153,5 @@ pub fn FormActions(
     let default_class = "flex gap-4 pt-4";
     let final_class = class.unwrap_or(default_class);
 
-    view! {
-        <div class=final_class>
-            {children()}
-        </div>
-    }
+    view! { <div class=final_class>{children()}</div> }
 }

@@ -39,7 +39,7 @@ use crate::theme::Theme;
 )]
 #[partial(
     "DeliveryDetails",
-    derive(Debug, Serialize, Deserialize, Clone),
+    derive(Debug, Serialize, Deserialize, Clone, PartialEq),
     omit(id, name, email_verified, is_admin, superadmin, theme, image)
 )]
 pub struct AdapterUser {
@@ -64,6 +64,29 @@ pub struct AdapterUser {
     pub first_name: Option<String>,
     #[serde(rename = "lastName")]
     pub last_name: Option<String>,
+}
+
+impl Default for AdapterUser {
+    fn default() -> Self {
+        Self {
+            id: RecordId::from_table_key("user", "default"),
+            name: "Guest".to_string(),
+            email_verified: None,
+            image: None,
+            email: EmailAddress::create_blank(),
+            is_admin: Some(false),
+            superadmin: Some(false),
+            theme: Theme::System,
+            address1: None,
+            address2: None,
+            address3: None,
+            postcode: None,
+            phone: None,
+            telephone: None,
+            first_name: None,
+            last_name: None,
+        }
+    }
 }
 
 impl Default for DeliveryDetails {
@@ -378,6 +401,46 @@ impl AdapterUser {
         let is_available = count.map_or(true, |c| c.count == 0);
 
         Ok(is_available)
+    }
+
+    pub async fn get_user_by_oauth_id(
+        oauth_id: &str,
+        provider: &crate::auth::oauth::OAuthProvider,
+    ) -> Result<Self, AppError> {
+        let client = db_init().await?;
+
+        let mut result = client
+            .query("SELECT VALUE ->links->user FROM oauth_account WHERE provider_account_id = $oauth_id AND provider = $provider LIMIT 1;")
+            .bind(("oauth_id", oauth_id.to_string()))
+            .bind(("provider", provider.as_str().to_string()))
+            .await?;
+
+        let user_ids: Option<Vec<RecordId>> = result.take(0)?;
+
+        if let Some(ids) = user_ids {
+            if let Some(user_id) = ids.first() {
+                return Self::get_user(user_id.clone()).await;
+            }
+        }
+
+        Err(AppError::AuthError("User not found".into()))
+    }
+
+    pub async fn link_oauth_account(
+        user_id: &RecordId,
+        oauth_id: &str,
+        provider: &crate::auth::oauth::OAuthProvider,
+    ) -> Result<(), AppError> {
+        let client = db_init().await?;
+
+        client
+            .query("CREATE oauth_account CONTENT { provider_account_id: $oauth_id, provider: $provider, user: $user_id } RETURN NONE;")
+            .bind(("oauth_id", oauth_id.to_string()))
+            .bind(("provider", provider.as_str().to_string()))
+            .bind(("user_id", user_id.clone()))
+            .await?;
+
+        Ok(())
     }
 }
 

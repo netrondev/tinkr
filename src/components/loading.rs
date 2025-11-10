@@ -38,8 +38,8 @@ pub fn LoadingIndicator(#[prop(optional)] size: Option<LoadingIndicatorSize>) ->
 
     view! {
         <div>
-            <div class={final_class}>
-                <Icon icon=CIRCLE_NOTCH size={"100%"} />
+            <div class=final_class>
+                <Icon icon=CIRCLE_NOTCH size="100%" />
             </div>
         </div>
     }

@@ -106,22 +106,32 @@ pub fn KeyItem(key: Key) -> impl IntoView {
             <div class="flex items-center justify-between">
                 <div class="flex-1">
                     <div class="flex items-center gap-2">
-                        <h3 class="text-sm font-medium text-neutral-900 dark:text-neutral-100">{key.name.clone()}</h3>
-                        {key.expires_at.is_some().then(|| {
-                            view! {
-                                <span class="text-xs text-yellow-600 dark:text-yellow-400">"(expires)"</span>
-                            }
-                        })}
+                        <h3 class="text-sm font-medium text-neutral-900 dark:text-neutral-100">
+                            {key.name.clone()}
+                        </h3>
+                        {key
+                            .expires_at
+                            .is_some()
+                            .then(|| {
+                                view! {
+                                    <span class="text-xs text-yellow-600 dark:text-yellow-400">
+                                        "(expires)"
+                                    </span>
+                                }
+                            })}
                     </div>
-                    <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">{key.description.clone()}</p>
+                    <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-1">
+                        {key.description.clone()}
+                    </p>
                     <div class="flex items-center gap-4 mt-2 text-xs text-neutral-600 dark:text-neutral-400">
                         <span class="font-mono">{key_public_preview}</span>
                         <span>"Created: "{key.created_at.clone()}</span>
-                        {key.last_used.is_some().then(|| {
-                            view! {
-                                <span>"Last used: recently"</span>
-                            }
-                        })}
+                        {key
+                            .last_used
+                            .is_some()
+                            .then(|| {
+                                view! { <span>"Last used: recently"</span> }
+                            })}
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
@@ -139,16 +149,18 @@ pub fn KeyList() -> impl IntoView {
     let keys_resource = Resource::new(|| (), |_| get_user_keys());
 
     view! {
-        <Suspense fallback=move || view! {
-            <div class="bg-white dark:bg-neutral-800 rounded-lg shadow">
-                <div class="p-6">
-                    <div class="animate-pulse space-y-4">
-                        <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-3/4"></div>
-                        <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-1/2"></div>
-                        <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-5/6"></div>
+        <Suspense fallback=move || {
+            view! {
+                <div class="bg-white dark:bg-neutral-800 rounded-lg shadow">
+                    <div class="p-6">
+                        <div class="animate-pulse space-y-4">
+                            <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-3/4"></div>
+                            <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-1/2"></div>
+                            <div class="h-4 bg-neutral-200 dark:bg-neutral-700 rounded w-5/6"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         }>
             {move || {
                 match keys_resource.get() {
@@ -157,10 +169,13 @@ pub fn KeyList() -> impl IntoView {
                             view! {
                                 <div class="bg-white dark:bg-neutral-800 rounded-lg shadow">
                                     <div class="p-6">
-                                        <p class="text-neutral-500 dark:text-neutral-400">"No keys found. Create your first key to get started."</p>
+                                        <p class="text-neutral-500 dark:text-neutral-400">
+                                            "No keys found. Create your first key to get started."
+                                        </p>
                                     </div>
                                 </div>
-                            }.into_any()
+                            }
+                                .into_any()
                         } else {
                             view! {
                                 <div class="bg-white dark:bg-neutral-800 rounded-lg shadow overflow-hidden">
@@ -168,14 +183,13 @@ pub fn KeyList() -> impl IntoView {
                                         {keys
                                             .into_iter()
                                             .map(|key| {
-                                                view! {
-                                                    <KeyItem key=key />
-                                                }
+                                                view! { <KeyItem key=key /> }
                                             })
                                             .collect_view()}
                                     </div>
                                 </div>
-                            }.into_any()
+                            }
+                                .into_any()
                         }
                     }
                     Some(Err(e)) => {
@@ -193,13 +207,10 @@ pub fn KeyList() -> impl IntoView {
                                     </div>
                                 </div>
                             </div>
-                        }.into_any()
+                        }
+                            .into_any()
                     }
-                    None => {
-                        view! {
-                            <div></div>
-                        }.into_any()
-                    }
+                    None => view! { <div></div> }.into_any(),
                 }
             }}
         </Suspense>
@@ -211,7 +222,9 @@ pub fn KeysControl() -> impl IntoView {
     view! {
         <div class="p-4 bg-white dark:bg-neutral-800 rounded-lg shadow">
             <h2 class="text-xl font-semibold mb-4">"Manage Keys"</h2>
-            <p class="text-neutral-600 dark:text-neutral-400 mb-6">"Here you can manage your API keys."</p>
+            <p class="text-neutral-600 dark:text-neutral-400 mb-6">
+                "Here you can manage your API keys."
+            </p>
             <KeyList />
         </div>
     }
@@ -390,8 +403,12 @@ pub fn KeysAdd(
                 <form on:submit=submit>
                     <div class="space-y-4">
                         <div>
-                            <label for="key-name" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                                "Name" <span class="text-red-500">"*"</span>
+                            <label
+                                for="key-name"
+                                class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
+                            >
+                                "Name"
+                                <span class="text-red-500">"*"</span>
                             </label>
                             <input
                                 type="text"
@@ -405,7 +422,10 @@ pub fn KeysAdd(
                         </div>
 
                         <div>
-                            <label for="key-description" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                            <label
+                                for="key-description"
+                                class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
+                            >
                                 "Description"
                             </label>
                             <textarea
@@ -418,83 +438,102 @@ pub fn KeysAdd(
                             />
                         </div>
 
-                        {move || if show_apikey {
-                            view! {
-                                <div>
-                                    <label for="key-apikey" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                                        "API Key"
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="key-apikey"
-                                        class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Enter API key"
-                                        prop:value=move || apikey.get()
-                                        on:input=move |e| set_apikey.set(event_target_value(&e))
-                                        disabled=move || is_creating.get()
-                                    />
-                                </div>
-                            }.into_any()
-                        } else {
-                            view! { <></> }.into_any()
+                        {move || {
+                            if show_apikey {
+                                view! {
+                                    <div>
+                                        <label
+                                            for="key-apikey"
+                                            class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
+                                        >
+                                            "API Key"
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="key-apikey"
+                                            class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="Enter API key"
+                                            prop:value=move || apikey.get()
+                                            on:input=move |e| set_apikey.set(event_target_value(&e))
+                                            disabled=move || is_creating.get()
+                                        />
+                                    </div>
+                                }
+                                    .into_any()
+                            } else {
+                                view! { <></> }.into_any()
+                            }
                         }}
 
-                        {move || if show_token {
-                            view! {
-                                <div>
-                                    <label for="key-token" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                                        "Token"
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="key-token"
-                                        class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                                        placeholder="Enter token"
-                                        prop:value=move || token.get()
-                                        on:input=move |e| set_token.set(event_target_value(&e))
-                                        disabled=move || is_creating.get()
-                                    />
-                                </div>
-                            }.into_any()
-                        } else {
-                            view! { <></> }.into_any()
+                        {move || {
+                            if show_token {
+                                view! {
+                                    <div>
+                                        <label
+                                            for="key-token"
+                                            class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1"
+                                        >
+                                            "Token"
+                                        </label>
+                                        <input
+                                            type="text"
+                                            id="key-token"
+                                            class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                                            placeholder="Enter token"
+                                            prop:value=move || token.get()
+                                            on:input=move |e| set_token.set(event_target_value(&e))
+                                            disabled=move || is_creating.get()
+                                        />
+                                    </div>
+                                }
+                                    .into_any()
+                            } else {
+                                view! { <></> }.into_any()
+                            }
                         }}
 
-                        {move || if show_public_private {
-                            view! {
-                                <div class="p-3 bg-neutral-100 dark:bg-neutral-700 rounded-md">
-                                    <p class="text-sm text-neutral-600 dark:text-neutral-400">
-                                        "Public and private keys will be automatically generated when you create this key."
-                                    </p>
-                                </div>
-                            }.into_any()
-                        } else {
-                            view! { <></> }.into_any()
+                        {move || {
+                            if show_public_private {
+                                view! {
+                                    <div class="p-3 bg-neutral-100 dark:bg-neutral-700 rounded-md">
+                                        <p class="text-sm text-neutral-600 dark:text-neutral-400">
+                                            "Public and private keys will be automatically generated when you create this key."
+                                        </p>
+                                    </div>
+                                }
+                                    .into_any()
+                            } else {
+                                view! { <></> }.into_any()
+                            }
                         }}
 
                         // <div>
-                        //     <label for="key-expires" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
-                        //         "Expires in (days)"
-                        //     </label>
-                        //     <input
-                        //         type="number"
-                        //         id="key-expires"
-                        //         min="1"
-                        //         class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        //         placeholder="Leave empty for no expiration"
-                        //         prop:value=move || expires_in_days.get()
-                        //         on:input=move |e| set_expires_in_days.set(event_target_value(&e))
-                        //         disabled=move || is_creating.get()
-                        //     />
+                        // <label for="key-expires" class="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-1">
+                        // "Expires in (days)"
+                        // </label>
+                        // <input
+                        // type="number"
+                        // id="key-expires"
+                        // min="1"
+                        // class="w-full px-3 py-2 border border-neutral-300 dark:border-neutral-600 bg-white dark:bg-neutral-700 text-neutral-900 dark:text-white rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        // placeholder="Leave empty for no expiration"
+                        // prop:value=move || expires_in_days.get()
+                        // on:input=move |e| set_expires_in_days.set(event_target_value(&e))
+                        // disabled=move || is_creating.get()
+                        // />
                         // </div>
 
-                        {move || error_message.get().map(|msg| {
-                            view! {
-                                <div class="text-red-600 dark:text-red-400 text-sm">
-                                    {msg}
-                                </div>
-                            }
-                        })}
+                        {move || {
+                            error_message
+                                .get()
+                                .map(|msg| {
+                                    view! {
+                                        <div class="text-red-600 dark:text-red-400 text-sm">
+                                            {msg}
+                                        </div>
+                                    }
+                                })
+                        }}
 
                         <div class="flex gap-4 pt-2">
                             <button
@@ -502,7 +541,9 @@ pub fn KeysAdd(
                                 class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-neutral-800 disabled:opacity-50 disabled:cursor-not-allowed"
                                 disabled=move || is_creating.get()
                             >
-                                {move || if is_creating.get() { "Creating..." } else { "Create Key" }}
+                                {move || {
+                                    if is_creating.get() { "Creating..." } else { "Create Key" }
+                                }}
                             </button>
                             <button
                                 type="button"

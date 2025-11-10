@@ -27,11 +27,7 @@ pub fn SubmitButton(
                 {icon.map(|i| view! { <Icon icon=i size="20px" /> })}
                 {move || {
                     let is_loading = is_submitting.map(|s| s.get()).unwrap_or(false);
-                    if is_loading {
-                        format!("{}...", button_text)
-                    } else {
-                        button_text.clone()
-                    }
+                    if is_loading { format!("{}...", button_text) } else { button_text.clone() }
                 }}
             </div>
         </button>

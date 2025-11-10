@@ -17,3 +17,5 @@ pub mod user;
 pub mod guest;
 
 pub mod authcheck;
+
+pub mod oauth;

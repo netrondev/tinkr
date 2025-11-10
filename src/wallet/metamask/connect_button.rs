@@ -124,8 +124,6 @@ pub fn WalletConnectButton() -> impl IntoView {
         spawn_local(async move {
             let mut w = wallet.get_value();
 
-            println!("Connecting to wallet...");
-
             // Clear any existing error and set loading state
             w.state.error = None;
             w.state.loading = true;
@@ -266,22 +264,25 @@ pub fn WalletConnectButton() -> impl IntoView {
         <div class="flex flex-col items-center">
             {move || {
                 let state = wallet_state.get();
-
                 if state.connected {
                     let chain_id_for_name = state.chain_id.clone();
 
                     view! {
                         <Dropdown class="relative">
                             <DropdownTrigger icon=ButtonIcon::Icon(WALLET)>
-                                <span class="font-medium">{
-                                    state.account.as_ref().map(|addr| {
-                                        if addr.len() > 6 {
-                                            format!("{}...{}", &addr[..6], &addr[addr.len()-4..])
-                                        } else {
-                                            addr.clone()
-                                        }
-                                    }).unwrap_or_else(|| "No Address".to_string())
-                                }</span>
+                                <span class="font-medium">
+                                    {state
+                                        .account
+                                        .as_ref()
+                                        .map(|addr| {
+                                            if addr.len() > 6 {
+                                                format!("{}...{}", &addr[..6], &addr[addr.len() - 4..])
+                                            } else {
+                                                addr.clone()
+                                            }
+                                        })
+                                        .unwrap_or_else(|| "No Address".to_string())}
+                                </span>
                                 <Icon icon=CARET_DOWN />
                             </DropdownTrigger>
 
@@ -289,47 +290,58 @@ pub fn WalletConnectButton() -> impl IntoView {
                                 <div class="px-4 py-2 border-b border-neutral-200 dark:border-neutral-700">
                                     <div class="flex items-center space-x-2">
                                         <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                                        <span class="text-sm text-neutral-600 dark:text-neutral-400">Connected</span>
+                                        <span class="text-sm text-neutral-600 dark:text-neutral-400">
+                                            Connected
+                                        </span>
                                     </div>
-                                    {chain_id_for_name.as_ref().and_then(|id| {
-                                        u64::from_str_radix(id.trim_start_matches("0x"), 16).ok()
-                                    }).map(|chain_id| {
-                                        view! {
-                                            <div class="mt-1">
-                                                <ChainIdToInfo chain_id={chain_id} />
-                                            </div>
-                                        }
-                                    })}
+                                    {chain_id_for_name
+                                        .as_ref()
+                                        .and_then(|id| {
+                                            u64::from_str_radix(id.trim_start_matches("0x"), 16).ok()
+                                        })
+                                        .map(|chain_id| {
+                                            view! {
+                                                <div class="mt-1">
+                                                    <ChainIdToInfo chain_id=chain_id />
+                                                </div>
+                                            }
+                                        })}
                                 </div>
 
                                 {move || {
                                     let current_chain_id = wallet_state.get().chain_id;
                                     if current_chain_id.as_ref() != Some(&"0x1".to_string()) {
                                         view! {
-                                            <DropdownItem
-                                                on_click={Callback::from(switch_to_mainnet)}
-                                            >
-                                                <span class="text-blue-600 dark:text-blue-400">Switch to Mainnet</span>
+                                            <DropdownItem on_click=Callback::from(switch_to_mainnet)>
+                                                <span class="text-blue-600 dark:text-blue-400">
+                                                    Switch to Mainnet
+                                                </span>
                                             </DropdownItem>
-                                        }.into_any()
+                                        }
+                                            .into_any()
                                     } else {
                                         view! { <div></div> }.into_any()
                                     }
                                 }}
 
                                 <DropdownItem
-                                    on_click={Callback::from(disconnect_wallet)}
-                                    class="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20".into()
+                                    on_click=Callback::from(disconnect_wallet)
+                                    class="block w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                                        .into()
                                 >
                                     "Disconnect Wallet"
                                 </DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
-                    }.into_any()
+                    }
+                        .into_any()
                 } else {
                     if let Some(error) = state.error.clone() {
                         view! {
-                            <Tooltip label=format!("{}. Check your wallet.",error) align=Align::Left>
+                            <Tooltip
+                                label=format!("{}. Check your wallet.", error)
+                                align=Align::Left
+                            >
                                 <Button
                                     icon=ButtonIcon::Icon(WALLET)
                                     on:click=connect_wallet
@@ -339,7 +351,8 @@ pub fn WalletConnectButton() -> impl IntoView {
                                     "Error"
                                 </Button>
                             </Tooltip>
-                        }.into_any()
+                        }
+                            .into_any()
                     } else {
                         view! {
                             <Button
@@ -349,7 +362,8 @@ pub fn WalletConnectButton() -> impl IntoView {
                             >
                                 {if state.loading { "Connecting..." } else { "Connect Wallet" }}
                             </Button>
-                        }.into_any()
+                        }
+                            .into_any()
                     }
                 }
             }}

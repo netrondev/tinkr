@@ -3,8 +3,19 @@ use serde::{Deserialize, Serialize};
 #[cfg(feature = "ssr")]
 use crate::AppError;
 
+use crate::RecordId;
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub enum PaymentStatus {
+    Pending,
+    Processing,
+    Complete,
+    Failed,
+    Cancelled,
+}
+
 /// PayFast IPN (Instant Payment Notification) payload schema
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct PayFastNotify {
     pub m_payment_id: String,
     pub pf_payment_id: String,
@@ -38,7 +49,7 @@ pub struct PayFastNotify {
 }
 
 /// Payment record to be stored in database
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct PaymentRecord {
     pub order: crate::RecordId,
     pub amount_fee: String,
@@ -62,10 +73,17 @@ pub struct PaymentRecord {
     pub extra: PayFastNotify,
 }
 
-#[cfg(feature = "ssr")]
-pub async fn handle_payfast_notify(notify: PayFastNotify) -> Result<(), AppError> {
-    use crate::RecordId;
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
+pub struct HandlePayfastResult {
+    pub payment_status: PaymentStatus,
+    pub order_id: RecordId,
+    pub payment: Option<PaymentRecord>,
+}
 
+#[cfg(feature = "ssr")]
+pub async fn handle_payfast_notify_internal(
+    notify: PayFastNotify,
+) -> Result<HandlePayfastResult, AppError> {
     // Extract order ID from custom_str1 (format: "order:ID")
     let order_id = notify
         .custom_str1
@@ -100,49 +118,31 @@ pub async fn handle_payfast_notify(notify: PayFastNotify) -> Result<(), AppError
     };
 
     // Insert payment record into database
-    let _: Option<PaymentRecord> = db.create("payments").content(payment_record).await?;
+    let payment = db.create("payments").content(payment_record).await?;
 
-    // If payment is complete, update order status and send confirmation email
+    // If payment is complete, update order status
     if notify.payment_status == "COMPLETE" {
         // Update order paid status
         let query = format!("UPDATE order:{} SET paid = true;", order_id);
         let _result = db.query(query).await?;
 
-        // Send order confirmation email
-        send_order_confirmation_email(&notify.email_address, &notify.name_first, order_id).await?;
+        return Ok(HandlePayfastResult {
+            payment_status: PaymentStatus::Complete,
+            order_id: RecordId::from(("order", order_id)),
+            payment,
+        });
     }
 
-    Ok(())
+    Ok(HandlePayfastResult {
+        payment_status: PaymentStatus::Failed,
+        order_id: RecordId::from(("order", order_id)),
+        payment,
+    })
 }
 
 #[cfg(feature = "ssr")]
-async fn send_order_confirmation_email(
-    to_email: &str,
-    client_name: &str,
-    order_ref: &str,
-) -> Result<(), AppError> {
-    use crate::email::{EmailAddress, send_email};
-
-    let email_addr = EmailAddress::from(to_email);
-    let subject = format!("Scratch Fix Pro Order Confirmation REF: {}", order_ref);
-
-    // Create email body (plain text for now - you can enhance this with HTML templates)
-    let body = format!(
-        r#"Hi {},
-
-Thank you for your order!
-
-Your order reference number is: {}
-
-We'll send you another email once your order has been shipped.
-
-Best regards,
-Scratch Fix Pro Team
-"#,
-        client_name, order_ref
-    );
-
-    send_email(email_addr, &subject, &body).await?;
+pub async fn handle_payfast_notify(notify: PayFastNotify) -> Result<(), AppError> {
+    handle_payfast_notify_internal(notify).await?;
 
     Ok(())
 }

@@ -1,9 +1,9 @@
-use crate::EmailAddress;
 use crate::components::{
-    Seperator,
     input::{FormField, Input, InputType},
+    Seperator,
 };
 use crate::user::check_username_availability;
+use crate::EmailAddress;
 use leptos::{prelude::*, reactive::spawn_local};
 
 use serde::{Deserialize, Serialize};
@@ -111,11 +111,11 @@ pub async fn signin(input: SignInForm) -> Result<String, ServerFnError> {
 
     let token = user.new_verification_token().await?;
 
-    if std::env::var("SERVICE_URL_DX").is_err() {
-        tracing::warn!("SERVICE_URL_DX not set, using localhost:3000 as fallback");
+    if std::env::var("TINKR_AUTH_URL").is_err() {
+        tracing::warn!("TINKR_AUTH_URL not set, using localhost:3000 as fallback");
     }
 
-    let url = std::env::var("SERVICE_URL_DX").unwrap_or("http://localhost:3000".to_string());
+    let url = std::env::var("TINKR_AUTH_URL").unwrap_or("http://localhost:3000".to_string());
 
     // generate link
     let link = format!(

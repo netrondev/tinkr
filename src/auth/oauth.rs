@@ -73,7 +73,7 @@ impl OAuthConfig {
     }
 
     pub fn get_redirect_url() -> String {
-        std::env::var("SERVICE_URL_DX").unwrap_or_else(|_| "http://localhost:3000".to_string())
+        std::env::var("TINKR_AUTH_URL").unwrap_or_else(|_| "http://localhost:3000".to_string())
     }
 
     pub fn build_client(&self) -> Result<BasicClient, String> {

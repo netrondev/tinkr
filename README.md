@@ -3,3 +3,9 @@ Initial publish tests for tinkr: a leptos + tailwind + surrealdb framework and c
 references: 
 
 https://crates.io/crates/biji-ui
+
+
+
+# ENV VARS
+
+TINKR_AUTH_URL=https://yourwebsite.com

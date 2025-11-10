@@ -1,4 +1,4 @@
-use crate::{EmailAddress, session::get_user};
+use crate::{session::get_user, EmailAddress};
 
 use leptos::prelude::*;
 
@@ -551,7 +551,8 @@ pub async fn send_verification_email() -> Result<(), ServerFnError> {
     let token = user.new_verification_token().await?;
 
     // Construct verification URL
-    let base_url = std::env::var("APP_URL").unwrap_or_else(|_| "http://localhost:3000".to_string());
+    let base_url =
+        std::env::var("TINKR_AUTH_URL").unwrap_or_else(|_| "http://localhost:3000".to_string());
     let verification_url = format!(
         "{}/api/auth/callback/email-verify?token={}",
         base_url, token.token

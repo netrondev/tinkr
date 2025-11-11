@@ -32,20 +32,20 @@ pub fn WebGLDemo() -> impl IntoView {
                 {r#"
                 @keyframes rotate3d {
                 0% {
-                   transform: rotateX(0deg) rotateY(0deg);
+                  transform: rotateX(0deg) rotateY(0deg);
                 }
                 100% {
-                   transform: rotateX(0deg) rotateY(360deg);
+                  transform: rotateX(0deg) rotateY(360deg);
                 }
                 }
                 @keyframes glow-pulse {
                 0%, 100% {
-                   opacity: 0.3;
-                   transform: scale(1);
+                  opacity: 0.3;
+                  transform: scale(1);
                 }
                 50% {
-                   opacity: 0.8;
-                   transform: scale(1.1);
+                  opacity: 0.8;
+                  transform: scale(1.1);
                 }
                 }
                 .perspective-1000 {
@@ -180,18 +180,18 @@ pub fn RealtimeDataDemo() -> impl IntoView {
                 {r#"
                 @keyframes candle-update {
                 0% {
-                   opacity: 0.6;
+                  opacity: 0.6;
                 }
                 100% {
-                   opacity: 1;
+                  opacity: 1;
                 }
                 }
                 @keyframes price-pulse {
                 0%, 100% {
-                   transform: scale(1);
+                  transform: scale(1);
                 }
                 50% {
-                   transform: scale(1.02);
+                  transform: scale(1.02);
                 }
                 }
                 .grid-line {

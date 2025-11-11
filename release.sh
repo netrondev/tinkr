@@ -41,6 +41,11 @@ if [[ -z $(git status -s) ]]; then
     exit 1
 fi
 
+# Run cargo check to ensure everything compiles
+echo -e "${YELLOW}Running cargo check...${NC}"
+cargo build --release
+echo -e "${GREEN}✓ Cargo check passed${NC}\n"
+
 # Show what will be committed
 echo -e "${YELLOW}Changes to be committed:${NC}"
 git status -s

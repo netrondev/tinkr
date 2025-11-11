@@ -1,9 +1,4 @@
 {
     // "rust-analyzer.cargo.features": "all", // Enable all features
-    "rust-analyzer.cargo.features": "hydrate", // Enable all features
-    "rust-analyzer.rustfmt.overrideCommand": [
-        "leptosfmt",
-        "--stdin",
-        "--rustfmt"
-    ]
+    "rust-analyzer.cargo.features": "all" // Enable all features
 }

@@ -1,31 +1,39 @@
 use leptos::prelude::*;
+use serde::{Deserialize, Serialize};
 
 use crate::components::{Button, button::BtnColor};
 
-#[derive(Clone, Debug)]
+#[derive(Clone, Debug, Serialize, Deserialize, PartialEq)]
 pub struct PayFastOptions {
     pub action_url: String,
     pub merchant_id: String,
     pub merchant_key: String,
 }
 
-impl PayFastOptions {
-    pub fn new(sandbox: bool) -> Self {
-        if sandbox {
-            Self {
-                action_url: "https://sandbox.payfast.co.za/eng/process".into(),
-                merchant_id: "10000100".into(),
-                merchant_key: "46f0cd694581a".into(),
-            }
-        } else {
-            Self {
-                action_url: "https://www.payfast.co.za/eng/process".into(),
-                // scratchfixpro live payfast
-                merchant_id: "12944071".into(),
-                merchant_key: "xvlw5hqgtqknh".into(),
-            }
+impl Default for PayFastOptions {
+    fn default() -> Self {
+        Self {
+            action_url: "https://sandbox.payfast.co.za/eng/process".into(),
+            merchant_id: "10000100".into(),
+            merchant_key: "46f0cd694581a".into(),
         }
     }
+}
+
+impl PayFastOptions {
+    #[cfg(feature = "ssr")]
+    pub fn new() -> Self {
+        Self {
+            action_url: std::env::var("TINKR_PAYFAST_SANDBOX_URL").unwrap_or_default(),
+            merchant_id: std::env::var("TINKR_PAYFAST_MERCHANT_ID").unwrap_or_default(),
+            merchant_key: std::env::var("TINKR_PAYFAST_MERCHANT_KEY").unwrap_or_default(),
+        }
+    }
+}
+
+#[server]
+async fn get_payfast_options() -> Result<PayFastOptions, ServerFnError> {
+    Ok(PayFastOptions::new())
 }
 
 #[component]
@@ -42,9 +50,10 @@ pub fn PayFastButton(
     city: String,
     province: String,
     postal_code: String,
-    #[prop(optional, default = false)] sandbox: bool,
 ) -> impl IntoView {
     let originget = RwSignal::new(String::new());
+
+    let optionsget = OnceResource::new(get_payfast_options());
 
     Effect::new(move |_| {
         #[cfg(not(feature = "ssr"))]
@@ -73,7 +82,10 @@ pub fn PayFastButton(
         let full_address = format!("{} , {}", address, province);
         let amount_formatted = format!("{:.2}", payment_confirm_amount);
 
-        let options = PayFastOptions::new(sandbox);
+        let options = match optionsget.get() {
+            Some(Ok(zxc)) => zxc,
+            _ => return view! { <div>"Loading..."</div> }.into_any(),
+        };
 
         view! {
             <form action=options.action_url method="POST">
@@ -149,10 +161,10 @@ pub fn PayFastButton(
                 <input type="hidden" name="notify_url" value=notify_url.clone() />
 
                 <Button prop:id="payment" prop:type="submit" color=BtnColor::Primary>
-                    {move || if sandbox { "PAYMENT sandbox" } else { "Pay with Payfast" }}
+                    "Pay with Payfast"
                 </Button>
-
             </form>
         }
+        .into_any()
     }
 }

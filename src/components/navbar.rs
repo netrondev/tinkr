@@ -22,8 +22,8 @@ where
             <div class="px-4">
                 <div class="flex items-center h-16 flex-row gap-5">
                     {logo()} {move || view! { <NavItemList links=navitems.get() /> }}
-                    <div class="flex-1" /> // <OrganizationSelector />
-                    <div class="flex items-center space-x-4"></div>
+                    // <OrganizationSelector />
+                    <div class="flex-1" /> <div class="flex items-center space-x-4"></div>
                     <div class="flex items-center space-x-4">
                         <div class="hidden md:block">
                             <crate::theme::ThemeToggle tooltip_align=Align::Left />

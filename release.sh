@@ -78,10 +78,60 @@ if [ "$NUM_FILES" -le 3 ]; then
     COMMIT_MSG="$COMMIT_MSG ($FILE_LIST)"
 fi
 
-echo -e "Commit message: ${GREEN}$COMMIT_MSG${NC}\n"
+echo -e "Default commit message: ${GREEN}$COMMIT_MSG${NC}\n"
+
+# Ask user for commit message preference
+echo -e "${YELLOW}Choose an option:${NC}"
+echo "1) Use default message"
+echo "2) Customize message"
+echo "3) Generate message with Claude CLI"
+echo ""
+read -p "Enter choice (1-3): " choice
+
+case $choice in
+    1)
+        # Use default message
+        FINAL_MSG="$COMMIT_MSG"
+        ;;
+    2)
+        # Customize message
+        read -e -p "Enter commit message: " -i "$COMMIT_MSG" FINAL_MSG
+        ;;
+    3)
+        # Generate with Claude CLI
+        echo -e "\n${YELLOW}Generating commit message with Claude...${NC}"
+
+        # Get git diff for context
+        DIFF_CONTEXT=$(git diff --cached)
+
+        # Use Claude to generate commit message
+        CLAUDE_MSG=$(echo "Based on this git diff, write a concise commit message (1-2 sentences max, no quotes around it):
+
+$DIFF_CONTEXT" | claude --no-cache 2>/dev/null || echo "")
+
+        if [ -z "$CLAUDE_MSG" ]; then
+            echo -e "${RED}Failed to generate message with Claude. Using default.${NC}"
+            FINAL_MSG="$COMMIT_MSG"
+        else
+            echo -e "\nClaude's suggestion: ${GREEN}$CLAUDE_MSG${NC}\n"
+            read -p "Use this message? (y/n): " use_claude
+            if [[ $use_claude =~ ^[Yy]$ ]]; then
+                FINAL_MSG="$CLAUDE_MSG"
+            else
+                read -e -p "Enter commit message: " -i "$COMMIT_MSG" FINAL_MSG
+            fi
+        fi
+        ;;
+    *)
+        echo -e "${RED}Invalid choice. Using default message.${NC}"
+        FINAL_MSG="$COMMIT_MSG"
+        ;;
+esac
+
+echo -e "\nUsing commit message: ${GREEN}$FINAL_MSG${NC}\n"
 
 # Create commit
-git commit -m "$COMMIT_MSG"
+git commit -m "$FINAL_MSG"
 echo -e "${GREEN}✓ Created commit${NC}\n"
 
 # Push to remote

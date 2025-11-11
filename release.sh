@@ -105,9 +105,9 @@ case $choice in
         DIFF_CONTEXT=$(git diff --cached)
 
         # Use Claude to generate commit message
-        CLAUDE_MSG=$(echo "Based on this git diff, write a concise commit message (1-2 sentences max, no quotes around it):
+        CLAUDE_MSG=$(claude --print "Based on this git diff, write a concise commit message (1-2 sentences max, no quotes around it):
 
-$DIFF_CONTEXT" | claude --no-cache 2>/dev/null || echo "")
+$DIFF_CONTEXT" 2>/dev/null || echo "")
 
         if [ -z "$CLAUDE_MSG" ]; then
             echo -e "${RED}Failed to generate message with Claude. Using default.${NC}"

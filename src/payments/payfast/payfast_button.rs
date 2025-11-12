@@ -12,14 +12,9 @@ pub struct PayFastOptions {
 
 impl Default for PayFastOptions {
     fn default() -> Self {
-        // Self {
-        //     action_url: "https://sandbox.payfast.co.za/eng/process".into(),
-        //     merchant_id: "10000100".into(),
-        //     merchant_key: "46f0cd694581a".into(),
-        // }
         Self {
-            action_url: "notset".into(),
-            merchant_id: "notset".into(),
+            action_url: "https://sandbox.payfast.co.za/eng/process".into(),
+            merchant_id: "10000100".into(),
             merchant_key: "notset".into(),
         }
     }
@@ -27,7 +22,7 @@ impl Default for PayFastOptions {
 
 impl PayFastOptions {
     #[cfg(feature = "ssr")]
-    pub fn new() -> Self {
+    pub fn from_env() -> Self {
         Self {
             action_url: std::env::var("TINKR_PAYFAST_URL").unwrap_or_default(),
             merchant_id: std::env::var("TINKR_PAYFAST_MERCHANT_ID").unwrap_or_default(),
@@ -38,9 +33,7 @@ impl PayFastOptions {
 
 #[server]
 async fn get_payfast_options() -> Result<PayFastOptions, ServerFnError> {
-    let pf = PayFastOptions::new();
-    println!("PayFast Options: {:?}", pf);
-    Ok(pf)
+    Ok(PayFastOptions::from_env())
 }
 
 #[component]

@@ -88,6 +88,10 @@ pub enum BtnColor {
     )]
     Error,
     #[tw(
+        class = "text-rose-900 dark:text-rose-500 bg-rose-200 dark:bg-rose-500/5 hover:bg-rose-300 dark:hover:bg-rose-600"
+    )]
+    ErrorSubtle,
+    #[tw(
         class = "bg-neutral-200 dark:bg-neutral-900 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-600 dark:hover:bg-neutral-700"
     )]
     Neutral,

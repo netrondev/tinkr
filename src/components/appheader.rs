@@ -25,7 +25,7 @@ where
 {
     let location = leptos_router::hooks::use_location();
     let pathname = move || location.pathname.get();
-    let (is_mobile_menu_open, set_mobile_menu_open) = signal(false);
+    let is_mobile_menu_open = RwSignal::new(false);
 
     view! {
         <header class="">
@@ -43,7 +43,7 @@ where
                                         false => ButtonIcon::Icon(&LIST),
                                     }
                                     on_click=Callback::new(move |_| {
-                                        set_mobile_menu_open.update(|v| *v = !*v)
+                                        is_mobile_menu_open.update(|v| *v = !*v)
                                     })
                                 />
                             }
@@ -109,6 +109,10 @@ where
 
                 // Mobile menu dropdown
                 <Show when=move || is_mobile_menu_open.get()>
+                    <div
+                        class="fixed top-0 left-0 w-screen h-screen opacity-0 cursor-default"
+                        on:click=move |_| is_mobile_menu_open.set(false)
+                    />
                     <nav class="md:hidden pb-4">
                         <div class="flex flex-col space-y-1">
                             <For
@@ -130,7 +134,7 @@ where
                                                             BtnState::Default
                                                         }
                                                         on_click=Callback::new(move |_| {
-                                                            set_mobile_menu_open.set(false);
+                                                            is_mobile_menu_open.set(false);
                                                             window().location().set_href(&item.url).unwrap();
                                                         })
                                                         class="w-full text-left"

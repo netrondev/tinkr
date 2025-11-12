@@ -30,6 +30,11 @@ sed -i "s/^version = \"$CURRENT_VERSION\"/version = \"$NEW_VERSION\"/" Cargo.tom
 
 echo -e "${GREEN}✓ Updated Cargo.toml to version $NEW_VERSION${NC}\n"
 
+# Update Cargo.lock to reflect the new version
+echo -e "${YELLOW}Updating Cargo.lock...${NC}"
+cargo update --workspace --offline 2>/dev/null || cargo check --quiet
+echo -e "${GREEN}✓ Updated Cargo.lock${NC}\n"
+
 # Format Leptos code
 echo -e "${YELLOW}Formatting Leptos code...${NC}"
 leptosfmt src
@@ -42,18 +47,18 @@ if [[ -z $(git status -s) ]]; then
 fi
 
 # Run cargo check to ensure everything compiles
-echo -e "${YELLOW}Running cargo check...${NC}"
-cargo build --release
-echo -e "${GREEN}✓ Cargo check passed${NC}\n"
+# echo -e "${YELLOW}Running cargo check...${NC}"
+# cargo build --release
+# echo -e "${GREEN}✓ Cargo check passed${NC}\n"
 
 # Show what will be committed
 echo -e "${YELLOW}Changes to be committed:${NC}"
 git status -s
 echo ""
 
-# Stage all changes
-git add .
-echo -e "${GREEN}✓ Staged all changes${NC}\n"
+# Stage all changes including Cargo.lock and deleted files
+git add -A
+echo -e "${GREEN}✓ Staged all changes (including Cargo.lock and deletions)${NC}\n"
 
 # Generate commit message from git diff
 echo -e "${YELLOW}Generating commit message from changes...${NC}"

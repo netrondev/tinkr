@@ -76,7 +76,7 @@ pub enum BtnColor {
     )]
     Default,
     #[tw(
-        class = "text-sky-900 dark:text-sky-100 bg-sky-200 dark:bg-sky-700 hover:bg-sky-300 dark:hover:bg-sky-600"
+        class = "text-blue-900 dark:text-blue-100 bg-blue-200 dark:bg-blue-600 hover:bg-blue-300 dark:hover:bg-blue-500"
     )]
     Primary,
     #[tw(
@@ -108,7 +108,7 @@ pub enum BtnState {
     #[tw(class = "bg-neutral-200 dark:bg-neutral-800")]
     Active,
     #[tw(
-        class = "border-b-2 hover:border-sky-600 hover:text-sky-500 border-sky-500 hover:dark:border-sky-300 hover:dark:text-sky-300 dark:border-sky-400 text-sky-600 dark:text-sky-400 py-2 px-1 text-sm font-medium"
+        class = "border-b-2 hover:border-blue-600 hover:text-blue-500 border-blue-500 hover:dark:border-blue-300 hover:dark:text-blue-300 dark:border-blue-400 text-blue-600 dark:text-blue-400 py-2 px-1 text-sm font-medium"
     )]
     TabActive,
 }

@@ -96,3 +96,8 @@ pub mod middleware;
 
 #[cfg(feature = "ssr")]
 pub mod server;
+
+/// Returns the version of the tinkr crate
+pub fn version() -> &'static str {
+    env!("CARGO_PKG_VERSION")
+}

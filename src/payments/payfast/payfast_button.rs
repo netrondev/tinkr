@@ -12,10 +12,15 @@ pub struct PayFastOptions {
 
 impl Default for PayFastOptions {
     fn default() -> Self {
+        // Self {
+        //     action_url: "https://sandbox.payfast.co.za/eng/process".into(),
+        //     merchant_id: "10000100".into(),
+        //     merchant_key: "46f0cd694581a".into(),
+        // }
         Self {
-            action_url: "https://sandbox.payfast.co.za/eng/process".into(),
-            merchant_id: "10000100".into(),
-            merchant_key: "46f0cd694581a".into(),
+            action_url: "notset".into(),
+            merchant_id: "notset".into(),
+            merchant_key: "notset".into(),
         }
     }
 }
@@ -24,7 +29,7 @@ impl PayFastOptions {
     #[cfg(feature = "ssr")]
     pub fn new() -> Self {
         Self {
-            action_url: std::env::var("TINKR_PAYFAST_SANDBOX_URL").unwrap_or_default(),
+            action_url: std::env::var("TINKR_PAYFAST_URL").unwrap_or_default(),
             merchant_id: std::env::var("TINKR_PAYFAST_MERCHANT_ID").unwrap_or_default(),
             merchant_key: std::env::var("TINKR_PAYFAST_MERCHANT_KEY").unwrap_or_default(),
         }
@@ -33,7 +38,9 @@ impl PayFastOptions {
 
 #[server]
 async fn get_payfast_options() -> Result<PayFastOptions, ServerFnError> {
-    Ok(PayFastOptions::new())
+    let pf = PayFastOptions::new();
+    println!("PayFast Options: {:?}", pf);
+    Ok(pf)
 }
 
 #[component]
@@ -52,7 +59,6 @@ pub fn PayFastButton(
     postal_code: String,
 ) -> impl IntoView {
     let originget = RwSignal::new(String::new());
-
     let optionsget = OnceResource::new(get_payfast_options());
 
     Effect::new(move |_| {

@@ -3,6 +3,7 @@ use crate::{
         SectionStyled,
         alert::{Alert, AlertSeverity},
         heading::{Heading, SubHeading},
+        loading::LoadingIndicator,
     },
     settings::{avatar_edit::AvatarSection, profile::ProfileSection},
 };
@@ -26,11 +27,8 @@ pub fn SettingsHome() -> impl IntoView {
 
                 <Suspense fallback=move || {
                     view! {
-                        <div class="bg-white shadow rounded-lg p-6">
-                            <div class="animate-pulse">
-                                <div class="h-4 bg-neutral-200 rounded w-1/4 mb-4"></div>
-                                <div class="h-4 bg-neutral-200 rounded w-1/2"></div>
-                            </div>
+                        <div class="">
+                            <LoadingIndicator size=crate::components::loading::LoadingIndicatorSize::Huge />
                         </div>
                     }
                 }>

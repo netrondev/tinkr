@@ -1,4 +1,4 @@
-use crate::components::loading::LoadingIndicator;
+use crate::components::loading::{LoadingIndicator, LoadingIndicatorSize};
 use crate::session::{get_session, get_user};
 use leptos::prelude::*;
 
@@ -50,7 +50,11 @@ pub fn AuthCheckAdmin(children: ChildrenFn) -> impl IntoView {
 
     view! {
         <Suspense fallback=|| {
-            view! { <LoadingIndicator /> }
+            view! {
+                <div class="flex align-center justify-center">
+                    <LoadingIndicator size=LoadingIndicatorSize::Huge />
+                </div>
+            }
         }>
             {move || {
                 match user_resource.get() {

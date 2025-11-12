@@ -88,6 +88,10 @@ pub fn DropdownMenu(
 
     view! {
         <Show when=move || dropdown_visible.get()>
+            <div
+                class="fixed top-0 left-0 w-screen h-screen opacity-0 cursor-default"
+                on:click=move |_| dropdown_visible.set(false)
+            />
             <div class=final_class.clone() on:click=move |e| e.stop_propagation()>
                 <div class="py-1 w-full flex flex-col">{children()}</div>
             </div>

@@ -7933,7 +7933,7 @@ dependencies = [
 
 [[package]]
 name = "tinkr"
-version = "0.0.34"
+version = "0.0.36"
 dependencies = [
  "alloy",
  "anyhow",

@@ -87,22 +87,15 @@ echo -e "Default commit message: ${GREEN}$COMMIT_MSG${NC}\n"
 
 # Ask user for commit message preference
 echo -e "${YELLOW}Choose an option:${NC}"
-echo "1) Use default message"
-echo "2) Customize message"
-echo "3) Generate message with Claude CLI"
+echo "1) Generate message with Claude CLI (default)"
+echo "2) Use default message"
+echo "3) Customize message"
 echo ""
-read -p "Enter choice (1-3): " choice
+read -p "Enter choice (1-3, default=1): " choice
+choice=${choice:-1}  # Default to 1 if empty
 
 case $choice in
     1)
-        # Use default message
-        FINAL_MSG="$COMMIT_MSG"
-        ;;
-    2)
-        # Customize message
-        read -e -p "Enter commit message: " -i "$COMMIT_MSG" FINAL_MSG
-        ;;
-    3)
         # Generate with Claude CLI
         echo -e "\n${YELLOW}Generating commit message with Claude...${NC}"
 
@@ -119,7 +112,8 @@ $DIFF_CONTEXT" 2>/dev/null || echo "")
             FINAL_MSG="$COMMIT_MSG"
         else
             echo -e "\nClaude's suggestion: ${GREEN}$CLAUDE_MSG${NC}\n"
-            read -p "Use this message? (y/n): " use_claude
+            read -p "Use this message? (Y/n): " use_claude
+            use_claude=${use_claude:-Y}  # Default to Y if empty
             if [[ $use_claude =~ ^[Yy]$ ]]; then
                 FINAL_MSG="$CLAUDE_MSG"
             else
@@ -127,9 +121,35 @@ $DIFF_CONTEXT" 2>/dev/null || echo "")
             fi
         fi
         ;;
-    *)
-        echo -e "${RED}Invalid choice. Using default message.${NC}"
+    2)
+        # Use default message
         FINAL_MSG="$COMMIT_MSG"
+        ;;
+    3)
+        # Customize message
+        read -e -p "Enter commit message: " -i "$COMMIT_MSG" FINAL_MSG
+        ;;
+    *)
+        echo -e "${RED}Invalid choice. Using Claude to generate message.${NC}"
+        # Default to Claude generation on invalid input
+        echo -e "\n${YELLOW}Generating commit message with Claude...${NC}"
+        DIFF_CONTEXT=$(git diff --cached)
+        CLAUDE_MSG=$(claude --print "Based on this git diff, write a concise commit message (1-2 sentences max, no quotes around it):
+
+$DIFF_CONTEXT" 2>/dev/null || echo "")
+
+        if [ -z "$CLAUDE_MSG" ]; then
+            FINAL_MSG="$COMMIT_MSG"
+        else
+            echo -e "\nClaude's suggestion: ${GREEN}$CLAUDE_MSG${NC}\n"
+            read -p "Use this message? (Y/n): " use_claude
+            use_claude=${use_claude:-Y}  # Default to Y if empty
+            if [[ $use_claude =~ ^[Yy]$ ]]; then
+                FINAL_MSG="$CLAUDE_MSG"
+            else
+                FINAL_MSG="$COMMIT_MSG"
+            fi
+        fi
         ;;
 esac
 
@@ -139,14 +159,21 @@ echo -e "\nUsing commit message: ${GREEN}$FINAL_MSG${NC}\n"
 git commit -m "$FINAL_MSG"
 echo -e "${GREEN}✓ Created commit${NC}\n"
 
-# Push to remote
-echo -e "${YELLOW}Pushing to remote...${NC}"
-git push
-echo -e "${GREEN}✓ Pushed to remote${NC}\n"
+# Ask user if they want to push
+read -p "Push to remote? (Y/n): " push_choice
+push_choice=${push_choice:-Y}  # Default to Y if empty
+
+if [[ $push_choice =~ ^[Yy]$ ]]; then
+    echo -e "${YELLOW}Pushing to remote...${NC}"
+    git push
+    echo -e "${GREEN}✓ Pushed to remote${NC}\n"
+else
+    echo -e "${YELLOW}Skipping push to remote${NC}\n"
+fi
 
 # Publish to crates.io
-echo -e "${YELLOW}Publishing to crates.io...${NC}"
+# echo -e "${YELLOW}Publishing to crates.io...${NC}"
 cargo publish
-echo -e "${GREEN}✓ Published to crates.io${NC}\n"
+# echo -e "${GREEN}✓ Published to crates.io${NC}\n"
 
 echo -e "${GREEN}🎉 Release $NEW_VERSION complete!${NC}"

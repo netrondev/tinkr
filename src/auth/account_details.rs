@@ -1,7 +1,7 @@
 use crate::{
     EmailAddress,
     components::{
-        Button,
+        Alert, AlertSeverity, Button,
         button::{BtnColor, BtnVariant, ButtonIcon},
         input::FormField,
         input_class_default,
@@ -203,92 +203,38 @@ pub fn AccountForm() -> impl IntoView {
 
     let details = RwSignal::new(None as Option<DeliveryDetails>);
 
-    // Update parent signal whenever any field changes
     Effect::new(move |_| {
         if let Some(Ok(data)) = user_delivery_details.get() {
             details.set(Some(data));
         }
     });
 
-    let update_action = ServerAction::<UpdateAccountDetails>::new();
-    let is_saving = update_action.pending();
-
-    let on_submit = move |ev: leptos::ev::SubmitEvent| {
-        ev.prevent_default();
-        if let Some(delivery_details) = details.get() {
-            update_action.dispatch(UpdateAccountDetails {
-                details: delivery_details,
-            });
-        }
-    };
-
     let on_details_change = Callback::new(move |updated: DeliveryDetails| {
-        details.set(Some(updated));
+        details.set(Some(updated.clone()));
+        leptos::task::spawn_local(async move {
+            let result = update_account_details(updated).await;
+        });
     });
 
     view! {
-        <form on:submit=on_submit>
-            <Transition>
-                {move || match details.get() {
-                    None => view! { <p>"Loading..."</p> }.into_any(),
-                    Some(delivery_details) => {
-                        let details_signal = Signal::derive(move || {
-                            details.get().unwrap_or(delivery_details.clone())
-                        });
-                        let editable = Signal::derive(|| true);
-
-                        view! {
-                            <DeliveryDetailsForm
-                                details=details_signal
-                                editable=editable
-                                on_change=on_details_change
-                            />
-
-                            <div class="col-span-12 flex justify-end gap-3 pt-10">
-                                {move || {
-                                    let is_saving_bool = is_saving.get();
-
-                                    view! {
-                                        <Button
-                                            variant=BtnVariant::Default
-                                            color=BtnColor::Neutral
-                                            button_type="submit"
-                                            disabled=is_saving_bool
-                                            icon=ButtonIcon::Icon(phosphor_leptos::FLOPPY_DISK)
-                                        >
-                                            {move || {
-                                                if is_saving.get() { "Saving..." } else { "Save Changes" }
-                                            }}
-                                        </Button>
-                                    }
-                                }}
-
-                            </div>
-                        }
-                            .into_any()
-                    }
-                }}
-            </Transition>
-
-            {move || {
-                if let Some(Ok(_)) = update_action.value().get() {
+        <Transition>
+            {move || match details.get() {
+                None => view! { <p>"Loading..."</p> }.into_any(),
+                Some(delivery_details) => {
+                    let details_signal = Signal::derive(move || {
+                        details.get().unwrap_or(delivery_details.clone())
+                    });
+                    let editable = Signal::derive(|| true);
                     view! {
-                        <div class="mt-4 p-4 bg-green-100 text-green-800 rounded">
-                            "Account details saved successfully!"
-                        </div>
+                        <DeliveryDetailsForm
+                            details=details_signal
+                            editable=editable
+                            on_change=on_details_change
+                        />
                     }
                         .into_any()
-                } else if let Some(Err(e)) = update_action.value().get() {
-                    view! {
-                        <div class="mt-4 p-4 bg-red-100 text-red-800 rounded">
-                            "Error saving: " {e.to_string()}
-                        </div>
-                    }
-                        .into_any()
-                } else {
-                    view! { <div></div> }.into_any()
                 }
             }}
-        </form>
+        </Transition>
     }
 }

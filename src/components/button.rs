@@ -246,12 +246,11 @@ pub fn Button(
                     }
                     (None, _) => view! {}.into_any(),
                 }}
-                <span>
-                    {match children {
-                        Some(children) => children(),
-                        None => view! {}.into_any(),
-                    }}
-                </span>
+                {match children {
+                    Some(children) => children(),
+                    None => view! {}.into_any(),
+                }}
+
             </div>
         }
         .into_any(),

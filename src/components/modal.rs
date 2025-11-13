@@ -1,5 +1,8 @@
 use leptos::prelude::*;
+use phosphor_leptos::Icon;
 use tw_merge::tw_merge;
+
+use crate::components::Button;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub enum ModalSize {
@@ -76,7 +79,7 @@ pub fn Modal(
             >
                 <div class="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                     <div
-                        class="fixed inset-0 bg-neutral-500/30 backdrop-blur-lg transition-opacity"
+                        class="fixed inset-0 dark:bg-neutral-800/50 bg-neutral-100/50 backdrop-blur-lg transition-opacity touch-none"
                         aria-hidden="true"
                         on:click=close_modal
                     ></div>
@@ -85,18 +88,23 @@ pub fn Modal(
                         "inline-block align-top bg-white dark:bg-neutral-800 rounded-lg container text-left overflow-hidden shadow-xl transform sm:my-8 sm:align-middle {} w-full shadow-xl", size_class
                     )>
                         <div class="px-4 pt-5 pb-4 sm:p-6 sm:pb-4 relative dark:bg-neutral-900 bg-white rounded-md">
-                            {title
-                                .as_ref()
-                                .map(|t| {
-                                    view! {
-                                        <h3
-                                            class="text-lg leading-6 font-medium text-neutral-900 dark:text-neutral-100 mb-4"
-                                            id="modal-title"
-                                        >
-                                            {t.clone()}
-                                        </h3>
-                                    }
-                                })} {children()}
+                            <div class="flex justify-between items-center mb-4">
+                                {title
+                                    .as_ref()
+                                    .map(|t| {
+                                        view! {
+                                            <h3
+                                                class="text-lg leading-6 font-medium text-neutral-900 dark:text-neutral-100 mb-4"
+                                                id="modal-title"
+                                            >
+                                                {t.clone()}
+                                            </h3>
+                                        }
+                                    })} <Button on:click=close_modal>
+                                    <Icon icon=phosphor_leptos::X />
+                                </Button>
+                            </div>
+                            {children()}
                         </div>
                     </div>
                 </div>

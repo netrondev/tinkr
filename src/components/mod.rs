@@ -31,6 +31,7 @@ pub mod seperator;
 pub mod sidebar;
 pub mod submit_button;
 pub mod tabs;
+pub mod timer;
 pub mod tooltip;
 pub mod user_avatar;
 pub mod user_navbutton;

@@ -36,6 +36,7 @@ where
         use_context::<RwSignal<Vec<TooltipData>>>().expect("LabelProvider context not found");
 
     let tooltip_id = RwSignal::new(None::<usize>);
+    let auto_hide_handle = StoredValue::new(None::<TimeoutHandle>);
 
     let update_position = move || {
         if let Some(element) = node_ref.get() {
@@ -60,7 +61,25 @@ where
         }
     };
 
+    let hide_tooltip = move || {
+        // Cancel any pending auto-hide timer
+        if let Some(handle) = auto_hide_handle.get_value() {
+            handle.clear();
+        }
+        auto_hide_handle.set_value(None);
+
+        tooltips.update(|tips| {
+            tips.clear();
+        });
+        tooltip_id.set(None);
+    };
+
     let show_tooltip = move || {
+        // Cancel any existing auto-hide timer
+        if let Some(handle) = auto_hide_handle.get_value() {
+            handle.clear();
+        }
+
         let new_tooltip = TooltipData {
             label: label_string.clone(),
             x: 0.0,
@@ -76,13 +95,16 @@ where
 
         tooltip_id.set(Some(id));
         update_position();
-    };
 
-    let hide_tooltip = move || {
-        tooltips.update(|tips| {
-            tips.clear();
-        });
-        tooltip_id.set(None);
+        // Set up auto-hide timer for 3 seconds
+        if let Ok(handle) = set_timeout_with_handle(
+            move || {
+                hide_tooltip();
+            },
+            std::time::Duration::from_secs(3),
+        ) {
+            auto_hide_handle.set_value(Some(handle));
+        }
     };
 
     view! {

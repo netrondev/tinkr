@@ -1,8 +1,6 @@
 use leptos::prelude::*;
 use tw_merge::*;
 
-use phosphor_leptos::{Icon, IconWeightData};
-
 #[derive(TwVariant)]
 pub enum HeadingSize {
     #[tw(class = "text-3xl font-bold text-neutral-600 dark:text-white")]
@@ -33,6 +31,7 @@ struct HeadingPropsCustom {
 pub fn Heading(
     children: Children,
     #[prop(optional)] variant: Option<HeadingSize>,
+    #[prop(optional, into)] class: Option<String>,
 ) -> impl IntoView {
     let classtext = move || {
         HeadingPropsCustom {
@@ -41,7 +40,9 @@ pub fn Heading(
         .to_class()
     };
 
-    view! { <h1 class=classtext>{children()}</h1> }
+    let class = class.unwrap_or_default();
+
+    view! { <h1 class=tw_merge!(classtext(), class)>{children()}</h1> }
 }
 
 #[component]

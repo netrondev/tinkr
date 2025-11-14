@@ -59,7 +59,7 @@ pub enum BtnVariant {
     Square,
     #[tw(class = "w-10 h-10 rounded-full")]
     Round,
-    #[tw(class = "h-10 rounded-md px-3")]
+    #[tw(class = "h-10 rounded-md pr-3")]
     CallToAction,
     #[tw(
         class = "border-b-2 w-min px-4 rounded-none border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600 py-2 px-1 text-sm font-medium"
@@ -224,7 +224,7 @@ pub fn Button(
         }
         .into_any(),
         _ => view! {
-            <div class="w-full flex items-center justify-left gap-2">
+            <div class="w-full flex items-center justify-left gap-0">
 
                 {match (&icon, &icon_hover) {
                     (Some(normal_icon), Some(hover_icon)) => {

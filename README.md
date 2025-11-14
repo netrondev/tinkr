@@ -202,6 +202,18 @@ pub fn ProtectedPage() -> impl IntoView {
 }
 ```
 
+### Datetime
+
+```rust
+use tinkr::Datetime;
+use tinkr::date_utils::FormatDatetime;
+
+let created_at: Datetime;
+created_at.format_custom("%a %d %b"); // Mon 01 Jan
+created_at.ago(); // 9 days ago
+```
+
+
 ### Database Integration (SSR)
 
 ```rust

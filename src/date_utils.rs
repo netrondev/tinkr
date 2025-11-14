@@ -8,12 +8,17 @@ use crate::Datetime;
 
 pub trait FormatDatetime {
     fn format_date(&self) -> String;
+    fn format_custom(&self, format_spec: &str) -> String;
     fn ago(&self) -> String;
 }
 
 impl FormatDatetime for Datetime {
     fn format_date(&self) -> String {
-        format_datetime(self)
+        format_datetime_custom(self, "%Y-%m-%d %H:%M:%S")
+    }
+
+    fn format_custom(&self, format_spec: &str) -> String {
+        format_datetime_custom(self, format_spec)
     }
 
     fn ago(&self) -> String {
@@ -136,6 +141,35 @@ pub fn format_date_custom(datetime: &Datetime, format_spec: &str) -> String {
 pub fn format_datetime(datetime: &Datetime) -> String {
     let format_spec = "%Y-%m-%d %H:%M:%S";
 
+    #[cfg(feature = "ssr")]
+    {
+        let parsed: Result<chrono::DateTime<chrono::Utc>, chrono::ParseError> = datetime
+            .to_string()
+            .trim_start_matches("d'")
+            .trim_end_matches("'")
+            .parse();
+
+        match parsed {
+            Ok(parsed_datetime) => {
+                let formatted = parsed_datetime.format(format_spec);
+                return formatted.to_string();
+            }
+            Err(e) => {
+                println!("Error parsing datetime: {}", e);
+                return "Invalid date".to_string();
+            }
+        }
+    }
+    #[cfg(not(feature = "ssr"))]
+    {
+        // For crate::Datetime - format with date and time
+        datetime.format(format_spec)
+    }
+}
+
+/// "%Y-%m-%d %H:%M:%S"
+#[allow(unused)]
+pub fn format_datetime_custom(datetime: &Datetime, format_spec: &str) -> String {
     #[cfg(feature = "ssr")]
     {
         let parsed: Result<chrono::DateTime<chrono::Utc>, chrono::ParseError> = datetime
